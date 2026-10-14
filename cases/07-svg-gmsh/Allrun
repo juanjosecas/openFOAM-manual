@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+for tool in gmshToFoam checkMesh simpleFoam foamDictionary; do
+    command -v "$tool" >/dev/null || { echo "ERROR: no se encuentra $tool." >&2; exit 1; }
+done
+if [[ -e constant/polyMesh/points ]]; then
+    echo 'ERROR: malla existente. No sobrescribir resultados anteriores.' >&2
+    exit 1
+fi
+python3 ../../scripts/generar_canal_gmsh.py
+gmshToFoam geometry/canal.msh > log.gmshToFoam 2>&1 || { tail -n 60 log.gmshToFoam >&2; exit 1; }
+python3 ../../scripts/ajustar_patches_gmsh.py
+checkMesh > log.checkMesh 2>&1 || { tail -n 60 log.checkMesh >&2; exit 1; }
+solver=$(foamDictionary system/controlDict -entry application -value)
+[[ "$solver" == simpleFoam ]] || { echo "ERROR: solver inesperado: $solver" >&2; exit 1; }
+simpleFoam 2>&1 | tee log.simpleFoam
