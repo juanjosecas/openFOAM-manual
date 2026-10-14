@@ -41,3 +41,14 @@ icoFoam 2>&1 | tee log.icoFoam
 Reducir velocidad 20%; reducir deltaT; aumentar frecuencia de escritura.
 
 Modificar **una sola variable** en cada copia del caso y conservar el original. Si cambia `blockMeshDict`, regenerar la malla; no reutilizar resultados antiguos. Los casos `simpleFoam` son estacionarios y sus iteraciones no representan tiempo físico. Consultar también la [guía general](../../docs/guia-ejecucion-y-variantes.md).
+
+
+## Gráficos de propiedades y diagnóstico
+
+Consultar [Gráficos y propiedades](../../docs/graficos-y-propiedades.md) para seleccionar campos físicos y generar perfiles a partir de CSV exportados. Si hay un archivo `log.NOMBRE_SOLVER`, ejecutar desde la raíz del repositorio:
+
+```bash
+python scripts/plot_solver_log.py cases/10b-tuberia-laminar-case1/log.NOMBRE_SOLVER --output plots/10b-tuberia-laminar-case1
+```
+
+Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `scripts/plot_csv.py` sobre CSV con columnas adecuadas. Los casos 09 y 10A–10C ya incluyen `system/sampleDict`, que se conserva.
