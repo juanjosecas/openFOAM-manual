@@ -8,6 +8,7 @@ theme:
 nav:
   - Inicio: index.md
   - Estructura y estilo: estructura-y-estilo.md
+  - Ejecución y variantes: guia-ejecucion-y-variantes.md
 markdown_extensions:
   - admonition
   - pymdownx.superfences
