@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Limpieza opt-in: evita borrar 0/, constant/ o system/.
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+if [[ "${1:-}" != "--yes" ]]; then
+    echo "Simulación de limpieza. Ejecutar bash Allclean --yes para borrar:"
+    find . -mindepth 1 -maxdepth 1 \( -name 'processor[0-9]*' -o -name 'postProcessing' -o -name 'VTK' -o -name 'log.*' \) -print
+    find . -mindepth 1 -maxdepth 1 -type d -regex './[0-9]+\(\.[0-9]+\)?' ! -name '0' -print
+    [[ -d constant/polyMesh ]] && echo constant/polyMesh
+    exit 0
+fi
+find . -mindepth 1 -maxdepth 1 \( -name 'processor[0-9]*' -o -name 'postProcessing' -o -name 'VTK' -o -name 'log.*' \) -exec rm -rf -- {} +
+find . -mindepth 1 -maxdepth 1 -type d -regex './[0-9]+\(\.[0-9]+\)?' ! -name '0' -exec rm -rf -- {} +
+rm -rf -- constant/polyMesh
+echo 'Limpieza terminada. Se conserva 0/, constant/ original y system/.'

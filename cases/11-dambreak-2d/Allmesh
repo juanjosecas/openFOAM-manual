@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Construye y comprueba SOLO la malla; no ejecuta el solver.
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+if [[ ! -f system/blockMeshDict ]]; then echo 'Falta system/blockMeshDict' >&2; exit 2; fi
+for tool in blockMesh checkMesh; do
+  command -v "$tool" >/dev/null || { echo "Falta $tool; cargar OpenFOAM" >&2; exit 2; }
+done
+if [[ -e constant/polyMesh/points ]]; then
+  echo 'Hay una malla previa. Para proteger resultados, no se sobrescribe.' >&2
+  echo 'Usar una copia limpia, o Allclean --yes tras revisar las salidas.' >&2
+  exit 3
+fi
+blockMesh > log.blockMesh 2>&1 || { tail -n 70 log.blockMesh >&2; exit 1; }
+checkMesh > log.checkMesh 2>&1 || { tail -n 70 log.checkMesh >&2; exit 1; }
+echo 'Malla generada. Revisar log.checkMesh; no equivale a validación física.'
