@@ -5,6 +5,8 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+// NOTA DEL MANUAL: Parametros opcionales para paralelizacion.
+// Caso heredado: mantener valores; revisar las diferencias entre Foundation y OpenFOAM.com.
 FoamFile
 {
     version     2.0;
