@@ -18,6 +18,23 @@
 Desde esta carpeta y con OpenFOAM cargado: `./Allrun`. Conserva logs y no elimina resultados previos.
 
 
-## Comandos y variaciones controladas
+## Preparación y ejecución
 
-Ver [instrucciones de mallado, verificación, solver y ensayos pequeños](../../docs/guia-ejecucion-y-variantes.md). La guía señala expresamente los casos incompletos o heredados que **todavía no deben ejecutarse** sin adaptación. Ningún caso fue ejecutado durante esta revisión.
+Desde la raíz del repositorio, con el entorno OpenFOAM cargado:
+
+```bash
+cd cases/02-canal-obstaculos
+foamVersion
+blockMesh 2>&1 | tee log.blockMesh
+checkMesh 2>&1 | tee log.checkMesh
+foamDictionary system/controlDict -entry application -value
+simpleFoam 2>&1 | tee log.simpleFoam
+```
+
+**Estado:** Comandos documentados, no comprobados mediante ejecución. Alternativamente, ejecutar `bash Allrun` desde la carpeta del caso; no combinar los dos procedimientos.
+
+## Variaciones pequeñas
+
+Reducir la velocidad de entrada 20%; variar n de 0.5 a 0.7; refinar bloques próximos al obstáculo conservando interfaces.
+
+Modificar **una sola variable** en cada copia del caso y conservar el original. Si cambia `blockMeshDict`, regenerar la malla; no reutilizar resultados antiguos. Los casos `simpleFoam` son estacionarios y sus iteraciones no representan tiempo físico. Consultar también la [guía general](../../docs/guia-ejecucion-y-variantes.md).

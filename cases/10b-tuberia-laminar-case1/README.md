@@ -21,6 +21,23 @@
 Este caso no dispone todavía de un lanzador verificado. Consultar los pasos de preparación del tutorial.
 
 
-## Comandos y variaciones controladas
+## Preparación y ejecución
 
-Ver [instrucciones de mallado, verificación, solver y ensayos pequeños](../../docs/guia-ejecucion-y-variantes.md). La guía señala expresamente los casos incompletos o heredados que **todavía no deben ejecutarse** sin adaptación. Ningún caso fue ejecutado durante esta revisión.
+Desde la raíz del repositorio, con el entorno OpenFOAM cargado:
+
+```bash
+cd cases/10b-tuberia-laminar-case1
+foamVersion
+blockMesh 2>&1 | tee log.blockMesh
+checkMesh 2>&1 | tee log.checkMesh
+foamDictionary system/controlDict -entry application -value
+icoFoam 2>&1 | tee log.icoFoam
+```
+
+**Estado:** Caso heredado: revisar compatibilidad con OpenFOAM.com antes de ejecutar. No hay un `Allrun` verificado para este caso.
+
+## Variaciones pequeñas
+
+Reducir velocidad 20%; reducir deltaT; aumentar frecuencia de escritura.
+
+Modificar **una sola variable** en cada copia del caso y conservar el original. Si cambia `blockMeshDict`, regenerar la malla; no reutilizar resultados antiguos. Los casos `simpleFoam` son estacionarios y sus iteraciones no representan tiempo físico. Consultar también la [guía general](../../docs/guia-ejecucion-y-variantes.md).
