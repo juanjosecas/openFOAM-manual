@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: Presion: leer dimensiones del campo antes de asignar unidades.
+// No cambiar los valores originales sin registrar una variante del caso.
 FoamFile
 {
     version     2.0;

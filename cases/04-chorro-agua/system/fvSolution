@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: Solvers y acoplamiento presion velocidad; revisar tolerancias y esquemas de fase.
+// No cambiar los valores originales sin registrar una variante del caso.
 FoamFile
 {
     version     2.0;

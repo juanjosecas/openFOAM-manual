@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: Solucion estacionaria simpleFoam; endTime se usa como indice de iteracion, no segundos.
+// No cambiar los valores originales sin registrar una variante del caso.
 FoamFile
 {
     version     2.0;

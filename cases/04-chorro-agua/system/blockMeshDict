@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: Vertices, bloques y patches. Cambios exigen regenerar malla y ejecutar checkMesh.
+// No cambiar los valores originales sin registrar una variante del caso.
 FoamFile
 {
     version     2.0;
