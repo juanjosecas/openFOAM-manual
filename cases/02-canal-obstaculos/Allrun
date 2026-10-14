@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+trap 'printf "ERROR: fallo en línea %s (código %s)\n" "$LINENO" "$?" >&2' ERR
+
+if ! command -v foamDictionary >/dev/null 2>&1; then
+    echo "ERROR: cargar el entorno de OpenFOAM antes de ejecutar Allrun." >&2
+    exit 1
+fi
+if [[ ! -f system/controlDict ]]; then
+    echo "ERROR: falta system/controlDict." >&2
+    exit 1
+fi
+solver="$(foamDictionary system/controlDict -entry application -value)"
+if [[ ! "$solver" =~ ^[a-zA-Z][a-zA-Z0-9_]*$ ]] || ! command -v "$solver" >/dev/null 2>&1; then
+    echo "ERROR: solver no disponible o inválido: $solver" >&2
+    exit 1
+fi
+printf 'Caso: %s\nSolver: %s\n' "$PWD" "$solver"
+foamVersion || true
+
+if [[ -f system/blockMeshDict ]]; then
+    if [[ ! -f constant/polyMesh/points ]]; then
+        echo 'Generando malla con blockMesh...'
+        blockMesh > log.blockMesh 2>&1 || { tail -n 50 log.blockMesh >&2; exit 1; }
+    else
+        echo 'Malla existente: se reutiliza; eliminarla manualmente si cambió blockMeshDict.'
+    fi
+elif [[ ! -f constant/polyMesh/points ]]; then
+    echo 'ERROR: no hay malla y el caso no contiene blockMeshDict.' >&2
+    exit 1
+fi
+
+checkMesh > log.checkMesh 2>&1 || { tail -n 60 log.checkMesh >&2; exit 1; }
+if ! grep -q 'Mesh OK' log.checkMesh; then
+    echo 'ERROR: checkMesh no confirmó "Mesh OK".' >&2
+    tail -n 60 log.checkMesh >&2
+    exit 1
+fi
+
+echo "Ejecutando $solver..."
+"$solver" 2>&1 | tee "log.$solver"

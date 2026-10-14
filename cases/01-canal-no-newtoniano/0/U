@@ -1,0 +1,45 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+
+dimensions [0 1 -1 0 0 0 0];
+
+internalField uniform (0.01 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        type fixedValue;
+        value uniform (0.01 0 0);
+    }
+
+    outlet
+    {
+        type zeroGradient;
+    }
+
+    lowerWall
+    {
+        type noSlip;
+    }
+
+    upperWall
+    {
+        type noSlip;
+    }
+
+    frontAndBack
+    {
+        type empty;
+    }
+}
+internalField define el valor inicial de velocidad para las celdas interiores. La simulación comienza con una velocidad uniforme de 0.01 m/s en la dirección X.
+inlet fija esa velocidad durante el cálculo.
+outlet utiliza zeroGradient, permitiendo que la velocidad de salida se determine a partir de la solución interior sin imponerle un valor fijo.
+noSlip establece velocidad nula en las paredes sólidas:

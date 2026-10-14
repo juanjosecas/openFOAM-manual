@@ -1,0 +1,250 @@
+[
+  {
+    "slug": "01-canal-no-newtoniano",
+    "title": "Tutorial 01 — Flujo no newtoniano en un canal 2D",
+    "sections": 632,
+    "blocks": 25,
+    "files": [
+      "0/U",
+      "0/p",
+      "constant/transportProperties",
+      "constant/turbulenceProperties",
+      "system/blockMeshDict",
+      "system/controlDict",
+      "system/fvSchemes",
+      "system/fvSolution"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "01-anexo-exportacion",
+    "title": "APÉNDICE PRÁCTICO DEL TUTORIAL 01 · Exportación y visualización fuera de ParaView",
+    "sections": 28,
+    "blocks": 5,
+    "files": [
+      "system/exportPerfilDict"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "02-canal-obstaculos",
+    "title": "Tutorial 02 — Flujo no newtoniano en un canal con obstáculos",
+    "sections": 642,
+    "blocks": 19,
+    "files": [
+      "0/U",
+      "0/p",
+      "constant/transportProperties",
+      "constant/turbulenceProperties",
+      "system/blockMeshDict",
+      "system/controlDict",
+      "system/fvSchemes",
+      "system/fvSolution"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "03-estenosis-capilar",
+    "title": "Tutorial 03 — Estenosis capilar 2D",
+    "sections": 498,
+    "blocks": 16,
+    "files": [
+      "0/U",
+      "0/p",
+      "constant/transportProperties",
+      "constant/turbulenceProperties",
+      "system/blockMeshDict",
+      "system/controlDict",
+      "system/fvSchemes",
+      "system/fvSolution"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "04-chorro-agua",
+    "title": "OpenFOAM v2406 — Tutorial 04",
+    "sections": 765,
+    "blocks": 24,
+    "files": [
+      "0/U",
+      "0/alpha.water",
+      "0/p_rgh",
+      "constant/g",
+      "constant/transportProperties",
+      "constant/turbulenceProperties",
+      "system/blockMeshDict",
+      "system/fvSchemes",
+      "system/fvSolution"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "05-esfera-agua",
+    "title": "OpenFOAM v2406 — Tutorial 05",
+    "sections": 149,
+    "blocks": 11,
+    "files": [],
+    "needs_review": []
+  },
+  {
+    "slug": "06-foamlib",
+    "title": "OpenFOAM v2406 — Tutorial 06",
+    "sections": 332,
+    "blocks": 26,
+    "files": [],
+    "needs_review": []
+  },
+  {
+    "slug": "07-svg-gmsh",
+    "title": "Tutorial 07 — Geometrías SVG y Gmsh",
+    "sections": 480,
+    "blocks": 22,
+    "files": [
+      "0/U",
+      "0/p",
+      "constant/transportProperties",
+      "constant/turbulenceProperties",
+      "system/controlDict",
+      "system/fvSchemes",
+      "system/fvSolution"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "08-tuberia-cilindrica-3d",
+    "title": "Tutorial 08. Flujo transitorio en una tubería cilíndrica 3D",
+    "sections": 320,
+    "blocks": 12,
+    "files": [
+      "0/U",
+      "0/p",
+      "constant/transportProperties",
+      "constant/turbulenceProperties",
+      "system/blockMeshDict",
+      "system/controlDict",
+      "system/fvSchemes",
+      "system/fvSolution"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "09-cavity-2d",
+    "title": "Tutorial 09 · Cavidad 2D con tapa móvil",
+    "sections": 40,
+    "blocks": 12,
+    "files": [
+      "0/U",
+      "0/p",
+      "constant/transportProperties",
+      "system/blockMeshDict",
+      "system/controlDict",
+      "system/decomposeParDict",
+      "system/fvSchemes",
+      "system/fvSolution",
+      "system/sampleDict"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "10a-tuberia-laminar-case0",
+    "title": "Tutorial 10A · Tubería laminar · case0",
+    "sections": 42,
+    "blocks": 13,
+    "files": [
+      "0/U",
+      "0/p",
+      "constant/transportProperties",
+      "system/blockMeshDict",
+      "system/controlDict",
+      "system/decomposeParDict",
+      "system/fvSchemes",
+      "system/fvSolution",
+      "system/modifyMeshDict",
+      "system/sampleDict"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "10b-tuberia-laminar-case1",
+    "title": "Tutorial 10B · Tubería laminar · case1",
+    "sections": 40,
+    "blocks": 12,
+    "files": [
+      "0/U",
+      "0/p",
+      "constant/transportProperties",
+      "system/blockMeshDict",
+      "system/controlDict",
+      "system/decomposeParDict",
+      "system/fvSchemes",
+      "system/fvSolution",
+      "system/sampleDict"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "10c-tuberia-laminar-case2",
+    "title": "Tutorial 10C · Tubería laminar · case2",
+    "sections": 44,
+    "blocks": 14,
+    "files": [
+      "0/U",
+      "0/p",
+      "constant/transportProperties",
+      "constant/turbulenceProperties",
+      "system/blockMeshDict",
+      "system/controlDict",
+      "system/decomposeParDict",
+      "system/fvSchemes",
+      "system/fvSolution",
+      "system/modifyMeshDict",
+      "system/sampleDict"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "11-dambreak-2d",
+    "title": "Tutorial 11 · Rotura de presa 2D",
+    "sections": 52,
+    "blocks": 18,
+    "files": [
+      "0/U",
+      "0/alpha.water",
+      "0/p",
+      "0/p_rgh",
+      "constant/dynamicMeshDict",
+      "constant/g",
+      "constant/transportProperties",
+      "constant/turbulenceProperties",
+      "system/blockMeshDict",
+      "system/controlDict",
+      "system/decomposeParDict",
+      "system/fvSchemes",
+      "system/fvSolution",
+      "system/probesDict",
+      "system/setFieldsDict"
+    ],
+    "needs_review": []
+  },
+  {
+    "slug": "12-goldschmidt-particulas",
+    "title": "Tutorial 12 · Goldschmidt · nube de partículas",
+    "sections": 45,
+    "blocks": 15,
+    "files": [
+      "0/U.air",
+      "0/p",
+      "constant/g",
+      "constant/kinematicCloudProperties",
+      "constant/momentumTransport.air",
+      "constant/transportProperties",
+      "system/blockMeshDict",
+      "system/controlDict",
+      "system/decomposeParDict",
+      "system/fvSchemes",
+      "system/fvSolution",
+      "system/mapFieldsDict"
+    ],
+    "needs_review": []
+  }
+]

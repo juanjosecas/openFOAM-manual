@@ -1,0 +1,17 @@
+[REVISAR] 01-anexo-exportacion
+  AVISO: No existe system/controlDict (puede ser un ejemplo parcial).
+  AVISO: No existe system/fvSchemes (puede ser un ejemplo parcial).
+  AVISO: No existe system/fvSolution (puede ser un ejemplo parcial).
+[OK] 01-canal-no-newtoniano
+[OK] 02-canal-obstaculos
+[OK] 03-estenosis-capilar
+[REVISAR] 04-chorro-agua
+  AVISO: No existe system/controlDict (puede ser un ejemplo parcial).
+[OK] 07-svg-gmsh
+[OK] 08-tuberia-cilindrica-3d
+[OK] 09-cavity-2d
+[OK] 10a-tuberia-laminar-case0
+[OK] 10b-tuberia-laminar-case1
+[OK] 10c-tuberia-laminar-case2
+[OK] 11-dambreak-2d
+[OK] 12-goldschmidt-particulas

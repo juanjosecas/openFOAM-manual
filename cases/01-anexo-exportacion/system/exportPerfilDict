@@ -1,0 +1,39 @@
+mkdir -p system
+cat > system/exportPerfilDict <<'EOF'
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object exportPerfilDict;
+}
+
+functions
+{
+    perfilCanal
+    {
+        type sets;
+        libs (sampling);
+        writeControl writeTime;
+        interpolationScheme cellPoint;
+        setFormat csv;
+        fields (U p);
+
+        sets
+        {
+            perfil_x015
+            {
+                type uniform;
+                axis y;
+                start (0.15 0.0001 0.0005);
+                end   (0.15 0.0199 0.0005);
+                nPoints 100;
+            }
+        }
+    }
+}
+EOF
+
+# Ejecutar el muestreo sobre el último resultado disponible
+postProcess -dict system/exportPerfilDict -latestTime
+find postProcessing/perfilCanal -type f

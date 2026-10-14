@@ -1,0 +1,32 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object controlDict;
+}
+
+application simpleFoam;
+
+startFrom startTime;
+startTime 0;
+
+stopAt endTime;
+endTime 2000;
+
+deltaT 1;
+
+writeControl timeStep;
+writeInterval 100;
+
+purgeWrite 0;
+
+writeFormat ascii;
+writePrecision 10;
+writeCompression off;
+
+timeFormat general;
+timePrecision 6;
+
+runTimeModifiable true;
+Las 2000 unidades corresponden al límite máximo de iteraciones del solver estacionario, no a 2000 segundos físicos.
