@@ -1,5 +1,7 @@
 mkdir -p system
 cat > system/exportPerfilDict <<'EOF'
+// NOTA DEL MANUAL: Diccionario de exportacion de perfiles. Verificar los campos existentes y la sintaxis de muestreo con la edicion instalada.
+// No se alteran propiedades ni parametros originales. Consultar la guia de materiales si procede.
 FoamFile
 {
     version 2.0;

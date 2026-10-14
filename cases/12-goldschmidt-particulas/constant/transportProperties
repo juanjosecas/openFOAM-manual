@@ -5,6 +5,8 @@
     \\  /    A nd           | Version:  8
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
+// NOTA DEL MANUAL: Propiedades del material. nu expresa viscosidad cinematica en m2/s cuando es dimensional; rho densidad en kg/m3.
+// No se alteran propiedades ni parametros originales. Consultar la guia de materiales si procede.
 FoamFile
 {
     version     2.0;

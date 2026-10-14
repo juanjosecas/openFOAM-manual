@@ -5,6 +5,8 @@
     \\  /    A nd           | Version:  8
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
+// NOTA DEL MANUAL: Algoritmos y solvers lineales; las tolerancias influyen en convergencia.
+// No se alteran propiedades ni parametros originales. Consultar la guia de materiales si procede.
 FoamFile
 {
     version     2.0;
