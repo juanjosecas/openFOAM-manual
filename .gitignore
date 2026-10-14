@@ -1,25 +1,29 @@
-# OpenFOAM outputs (case directories retained)
+# Resultados calculados de OpenFOAM (conservar siempre 0/)
 **/processor[0-9]*/
 **/postProcessing/
 **/VTK/
 **/constant/polyMesh/
 **/log.*
 **/*.foam
-# Exclude numeric time directories only (not tutorial folders)
-**/[1-9]/
-**/[1-9][0-9]*/
-**/[0-9]*.[0-9]*/
-# Generated media
+
+# Directorios numéricos DE RESULTADOS, únicamente dentro de cases/<caso>/
+# No ignorar por error carpetas llamadas 10a-... o 13-stl-...
+cases/*/[1-9]/
+cases/*/[1-9][0-9]/
+cases/*/[1-9][0-9][0-9]/
+cases/*/[1-9][0-9][0-9][0-9]/
+cases/*/[0-9]*.[0-9]*/
+
+# Salidas de visualización
 *.mp4
 *.avi
 *.vtu
 *.vtk
 *.vtm
 *.pvd
+plots/
+
 # Python
 __pycache__/
 *.py[cod]
 .venv/
-
-# Imágenes y tablas de salida, no material fuente
-plots/
