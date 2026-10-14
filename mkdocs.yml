@@ -10,6 +10,7 @@ nav:
   - Comenzar:
       - Estructura y estilo: estructura-y-estilo.md
       - Ejecución y variantes: guia-ejecucion-y-variantes.md
+      - De simpleFoam a transitorio: simplefoam-a-transitorio.md
       - Propiedades de materiales: propiedades-de-materiales.md
   - Tutoriales:
       - 01 · Canal no newtoniano: tutoriales/01-canal-no-newtoniano.md

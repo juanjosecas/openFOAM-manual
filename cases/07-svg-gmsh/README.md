@@ -28,3 +28,8 @@ El generador usa coordenadas directamente en **metros**, con geometría de 0.20 
 ## Ensayos pequeños
 
 Cambiar densidad de malla Gmsh, reducir 20 % velocidad de entrada, o variar frecuencia de escritura de iteraciones. `simpleFoam` es estacionario.
+
+
+## Ampliación transitoria
+
+Este caso utiliza `simpleFoam` estacionario. Si interesa estudiar arranques, pulsaciones o fluctuaciones físicas, consultar la [guía de conversión a `pimpleFoam`](../../docs/simplefoam-a-transitorio.md). La transición requiere una **copia independiente** y revisar esquemas, algoritmo, compatibilidad de modelos y condiciones de contorno; no cambiar únicamente `application`.

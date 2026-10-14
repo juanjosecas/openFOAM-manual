@@ -82,3 +82,8 @@ Las extensiones **no resuelven** los archivos ausentes de los casos 04 y 07 ni a
 - [Chorro de agua: configuración temporal reconstruida](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/04-chorro-agua/COMPLETADO.md).
 - [SVG/Gmsh: alternativa rectangular reproducible](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/07-svg-gmsh/COMPLETADO.md). El SVG histórico no está disponible.
 - [Goldschmidt: dependencias que no es seguro inventar](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/12-goldschmidt-particulas/PENDIENTES.md).
+
+
+## De régimen estacionario a transitorio
+
+[Guía de conversión `simpleFoam` → `pimpleFoam`](simplefoam-a-transitorio.md): cuándo conviene, qué diccionarios cambian, dificultad, número de Courant, inicialización y resultados adicionales que pueden obtenerse.

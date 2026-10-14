@@ -130,3 +130,8 @@ Es un caso de Foundation 8 basado en `DPMFoam`; los archivos lagrangianos y camp
 - Distinguir cambios de física (velocidad, geometría, viscosidad) de cambios numéricos (`deltaT`, `maxCo`, esquemas) y de salida (`writeInterval`).
 - Nunca interpretar estados de `simpleFoam` como un movimiento físico.
 - Mantener por separado el caso original y las variantes; no ejecutar una variante sobre resultados viejos.
+
+
+## Conversión de un caso estacionario a transitorio
+
+En los casos `simpleFoam` (01–03, 07, 10C), pasar a `pimpleFoam` exige revisar más que `application`: esquemas temporales, algoritmo de presión-velocidad, paso físico, modelo constitutivo, condiciones de entrada y salidas. Consultar la [guía paso a paso](simplefoam-a-transitorio.md). Las iteraciones estacionarias no son segundos simulados.
