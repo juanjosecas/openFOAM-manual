@@ -1,59 +1,30 @@
-# Tutorial 07 — Geometrías SVG y Gmsh
+# Tutorial 07 — Importación de Gmsh a OpenFOAM
 
-**Estado:** Revisión estática; **sin ejecución comprobada**.
+**Estado:** variante de referencia documentada, no ejecutada. La geometría SVG original **no está disponible** y no se simuló su recuperación.
 
-## Archivos presentes
+## Caso alternativo: canal rectangular
 
-- `0/U`
-- `0/p`
-- `constant/transportProperties`
-- `constant/turbulenceProperties`
-- `system/controlDict`
-- `system/fvSchemes`
-- `system/fvSolution`
-
-**Advertencia:** requiere comprobar migración desde versiones anteriores y cualquier preprocesamiento adicional antes de ejecutar.
-
-## Ejecución
-
-Este caso no dispone todavía de un lanzador verificado. Consultar los pasos de preparación del tutorial.
-
-
-## Preparación y ejecución
-
-Desde la raíz del repositorio, con el entorno OpenFOAM cargado:
+Desde la raíz del repositorio:
 
 ```bash
+python -m pip install gmsh
 cd cases/07-svg-gmsh
-foamVersion
-# PENDIENTE: recuperar SVG y geometry/svg_to_gmsh.py
-# python geometry/svg_to_gmsh.py
-# gmshToFoam dominio.msh
-# python geometry/ajustar_patches.py
-# checkMesh
-# simpleFoam
+python ../../scripts/generar_canal_gmsh.py
+gmshToFoam geometry/canal.msh
+python ../../scripts/ajustar_patches_gmsh.py
+checkMesh
+foamDictionary system/controlDict -entry application -value
+simpleFoam
 ```
 
-**Estado:** No ejecutar todavía: faltan el SVG y los scripts de conversión y patches. No hay un `Allrun` verificado para este caso.
+También existe `bash Allrun` que genera geometría y recoge logs, y se detiene si ya hay una malla.
 
-## Variaciones pequeñas
+El generador usa coordenadas directamente en **metros**, con geometría de 0.20 × 0.02 × 0.001 m, una celda de espesor y patches `inlet`, `outlet`, `walls` y `frontAndBack`. El conversor `gmshToFoam` puede variar en la nomenclatura de patches según versión: inspeccionar `constant/polyMesh/boundary` antes del solver. `frontAndBack` debe ser `empty` para el modelo 2D.
 
-Cambiar resolución de Gmsh; variar velocidad de entrada 20%; variar writeInterval tras recuperar SVG y scripts.
+**Limitación:** no se ha comprobado el comportamiento real de la malla Gmsh con OpenFOAM.com v2406/v2412. El ejemplo SVG original sigue pendiente de su archivo fuente.
 
-Modificar **una sola variable** en cada copia del caso y conservar el original. Si cambia `blockMeshDict`, regenerar la malla; no reutilizar resultados antiguos. Los casos `simpleFoam` son estacionarios y sus iteraciones no representan tiempo físico. Consultar también la [guía general](../../docs/guia-ejecucion-y-variantes.md).
+[Procedimiento y decisiones](COMPLETADO.md) · [Tutorial conceptual de SVG/Gmsh](../../docs/tutoriales/07-svg-gmsh.md)
 
+## Ensayos pequeños
 
-## Gráficos de propiedades y diagnóstico
-
-Consultar [Gráficos y propiedades](../../docs/graficos-y-propiedades.md) para seleccionar campos físicos y generar perfiles a partir de CSV exportados. Si hay un archivo `log.NOMBRE_SOLVER`, ejecutar desde la raíz del repositorio:
-
-```bash
-python scripts/plot_solver_log.py cases/07-svg-gmsh/log.NOMBRE_SOLVER --output plots/07-svg-gmsh
-```
-
-Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `scripts/plot_csv.py` sobre CSV con columnas adecuadas. Los casos 09 y 10A–10C ya incluyen `system/sampleDict`, que se conserva.
-
-
-## Nueva alternativa autocontenida
-
-Se añadieron `scripts/generar_canal_gmsh.py`, `scripts/ajustar_patches_gmsh.py` y `Allrun` para generar un **canal rectangular de referencia**, sin el SVG original. Ver [explicación completa](COMPLETADO.md). Es una variante didáctica, no una reconstrucción del antiguo SVG; sin prueba de ejecución.
+Cambiar densidad de malla Gmsh, reducir 20 % velocidad de entrada, o variar frecuencia de escritura de iteraciones. `simpleFoam` es estacionario.

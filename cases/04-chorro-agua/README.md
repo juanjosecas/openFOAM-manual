@@ -1,58 +1,30 @@
-# OpenFOAM v2406 — Tutorial 04
+# Tutorial 04 — Chorro de agua en aire
 
-**Estado:** Revisión estática; **sin ejecución comprobada**.
+**Estado:** configuración reconstruida documentalmente; sin ejecución ni validación física. Los archivos de condiciones de contorno y propiedades conservan sus valores originales.
 
-## Archivos presentes
+## Preparación y cálculo
 
-- `0/U`
-- `0/alpha.water`
-- `0/p_rgh`
-- `constant/g`
-- `constant/transportProperties`
-- `constant/turbulenceProperties`
-- `system/blockMeshDict`
-- `system/fvSchemes`
-- `system/fvSolution`
-
-**Caso incompleto:** no se recuperó `system/controlDict`; no ejecutar hasta reconstruirlo desde una fuente comprobada.
-
-## Ejecución
-
-Este caso no dispone todavía de un lanzador verificado. Consultar los pasos de preparación del tutorial.
-
-
-## Preparación y ejecución
-
-Desde la raíz del repositorio, con el entorno OpenFOAM cargado:
+Desde la raíz del repositorio, con OpenFOAM.com cargado:
 
 ```bash
 cd cases/04-chorro-agua
 foamVersion
-blockMesh 2>&1 | tee log.blockMesh
-checkMesh 2>&1 | tee log.checkMesh
-# DETENIDO: es necesaria una migración o archivo de configuración pendiente
+blockMesh
+checkMesh
+foamDictionary system/controlDict -entry application -value
+interFoam
 ```
 
-**Estado:** No ejecutar todavía: falta system/controlDict. No hay un `Allrun` verificado para este caso.
+Alternativamente ejecutar `bash Allrun` desde el caso; no mezclar los dos procedimientos. El lanzador crea la malla, la comprueba y registra la ejecución. `Allmesh` ejecuta solamente mallado y `Allclean` protege resultados con previsualización.
 
-## Variaciones pequeñas
+## Decisiones
 
-Reducir la velocidad de entrada 20%; reducir maxCo; aumentar la frecuencia de escritura una vez recuperado controlDict.
+- `system/controlDict` reconstruido con solver `interFoam`, paso inicial pequeño y límites conservadores de Courant.
+- Se conserva el aire inicial en el dominio y el agua entrante (`alpha.water`). **No se requiere `setFields`** para este escenario.
+- Sin ejecutar el caso, no se puede garantizar compatibilidad completa de las condiciones de contorno y los esquemas con v2406/v2412.
 
-Modificar **una sola variable** en cada copia del caso y conservar el original. Si cambia `blockMeshDict`, regenerar la malla; no reutilizar resultados antiguos. Los casos `simpleFoam` son estacionarios y sus iteraciones no representan tiempo físico. Consultar también la [guía general](../../docs/guia-ejecucion-y-variantes.md).
+[Decisiones y detalles](COMPLETADO.md) · [Guía general](../../docs/guia-ejecucion-y-variantes.md)
 
+## Ensayos pequeños
 
-## Gráficos de propiedades y diagnóstico
-
-Consultar [Gráficos y propiedades](../../docs/graficos-y-propiedades.md) para seleccionar campos físicos y generar perfiles a partir de CSV exportados. Si hay un archivo `log.NOMBRE_SOLVER`, ejecutar desde la raíz del repositorio:
-
-```bash
-python scripts/plot_solver_log.py cases/04-chorro-agua/log.NOMBRE_SOLVER --output plots/04-chorro-agua
-```
-
-Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `scripts/plot_csv.py` sobre CSV con columnas adecuadas. Los casos 09 y 10A–10C ya incluyen `system/sampleDict`, que se conserva.
-
-
-## Actualización de configuración
-
-Se añadió `system/controlDict`, `Allrun`, `Allmesh` y `Allclean` para el modelo `interFoam` con fase inicial de aire (`alpha.water=0`) y entrada de agua (`alpha.water=1`). No se requiere `setFields` para esta condición inicial. Ver [explicación y parámetros](COMPLETADO.md). Las advertencias históricas anteriores sobre la ausencia de `controlDict` han quedado obsoletas; la compatibilidad física y funcional sigue sin comprobarse.
+Reducir velocidad de entrada 20 %, reducir `maxCo` a 0.25, o variar `writeInterval`. Probar un parámetro por copia limpia.
