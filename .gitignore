@@ -1,0 +1,26 @@
+# OpenFOAM: campos calculados y resultados
+**/[1-9]*/
+**/[1-9]*.[0-9]*/
+**/processor*/
+**/postProcessing/
+**/VTK/
+**/constant/polyMesh/
+**/log.*
+**/*.foam
+
+# Datos generados, imágenes de animación y videos
+*.mp4
+*.avi
+*.gif
+*.vtu
+*.vtk
+*.vtm
+*.pvd
+frame*.png
+
+# Python y sistema
+__pycache__/
+*.py[cod]
+.venv/
+.ipynb_checkpoints/
+.DS_Store
