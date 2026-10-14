@@ -8,4 +8,10 @@ FoamFile
     object transportProperties;
 }
 transportModel Newtonian;
+// Referencias aproximadas a 20 C para fluidos NEWTONIANOS:
+// Agua: nu = 1.00e-6 m2/s; etanol puro: 1.52e-6 m2/s;
+// glicerina pura: 1.18e-3 m2/s. NO se aplican directamente a
+// este caso no newtoniano sin ajustar su modelo constitutivo.
+// Ver docs/propiedades-de-materiales.md.
 nu [0 2 -1 0 0 0 0] 1e-4;
+

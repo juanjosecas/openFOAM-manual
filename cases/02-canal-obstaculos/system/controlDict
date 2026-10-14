@@ -31,4 +31,3 @@ timeFormat general;
 timePrecision 6;
 
 runTimeModifiable true;
-Aumentamos el límite de iteraciones a 1500. La presencia del obstáculo puede dificultar la convergencia respecto del canal vacío.

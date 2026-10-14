@@ -31,4 +31,3 @@ timeFormat general;
 timePrecision 6;
 
 runTimeModifiable true;
-Las 2000 unidades corresponden al límite máximo de iteraciones del solver estacionario, no a 2000 segundos físicos.
