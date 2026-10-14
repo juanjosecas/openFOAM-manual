@@ -5,6 +5,8 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+// NOTA DEL MANUAL: Presion: leer dimensions antes de graficar en pascales.
+// Caso heredado. Valores originales preservados; revisar compatibilidad.
 FoamFile
 {
     version     2.0;

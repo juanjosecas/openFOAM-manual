@@ -5,6 +5,8 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+// NOTA DEL MANUAL: Propiedades del fluido; nu es viscosidad cinematica [m2/s].
+// Caso heredado. Valores originales preservados; revisar compatibilidad.
 FoamFile
 {
     version     2.0;
