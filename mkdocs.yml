@@ -28,6 +28,10 @@ nav:
       - 11 · Rotura de presa: tutoriales/11-dambreak-2d.md
       - 12 · Goldschmidt: tutoriales/12-goldschmidt-particulas.md
       - 13 · STL y snappyHexMesh: stl-snappyhexmesh.md
+  - Investigación y futuros casos:
+      - Fuentes y URLs originales: investigacion-fuentes-openfoam.md
+      - Difusión y liberación de fármacos: propuesta-difusion-farmacos.md
+      - Hoja de ruta: investigacion-hoja-de-ruta.md
   - Postprocesamiento:
       - Gráficos y propiedades: graficos-y-propiedades.md
       - Exportación de datos: tutoriales/01-anexo-exportacion.md

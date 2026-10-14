@@ -32,3 +32,8 @@ La migración de los tutoriales existentes se realizará de manera progresiva si
 ## Extensiones opcionales
 
 Los casos contienen scripts `Allmesh` y `Allclean` cuando usan `blockMesh`, y varias carpetas `variants/` y `postprocessing/` para ampliar los ejemplos sin modificar el original. Consultar [el portal de contenidos](docs/index.md#archivos-opcionales-y-ampliaciones).
+
+
+## Investigación de nuevas aplicaciones
+
+Se incorporó un [catálogo de tutoriales externos con sus URLs originales](docs/investigacion-fuentes-openfoam.md), una [propuesta biofísica de difusión y liberación de fármacos](docs/propuesta-difusion-farmacos.md) y una [hoja de ruta de futuros casos](docs/investigacion-hoja-de-ruta.md). Son referencias y proyectos **no implementados ni validados**; no se han copiado ni ejecutado casos externos.

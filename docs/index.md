@@ -87,3 +87,12 @@ Las extensiones **no resuelven** los archivos ausentes de los casos 04 y 07 ni a
 ## De régimen estacionario a transitorio
 
 [Guía de conversión `simpleFoam` → `pimpleFoam`](simplefoam-a-transitorio.md): cuándo conviene, qué diccionarios cambian, dificultad, número de Courant, inicialización y resultados adicionales que pueden obtenerse.
+
+
+## Investigación externa y futuras aplicaciones científicas
+
+- [Catálogo de fuentes con URL original](investigacion-fuentes-openfoam.md): transporte escalar, biofísica, calor, turbulencia, FSI y referencias de malla; clasifica duplicados y dependencias.
+- [Proyecto 14A–14E: difusión y liberación de fármacos](propuesta-difusion-farmacos.md): ecuaciones, unidades, modelos de liberación, condiciones de contorno, validación analítica y observables.
+- [Hoja de ruta de aplicaciones nuevas](investigacion-hoja-de-ruta.md): prioridades y requisitos antes de convertir fuentes externas en casos reproducibles.
+
+**Importante:** estos documentos son una **investigación y propuestas**, no nuevos casos CFD ejecutables; los enlaces originales no implican compatibilidad automática con OpenFOAM.com v2406/v2412.
