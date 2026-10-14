@@ -12,6 +12,7 @@ nav:
   - Gráficos y propiedades: graficos-y-propiedades.md
   - Propiedades de materiales: propiedades-de-materiales.md
   - PyVista: pyvista.md
+  - STL y snappyHexMesh: stl-snappyhexmesh.md
 markdown_extensions:
   - admonition
   - pymdownx.superfences
