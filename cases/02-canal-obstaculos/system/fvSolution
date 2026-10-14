@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: Solvers lineales, tolerancias y acoplamiento presion-velocidad; no retirar entradas sin comprobar cuales consulta el solver.
+// Mantener la fisica y los valores originales; verificar compatibilidad con la version instalada.
 FoamFile
 {
     version 2.0;

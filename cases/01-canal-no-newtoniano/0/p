@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: Presion del solver: comprobar dimensions antes de rotular Pa. En varios solvers incompresibles se utiliza presion cinematica.
+// Mantener la fisica y los valores originales; verificar compatibilidad con la version instalada.
 FoamFile
 {
     version     2.0;

@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: Velocidad en m/s; boundaryField debe coincidir con los nombres de patches. fixedValue impone velocidad; zeroGradient no fija el valor.
+// Mantener la fisica y los valores originales; verificar compatibilidad con la version instalada.
 FoamFile
 {
     version 2.0;

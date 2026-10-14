@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: application indica el solver; endTime limita iteraciones de simpleFoam. writeInterval controla archivos guardados, no la resolucion fisica.
+// Mantener la fisica y los valores originales; verificar compatibilidad con la version instalada.
 FoamFile
 {
     version 2.0;
