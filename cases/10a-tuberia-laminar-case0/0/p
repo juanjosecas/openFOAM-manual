@@ -5,6 +5,8 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+// NOTA DEL MANUAL: Presion; verificar las dimensiones del campo y la referencia.
+// Archivo heredado de Foundation: revisar compatibilidad con OpenFOAM.com.
 FoamFile
 {
     version     2.0;

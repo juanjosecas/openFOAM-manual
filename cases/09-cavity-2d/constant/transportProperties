@@ -5,6 +5,8 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+// NOTA DEL MANUAL: Viscosidad del fluido. Valores del caso heredado, no actualizados sin verificar compatibilidad.
+// Archivo heredado de Foundation: revisar compatibilidad con OpenFOAM.com.
 FoamFile
 {
     version     2.0;
