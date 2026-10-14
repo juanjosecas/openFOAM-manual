@@ -148,3 +148,12 @@ Español técnico claro, sin antropomorfismos ni frases promocionales. Presentar
 - [Código OpenFOAM](https://gitlab.com/openfoam/core/openfoam)
 - [Estructura estándar del caso](https://www.openfoam.com/documentation/user-guide/2-openfoam-cases/2.1-file-structure-of-openfoam-cases)
 - [Formato de entrada y salida](https://www.openfoam.com/documentation/user-guide/2-openfoam-cases/2-2-basic-inputoutput-file-format)
+
+
+## 10. Extensiones y archivos opcionales
+
+- `Allmesh`: construye malla mediante `blockMesh` y ejecuta `checkMesh`, **sin solver**. Se detiene si existe una malla anterior.
+- `Allclean`: sin opciones, enumera las rutas generadas; con `--yes`, borra solamente mallas, logs, tiempos posteriores a cero y directorios calculados. Conserva `0/`, `system/` y `constant/` (excepto su `polyMesh` generado).
+- `variants/README.md`: describe las variaciones pequeñas sobre copias del caso, sin duplicar todos los archivos fuente.
+- `postprocessing/probes.function`: fragmento de función opcional. Para activarlo debe integrarse en `functions` de `controlDict`, previa comprobación de versión y de que los puntos están dentro del fluido.
+- Las carpetas `plots/`, `postProcessing/` y tiempos calculados se consideran resultados; **no ignorar el directorio inicial `0/`**.

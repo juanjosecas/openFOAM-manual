@@ -63,3 +63,15 @@ Portal de contenidos del repositorio [openFOAM-manual](https://github.com/juanjo
 ## Mantenimiento del índice
 
 **Regla editorial:** todo nuevo tutorial debe incorporarse a esta página, a la navegación en `mkdocs.yml` y, cuando corresponda, vincular su directorio en `cases/`. Si se añade un caso sin tutorial, describirlo aquí como caso auxiliar. No anunciar un enlace ni el estado «ejecutable» hasta confirmar que el archivo existe y que los componentes necesarios están presentes. Las ecuaciones se escriben como `$...$` (en línea) y `$$...$$` (en bloque).
+
+
+## Archivos opcionales y ampliaciones
+
+Los directorios `variants/` documentan tres ajustes pequeños por caso. No sustituyen las condiciones originales: copiar un caso antes de aplicar una variante y modificar **un parámetro por vez**.
+
+- Los casos **01, 02, 03 y 08** contienen `postprocessing/probes.function`: configuración de sondas *opcional*, sin activar automáticamente.
+- Los casos con malla `blockMesh` tienen `Allmesh` para construir y comprobar la malla, y `Allclean` con previsualización de archivos a limpiar. Para borrar resultados hay que usar `bash Allclean --yes`; **no se elimina `0/`**.
+- Los casos 01–03, 08–12 y 13 incluyen `variants/README.md`, con propuestas de variación y criterios para conservar el caso base.
+- [`compare_variants.py`](https://github.com/juanjosecas/openFOAM-manual/blob/main/scripts/compare_variants.py) genera una comparación de perfiles CSV de distintas corridas; no ejecuta el solver.
+
+Las extensiones **no resuelven** los archivos ausentes de los casos 04 y 07 ni adaptan automáticamente el caso 12, procedente de OpenFOAM Foundation 8. El tutorial 05 continúa siendo conceptual y el 06 corresponde a automatización, no a un caso CFD independiente.

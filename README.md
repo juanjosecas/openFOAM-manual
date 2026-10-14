@@ -27,3 +27,8 @@ La migración de los tutoriales existentes se realizará de manera progresiva si
 - [Código fuente de OpenFOAM](https://gitlab.com/openfoam/core/openfoam).
 - [Estructura de casos](https://www.openfoam.com/documentation/user-guide/2-openfoam-cases/2.1-file-structure-of-openfoam-cases).
 - [Formato de archivos y diccionarios](https://www.openfoam.com/documentation/user-guide/2-openfoam-cases/2-2-basic-inputoutput-file-format).
+
+
+## Extensiones opcionales
+
+Los casos contienen scripts `Allmesh` y `Allclean` cuando usan `blockMesh`, y varias carpetas `variants/` y `postprocessing/` para ampliar los ejemplos sin modificar el original. Consultar [el portal de contenidos](docs/index.md#archivos-opcionales-y-ampliaciones).
