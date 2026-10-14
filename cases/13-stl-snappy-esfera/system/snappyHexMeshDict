@@ -1,0 +1,103 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object snappyHexMeshDict;
+}
+
+// Genera una malla conforme a la superficie STL dentro de la malla de fondo.
+castellatedMesh true;   // Celdas cercanas al objeto y recorte.
+snap            true;   // Ajuste de puntos a la superficie triangulada.
+addLayers       false;  // Etapa de capas límite desactivada para el primer ejemplo.
+
+geometry
+{
+    sphere.stl
+    {
+        type triSurfaceMesh;
+        name sphere;
+    }
+}
+
+castellatedMeshControls
+{
+    maxLocalCells 100000;
+    maxGlobalCells 500000;
+    minRefinementCells 0;
+    maxLoadUnbalance 0.10;
+    nCellsBetweenLevels 2;
+
+    // Sin archivo eMesh: esfera sin aristas afiladas.
+    features ();
+
+    refinementSurfaces
+    {
+        sphere
+        {
+            level (1 2);  // Nivel de refinamiento próximo al STL.
+            patchInfo { type wall; }
+        }
+    }
+    resolveFeatureAngle 30;
+    refinementRegions {};
+
+    // Punto FUERA del sólido y DENTRO de la caja, en metros.
+    // Mantiene la región conectada que contiene este punto.
+    locationInMesh (1.5 0 0);
+    allowFreeStandingZoneFaces true;
+}
+
+snapControls
+{
+    nSmoothPatch 3;
+    tolerance 2.0;
+    nSolveIter 30;
+    nRelaxIter 5;
+    nFeatureSnapIter 0;
+    implicitFeatureSnap false;
+    explicitFeatureSnap false;
+    multiRegionFeatureSnap false;
+}
+
+// Opciones no utilizadas mientras addLayers sea false; se conservan como
+// parámetros mínimos explícitos por compatibilidad con el diccionario.
+addLayersControls
+{
+    relativeSizes true;
+    layers {};
+    expansionRatio 1.0;
+    finalLayerThickness 0.3;
+    minThickness 0.1;
+    nGrow 0;
+    featureAngle 60;
+    nRelaxIter 3;
+    nSmoothSurfaceNormals 1;
+    nSmoothNormals 3;
+    nSmoothThickness 10;
+    maxFaceThicknessRatio 0.5;
+    maxThicknessToMedialRatio 0.3;
+    minMedialAxisAngle 90;
+    nBufferCellsNoExtrude 0;
+    nLayerIter 30;
+}
+
+meshQualityControls
+{
+    maxNonOrtho 65;
+    maxBoundarySkewness 20;
+    maxInternalSkewness 4;
+    maxConcave 80;
+    minVol 1e-13;
+    minTetQuality -1e30;
+    minArea -1;
+    minTwist 0.02;
+    minDeterminant 0.001;
+    minFaceWeight 0.02;
+    minVolRatio 0.01;
+    minTriangleTwist -1;
+    nSmoothScale 4;
+    errorReduction 0.75;
+}
+
+mergeTolerance 1e-6;

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+if ! command -v blockMesh >/dev/null 2>&1 || ! command -v snappyHexMesh >/dev/null 2>&1; then
+    echo "ERROR: cargue el entorno de OpenFOAM." >&2
+    exit 1
+fi
+if [[ ! -f constant/triSurface/sphere.stl ]]; then
+    echo "ERROR: falta constant/triSurface/sphere.stl; generarlo con Python." >&2
+    exit 1
+fi
+if [[ -e constant/polyMesh/points ]]; then
+    echo "ERROR: ya existe una malla; use una copia limpia del caso para evitar mezclar resultados." >&2
+    exit 1
+fi
+surfaceCheck constant/triSurface/sphere.stl > log.surfaceCheck 2>&1
+blockMesh > log.blockMesh 2>&1
+checkMesh > log.checkMeshBase 2>&1
+snappyHexMesh -overwrite > log.snappyHexMesh 2>&1
+checkMesh > log.checkMesh 2>&1
+echo "Mallado completado. Revisar logs y calidad de malla antes de usarla con un solver."
