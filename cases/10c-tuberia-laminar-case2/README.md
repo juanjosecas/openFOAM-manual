@@ -21,3 +21,8 @@
 ## Ejecución
 
 Este caso no dispone todavía de un lanzador verificado. Consultar los pasos de preparación del tutorial.
+
+
+## Comandos y variaciones controladas
+
+Ver [instrucciones de mallado, verificación, solver y ensayos pequeños](../../docs/guia-ejecucion-y-variantes.md). La guía señala expresamente los casos incompletos o heredados que **todavía no deben ejecutarse** sin adaptación. Ningún caso fue ejecutado durante esta revisión.
