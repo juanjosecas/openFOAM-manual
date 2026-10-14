@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+command -v blockMesh >/dev/null || { echo "ERROR: cargar OpenFOAM" >&2; exit 2; }
+command -v checkMesh >/dev/null || { echo "ERROR: falta checkMesh" >&2; exit 2; }
+[[ ! -e constant/polyMesh/points ]] || { echo "ERROR: malla previa; usar copia limpia" >&2; exit 3; }
+blockMesh > log.blockMesh 2>&1 || { tail -n 60 log.blockMesh >&2; exit 1; }
+checkMesh > log.checkMesh 2>&1 || { tail -n 60 log.checkMesh >&2; exit 1; }
+echo "Malla generada; revisar log.checkMesh"

@@ -12,6 +12,7 @@ nav:
       - Ejecución y variantes: guia-ejecucion-y-variantes.md
       - De simpleFoam a transitorio: simplefoam-a-transitorio.md
       - Propiedades de materiales: propiedades-de-materiales.md
+      - Estándar de casos autocontenidos: estandar-casos-autocontenidos.md
   - Tutoriales:
       - 01 · Canal no newtoniano: tutoriales/01-canal-no-newtoniano.md
       - 02 · Canal con obstáculos: tutoriales/02-canal-obstaculos.md
@@ -28,6 +29,7 @@ nav:
       - 11 · Rotura de presa: tutoriales/11-dambreak-2d.md
       - 12 · Goldschmidt: tutoriales/12-goldschmidt-particulas.md
       - 13 · STL y snappyHexMesh: stl-snappyhexmesh.md
+      - 14A · Difusión de fármaco (caso autocontenido): https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-farmaco
   - Investigación y futuros casos:
       - Fuentes y URLs originales: investigacion-fuentes-openfoam.md
       - Difusión y liberación de fármacos: propuesta-difusion-farmacos.md

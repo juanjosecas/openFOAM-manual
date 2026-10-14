@@ -1,0 +1,25 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    location "system";
+    object controlDict;
+}
+
+application scalarTransportFoam;
+startFrom startTime;
+startTime 0;
+stopAt endTime;
+endTime 200;             // 200 s físicos.
+deltaT 1;                // Integración Euler implícita.
+adjustTimeStep no;
+writeControl runTime;
+writeInterval 20;        // Estados 0,20,...,200 s.
+purgeWrite 0;
+writeFormat ascii;
+writePrecision 9;
+writeCompression off;
+timeFormat general;
+timePrecision 8;
+runTimeModifiable false;

@@ -1,0 +1,28 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class volScalarField;
+    location "0";
+    object T;
+}
+
+// T representa C/C0, NO temperatura; concentración normalizada [-].
+dimensions [0 0 0 0 0 0 0];
+internalField uniform 0;
+boundaryField
+{
+    source
+    {
+        type fixedValue;
+        value uniform 1; // Reservorio ideal infinito en x=0.
+    }
+    farEnd
+    {
+        type zeroGradient; // Sin flujo difusivo en x=L.
+    }
+    transverse
+    {
+        type empty;
+    }
+}

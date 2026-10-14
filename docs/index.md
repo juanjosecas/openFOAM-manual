@@ -96,3 +96,11 @@ Las extensiones **no resuelven** los archivos ausentes de los casos 04 y 07 ni a
 - [Hoja de ruta de aplicaciones nuevas](investigacion-hoja-de-ruta.md): prioridades y requisitos antes de convertir fuentes externas en casos reproducibles.
 
 **Importante:** estos documentos son una **investigación y propuestas**, no nuevos casos CFD ejecutables; los enlaces originales no implican compatibilidad automática con OpenFOAM.com v2406/v2412.
+
+
+## Nuevo caso 14A: difusión de concentración normalizada
+
+- [Caso 14A autocontenido](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-farmaco): `scalarTransportFoam`, `0/T`, `0/U`, `DT`, malla 1D, scripts propios y CSV/PNG/GIF. **Revisión estática; no ejecutado.**
+- [Estándar obligatorio para futuros casos](estandar-casos-autocontenidos.md): estructura, scripts, variantes, procedencia y verificaciones.
+
+Las fases 14B–14E y los casos 15–22 siguen siendo propuestas, no carpetas de simulación.

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+command -v scalarTransportFoam >/dev/null || { echo "ERROR: falta scalarTransportFoam en esta versión" >&2; exit 2; }
+[[ ! -e constant/polyMesh/points ]] && bash Allmesh
+scalarTransportFoam > log.scalarTransportFoam 2>&1 || { tail -n 80 log.scalarTransportFoam >&2; exit 1; }
+echo "Solver finalizado. Para CSV/PNG/GIF: python3 postprocessing/analizar.py"

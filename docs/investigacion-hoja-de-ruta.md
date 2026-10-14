@@ -40,3 +40,8 @@ Las numeraciones son **reservas editoriales**, no directorios `cases/` existente
 ## Advertencias sobre el informe fuente
 
 La investigación original sugería importar nuevamente `cavity`, `damBreak`, `Goldschmidt`, PyVista y STL, pero **esos temas ya están en el manual**. Por eso se preservan sus enlaces como complementos, no como nuevos tutoriales. También mencionaba archivos de algunos sitios sin descargarlos ni verificar su licencia; aquí se los trata como **recursos por inspeccionar**. No se copió código ajeno.
+
+
+## Implementación documental inicial
+
+El [caso 14A](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-farmaco) ya tiene estructura, diccionarios y postprocesamiento autocontenidos, **sin ejecución ni validación**. El resto de casos numerados de esta hoja sigue pendiente de implementación. Consultar el [estándar de autocontención](estandar-casos-autocontenidos.md).

@@ -1,0 +1,47 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    location "system";
+    object blockMeshDict;
+}
+
+// Dominio 1D: L=2 mm; sección ficticia 0.1 x 0.1 mm.
+// Los patches transverse son empty; solo se resuelve la dirección x.
+scale 1;
+vertices
+(
+    (0 0 0) (0.002 0 0) (0.002 0.0001 0) (0 0.0001 0)
+    (0 0 0.0001) (0.002 0 0.0001) (0.002 0.0001 0.0001) (0 0.0001 0.0001)
+);
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (200 1 1) simpleGrading (1 1 1)
+);
+edges ();
+boundary
+(
+    source
+    {
+        type patch;
+        faces ((0 4 7 3));
+    }
+    farEnd
+    {
+        type patch;
+        faces ((1 2 6 5));
+    }
+    transverse
+    {
+        type empty;
+        faces
+        (
+            (0 1 5 4)
+            (3 7 6 2)
+            (0 3 2 1)
+            (4 5 6 7)
+        );
+    }
+);
+mergePatchPairs ();
