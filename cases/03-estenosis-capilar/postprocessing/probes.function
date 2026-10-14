@@ -1,0 +1,16 @@
+// Fragmento OPCIONAL para system/controlDict, dentro de functions { ... }.
+// No se activa por estar en esta carpeta. Coordenadas en metros.
+// Leer campos U y p; revisar las unidades de p en cada solver.
+caseProbes
+{
+    type probes;
+    libs ("libsampling.so");
+    enabled true;
+    fields (U p);
+    probeLocations
+    (
+        (2e-5 5e-6 5e-7)
+        (5e-5 5e-6 5e-7)
+        (8e-5 5e-6 5e-7)
+    );
+}
