@@ -10,6 +10,7 @@ nav:
   - Estructura y estilo: estructura-y-estilo.md
   - Ejecución y variantes: guia-ejecucion-y-variantes.md
   - Gráficos y propiedades: graficos-y-propiedades.md
+  - Propiedades de materiales: propiedades-de-materiales.md
 markdown_extensions:
   - admonition
   - pymdownx.superfences
