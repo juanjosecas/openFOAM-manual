@@ -5,6 +5,8 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+// NOTA DEL MANUAL: Malla y patches. Tras modificar ejecutar blockMesh y checkMesh.
+// Caso heredado: valores conservados y compatibilidad aun no verificada.
 FoamFile
 {
     version     2.0;

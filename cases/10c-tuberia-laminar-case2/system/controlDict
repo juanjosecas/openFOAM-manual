@@ -5,6 +5,8 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+// NOTA DEL MANUAL: Solver, iteraciones o tiempo y frecuencia de resultados. simpleFoam es estacionario.
+// Caso heredado: valores conservados y compatibilidad aun no verificada.
 FoamFile
 {
     version     2.0;
