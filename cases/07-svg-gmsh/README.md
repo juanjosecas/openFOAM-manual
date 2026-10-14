@@ -52,3 +52,8 @@ python scripts/plot_solver_log.py cases/07-svg-gmsh/log.NOMBRE_SOLVER --output p
 ```
 
 Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `scripts/plot_csv.py` sobre CSV con columnas adecuadas. Los casos 09 y 10A–10C ya incluyen `system/sampleDict`, que se conserva.
+
+
+## Nueva alternativa autocontenida
+
+Se añadieron `scripts/generar_canal_gmsh.py`, `scripts/ajustar_patches_gmsh.py` y `Allrun` para generar un **canal rectangular de referencia**, sin el SVG original. Ver [explicación completa](COMPLETADO.md). Es una variante didáctica, no una reconstrucción del antiguo SVG; sin prueba de ejecución.

@@ -51,3 +51,8 @@ python scripts/plot_solver_log.py cases/04-chorro-agua/log.NOMBRE_SOLVER --outpu
 ```
 
 Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `scripts/plot_csv.py` sobre CSV con columnas adecuadas. Los casos 09 y 10A–10C ya incluyen `system/sampleDict`, que se conserva.
+
+
+## Actualización de configuración
+
+Se añadió `system/controlDict`, `Allrun`, `Allmesh` y `Allclean` para el modelo `interFoam` con fase inicial de aire (`alpha.water=0`) y entrada de agua (`alpha.water=1`). No se requiere `setFields` para esta condición inicial. Ver [explicación y parámetros](COMPLETADO.md). Las advertencias históricas anteriores sobre la ausencia de `controlDict` han quedado obsoletas; la compatibilidad física y funcional sigue sin comprobarse.

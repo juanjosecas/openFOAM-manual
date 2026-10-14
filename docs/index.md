@@ -20,10 +20,10 @@ Portal de contenidos del repositorio [openFOAM-manual](https://github.com/juanjo
 | 01 | [Canal 2D no newtoniano](tutoriales/01-canal-no-newtoniano.md) | [Caso 01](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/01-canal-no-newtoniano) | Configuración disponible; `simpleFoam` estacionario |
 | 02 | [Canal con obstáculos](tutoriales/02-canal-obstaculos.md) | [Caso 02](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/02-canal-obstaculos) | Configuración disponible; `simpleFoam` estacionario |
 | 03 | [Estenosis capilar](tutoriales/03-estenosis-capilar.md) | [Caso 03](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/03-estenosis-capilar) | Configuración disponible; `simpleFoam` estacionario |
-| 04 | [Chorro de agua](tutoriales/04-chorro-agua.md) | [Caso 04](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/04-chorro-agua) | **Incompleto:** falta `system/controlDict` |
+| 04 | [Chorro de agua](tutoriales/04-chorro-agua.md) | [Caso 04](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/04-chorro-agua) | Control temporal reconstruido; pendiente de validación |
 | 05 | [Esfera en agua](tutoriales/05-esfera-agua.md) | — | Conceptual: no existe un caso autónomo completo |
 | 06 | [Automatización con foamlib](tutoriales/06-foamlib.md) | — | Guía Python; no es un caso CFD independiente |
-| 07 | [Geometrías SVG/Gmsh](tutoriales/07-svg-gmsh.md) | [Caso 07](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/07-svg-gmsh) | **Incompleto:** faltan SVG y scripts de geometría |
+| 07 | [Geometrías SVG/Gmsh](tutoriales/07-svg-gmsh.md) | [Caso 07](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/07-svg-gmsh) | Alternativa Gmsh disponible; SVG original pendiente |
 | 08 | [Tubería cilíndrica 3D transitoria](tutoriales/08-tuberia-cilindrica-3d.md) | [Caso 08](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/08-tuberia-cilindrica-3d) | `pimpleFoam`; revisión documental |
 | 09 | [Cavidad 2D con tapa móvil](tutoriales/09-cavity-2d.md) | [Caso 09](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/09-cavity-2d) | Heredado de Foundation; `icoFoam` |
 | 10A | [Tubería laminar, variante 0](tutoriales/10a-tuberia-laminar-case0.md) | [Caso 10A](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/10a-tuberia-laminar-case0) | Heredado; `icoFoam` |
@@ -75,3 +75,10 @@ Los directorios `variants/` documentan tres ajustes pequeños por caso. No susti
 - [`compare_variants.py`](https://github.com/juanjosecas/openFOAM-manual/blob/main/scripts/compare_variants.py) genera una comparación de perfiles CSV de distintas corridas; no ejecuta el solver.
 
 Las extensiones **no resuelven** los archivos ausentes de los casos 04 y 07 ni adaptan automáticamente el caso 12, procedente de OpenFOAM Foundation 8. El tutorial 05 continúa siendo conceptual y el 06 corresponde a automatización, no a un caso CFD independiente.
+
+
+## Actualizaciones de los casos previamente incompletos
+
+- [Chorro de agua: configuración temporal reconstruida](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/04-chorro-agua/COMPLETADO.md).
+- [SVG/Gmsh: alternativa rectangular reproducible](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/07-svg-gmsh/COMPLETADO.md). El SVG histórico no está disponible.
+- [Goldschmidt: dependencias que no es seguro inventar](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/12-goldschmidt-particulas/PENDIENTES.md).
