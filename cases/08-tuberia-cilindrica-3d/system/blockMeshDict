@@ -1,3 +1,7 @@
+// NOTA DEL MANUAL: vertices definen la geometria; blocks define celdas y grading;
+// boundary fija patches y condiciones geométricas. Asegurar la orientacion de
+// los bloques y correspondencia exacta con las condiciones de 0/U y 0/p.
+// Si se edita este archivo, reconstruir la malla con blockMesh y checkMesh.
 FoamFile
 {
     version 2.0;
