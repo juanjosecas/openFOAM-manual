@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+echo "Limpiar salidas generadas sin tocar 0/, system/ ni propiedades iniciales."
+if [[ "${1:-}" != "--yes" ]]; then
+  echo "Vista previa: constant/polyMesh, logs, postProcessing, VTK, processor*, tiempos > 0"
+  echo "Ejecute bash Allclean --yes únicamente sobre una copia descartable."
+  exit 0
+fi
+rm -rf -- constant/polyMesh postProcessing VTK
+find . -mindepth 1 -maxdepth 1 -name 'log.*' -type f -delete
+find . -mindepth 1 -maxdepth 1 -type d -name 'processor[0-9]*' -exec rm -rf -- {} +
+find . -mindepth 1 -maxdepth 1 -type d -regex './[0-9]+\(\.[0-9]+\)?' ! -name '0' -exec rm -rf -- {} +

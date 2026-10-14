@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+for cmd in blockMesh checkMesh; do command -v "$cmd" >/dev/null || exit 2; done
+[[ ! -e constant/polyMesh/points ]] || { echo "Hay malla previa; usar una copia limpia." >&2; exit 3; }
+blockMesh 2>&1 | tee log.blockMesh
+checkMesh 2>&1 | tee log.checkMesh

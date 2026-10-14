@@ -1,0 +1,35 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object controlDict;
+}
+
+// interFoam: dos fases incompresibles (agua/aire), malla fija.
+// Edición objetivo: OpenFOAM.com v2406; sin prueba de ejecución.
+application interFoam;
+
+// Iniciar desde los campos originales en 0/.
+startFrom startTime;
+startTime 0;
+stopAt endTime;
+endTime 0.30;
+
+// Paso inicial pequeño; el solver puede reducirlo por Courant.
+deltaT 1e-5;
+adjustTimeStep yes;
+maxCo 0.35;
+maxAlphaCo 0.35;
+maxDeltaT 2e-4;
+
+// Escribir cada 0.005 s de tiempo físico: hasta 60 estados.
+writeControl adjustableRunTime;
+writeInterval 0.005;
+purgeWrite 0;
+writeFormat ascii;
+writePrecision 8;
+writeCompression off;
+timeFormat fixed;
+timePrecision 6;
+runTimeModifiable true;

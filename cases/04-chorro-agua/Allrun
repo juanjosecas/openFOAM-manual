@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+for cmd in blockMesh checkMesh interFoam foamDictionary; do
+    command -v "$cmd" >/dev/null || { echo "ERROR: falta $cmd; cargue OpenFOAM.com." >&2; exit 1; }
+done
+[[ ! -e constant/polyMesh/points ]] || { echo "ERROR: malla previa presente; trabajar en copia limpia." >&2; exit 1; }
+blockMesh > log.blockMesh 2>&1 || { tail -n 60 log.blockMesh >&2; exit 1; }
+checkMesh > log.checkMesh 2>&1 || { tail -n 60 log.checkMesh >&2; exit 1; }
+solver=$(foamDictionary system/controlDict -entry application -value)
+[[ "$solver" == "interFoam" ]] || { echo "ERROR: se esperaba interFoam, no $solver" >&2; exit 1; }
+# El campo inicial alpha.water = 0 significa aire en el dominio;
+# alpha.water = 1 en waterInlet introduce agua. NO es necesario setFields
+# mientras se mantenga esta inicialización.
+interFoam 2>&1 | tee log.interFoam
