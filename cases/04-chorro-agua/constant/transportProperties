@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: Nu expresa viscosidad cinematica [m2/s]. Cuando aparecen rho y sigma, expresan densidad [kg/m3] y tension superficial [N/m]. En sistemas multifasicos las propiedades corresponden a cada fase.
+// Valores originales conservados. Consultar docs/propiedades-de-materiales.md.
 FoamFile
 {
     version     2.0;
