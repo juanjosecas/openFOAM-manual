@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: Solucion de sistemas lineales y acoplamiento; tolerancias alteran convergencia.
+// Se conservan todos los parametros numericos y fisicos del caso fuente.
 FoamFile
 {
     version 2.0;

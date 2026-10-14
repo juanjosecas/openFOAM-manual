@@ -1,3 +1,5 @@
+// NOTA DEL MANUAL: Control de solver, tiempo o iteraciones y escrituras. simpleFoam es estacionario y pimpleFoam transitorio.
+// Se conservan todos los parametros numericos y fisicos del caso fuente.
 FoamFile
 {
     version 2.0;
