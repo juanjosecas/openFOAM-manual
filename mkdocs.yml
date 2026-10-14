@@ -1,20 +1,39 @@
 site_name: Manual práctico de OpenFOAM
-site_description: Tutoriales reproducibles y transitorios de OpenFOAM.com
+site_description: Tutoriales reproducibles de OpenFOAM.com en español
 site_url: https://juanjosecas.github.io/openFOAM-manual/
 repo_url: https://github.com/juanjosecas/openFOAM-manual
 theme:
   name: material
   language: es
 nav:
-  - Inicio: index.md
-  - Estructura y estilo: estructura-y-estilo.md
-  - Ejecución y variantes: guia-ejecucion-y-variantes.md
-  - Gráficos y propiedades: graficos-y-propiedades.md
-  - Propiedades de materiales: propiedades-de-materiales.md
-  - PyVista: pyvista.md
-  - STL y snappyHexMesh: stl-snappyhexmesh.md
+  - Portal: index.md
+  - Comenzar:
+      - Estructura y estilo: estructura-y-estilo.md
+      - Ejecución y variantes: guia-ejecucion-y-variantes.md
+      - Propiedades de materiales: propiedades-de-materiales.md
+  - Tutoriales:
+      - 01 · Canal no newtoniano: tutoriales/01-canal-no-newtoniano.md
+      - 02 · Canal con obstáculos: tutoriales/02-canal-obstaculos.md
+      - 03 · Estenosis capilar: tutoriales/03-estenosis-capilar.md
+      - 04 · Chorro de agua: tutoriales/04-chorro-agua.md
+      - 05 · Esfera en agua: tutoriales/05-esfera-agua.md
+      - 06 · Automatización con foamlib: tutoriales/06-foamlib.md
+      - 07 · SVG y Gmsh: tutoriales/07-svg-gmsh.md
+      - 08 · Tubería 3D transitoria: tutoriales/08-tuberia-cilindrica-3d.md
+      - 09 · Cavidad 2D: tutoriales/09-cavity-2d.md
+      - 10A · Tubería laminar 0: tutoriales/10a-tuberia-laminar-case0.md
+      - 10B · Tubería laminar 1: tutoriales/10b-tuberia-laminar-case1.md
+      - 10C · Tubería laminar 2: tutoriales/10c-tuberia-laminar-case2.md
+      - 11 · Rotura de presa: tutoriales/11-dambreak-2d.md
+      - 12 · Goldschmidt: tutoriales/12-goldschmidt-particulas.md
+      - 13 · STL y snappyHexMesh: stl-snappyhexmesh.md
+  - Postprocesamiento:
+      - Gráficos y propiedades: graficos-y-propiedades.md
+      - Exportación de datos: tutoriales/01-anexo-exportacion.md
+      - PyVista: pyvista.md
 markdown_extensions:
   - admonition
+  - tables
   - pymdownx.superfences
   - pymdownx.highlight
   - pymdownx.arithmatex:

@@ -1,12 +1,65 @@
 # Manual práctico de OpenFOAM
 
-Documentación en español, con casos autocontenidos, geometrías creadas sin CAD externo, simulaciones transitorias y visualización de resultados.
+Portal de contenidos del repositorio [openFOAM-manual](https://github.com/juanjosecas/openFOAM-manual). El manual está escrito en español y toma como referencia principal **OpenFOAM.com v2406**. Los casos de otras versiones se identifican como heredados y no se consideran automáticamente compatibles.
 
-> **Estado:** se está preparando la migración y comprobación de los tutoriales existentes. Ningún caso se presenta aquí como validado hasta superar pruebas de mallado y ejecución.
+> **Importante:** las instrucciones y scripts son material didáctico. Los casos no han sido validados mediante ejecución en esta revisión. Algunos están incompletos; consultar las advertencias de cada uno antes de utilizarlos.
 
-Comenzar por [la estructura del repositorio y las reglas editoriales](estructura-y-estilo.md).
+## Cómo empezar
 
+1. [Estructura del repositorio y convenciones editoriales](estructura-y-estilo.md): archivos `0/`, `constant/`, `system/`, unidades y comentarios.
+2. [Ejecución y pequeñas variantes por caso](guia-ejecucion-y-variantes.md): preparación, malla, preprocesamiento y solver.
+3. [Gráficos y propiedades físicas](graficos-y-propiedades.md): perfiles, residuos, campos y diagnóstico.
+4. [Propiedades de materiales](propiedades-de-materiales.md): ejemplos orientativos de agua, etanol y glicerina.
+5. [PyVista](pyvista.md): lectura de resultados, cortes, vectores y animaciones.
+6. [STL y snappyHexMesh](stl-snappyhexmesh.md): escalas, superficies STL y generación de mallas volumétricas.
 
-## Ejecución y variaciones
+## Tutoriales de simulación
 
-Consultar la [guía de comandos y pequeñas modificaciones por tutorial](guia-ejecucion-y-variantes.md). Incluye el estado de preparación de los casos incompletos y distingue ejecución estacionaria de transitoria.
+| Tutorial | Tema y documentación | Archivos del caso | Estado |
+| --- | --- | --- | --- |
+| 01 | [Canal 2D no newtoniano](tutoriales/01-canal-no-newtoniano.md) | [Caso 01](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/01-canal-no-newtoniano) | Configuración disponible; `simpleFoam` estacionario |
+| 02 | [Canal con obstáculos](tutoriales/02-canal-obstaculos.md) | [Caso 02](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/02-canal-obstaculos) | Configuración disponible; `simpleFoam` estacionario |
+| 03 | [Estenosis capilar](tutoriales/03-estenosis-capilar.md) | [Caso 03](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/03-estenosis-capilar) | Configuración disponible; `simpleFoam` estacionario |
+| 04 | [Chorro de agua](tutoriales/04-chorro-agua.md) | [Caso 04](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/04-chorro-agua) | **Incompleto:** falta `system/controlDict` |
+| 05 | [Esfera en agua](tutoriales/05-esfera-agua.md) | — | Conceptual: no existe un caso autónomo completo |
+| 06 | [Automatización con foamlib](tutoriales/06-foamlib.md) | — | Guía Python; no es un caso CFD independiente |
+| 07 | [Geometrías SVG/Gmsh](tutoriales/07-svg-gmsh.md) | [Caso 07](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/07-svg-gmsh) | **Incompleto:** faltan SVG y scripts de geometría |
+| 08 | [Tubería cilíndrica 3D transitoria](tutoriales/08-tuberia-cilindrica-3d.md) | [Caso 08](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/08-tuberia-cilindrica-3d) | `pimpleFoam`; revisión documental |
+| 09 | [Cavidad 2D con tapa móvil](tutoriales/09-cavity-2d.md) | [Caso 09](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/09-cavity-2d) | Heredado de Foundation; `icoFoam` |
+| 10A | [Tubería laminar, variante 0](tutoriales/10a-tuberia-laminar-case0.md) | [Caso 10A](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/10a-tuberia-laminar-case0) | Heredado; `icoFoam` |
+| 10B | [Tubería laminar, variante 1](tutoriales/10b-tuberia-laminar-case1.md) | [Caso 10B](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/10b-tuberia-laminar-case1) | Heredado; `icoFoam` |
+| 10C | [Tubería laminar, variante 2](tutoriales/10c-tuberia-laminar-case2.md) | [Caso 10C](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/10c-tuberia-laminar-case2) | Heredado; `simpleFoam` estacionario |
+| 11 | [Rotura de presa 2D](tutoriales/11-dambreak-2d.md) | [Caso 11](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/11-dambreak-2d) | Heredado; requiere `setFields` |
+| 12 | [Goldschmidt: partículas](tutoriales/12-goldschmidt-particulas.md) | [Caso 12](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/12-goldschmidt-particulas) | Heredado de Foundation 8; migración pendiente |
+| 13 | [STL → snappyHexMesh](stl-snappyhexmesh.md) | [Caso 13](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/13-stl-snappy-esfera) | Generación de malla, no incluye solver CFD |
+
+## Postprocesamiento y visualización
+
+| Recurso | Uso |
+| --- | --- |
+| [Exportación a VTK, CSV y otros programas](tutoriales/01-anexo-exportacion.md) | Preparación de resultados para aplicaciones externas |
+| [PyVista](pyvista.md) | Lectura directa de `.foam`, cortes, vectores y GIF |
+| [Gráficos de propiedades](graficos-y-propiedades.md) | Comparación de perfiles y diagnósticos |
+| [`plot_csv.py`](https://github.com/juanjosecas/openFOAM-manual/blob/main/scripts/plot_csv.py) | Gráficos de columnas exportadas a CSV |
+| [`plot_solver_log.py`](https://github.com/juanjosecas/openFOAM-manual/blob/main/scripts/plot_solver_log.py) | Residuos y número de Courant |
+| [`pyvista_openfoam.py`](https://github.com/juanjosecas/openFOAM-manual/blob/main/scripts/pyvista_openfoam.py) | Capturas PNG y GIF desde datos de OpenFOAM |
+
+## Geometría y preparación
+
+| Recurso | Uso |
+| --- | --- |
+| [STL y snappyHexMesh](stl-snappyhexmesh.md) | Importar STL, revisar unidades y generar malla volumétrica |
+| [`preparar_stl.py`](https://github.com/juanjosecas/openFOAM-manual/blob/main/scripts/preparar_stl.py) | Crear esfera STL o convertir milímetros/centímetros a metros |
+| [SVG y Gmsh](tutoriales/07-svg-gmsh.md) | Flujo de trabajo con Gmsh; archivos auxiliares pendientes |
+| [`audit_cases.py`](https://github.com/juanjosecas/openFOAM-manual/blob/main/scripts/audit_cases.py) | Auditoría estructural de casos sin ejecutarlos |
+
+## Archivos del proyecto
+
+- [README del repositorio](https://github.com/juanjosecas/openFOAM-manual/blob/main/README.md).
+- [Todos los casos](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases).
+- [Todos los scripts](https://github.com/juanjosecas/openFOAM-manual/tree/main/scripts).
+- [Convenciones de documentación y nomenclatura](estructura-y-estilo.md).
+
+## Mantenimiento del índice
+
+**Regla editorial:** todo nuevo tutorial debe incorporarse a esta página, a la navegación en `mkdocs.yml` y, cuando corresponda, vincular su directorio en `cases/`. Si se añade un caso sin tutorial, describirlo aquí como caso auxiliar. No anunciar un enlace ni el estado «ejecutable» hasta confirmar que el archivo existe y que los componentes necesarios están presentes. Las ecuaciones se escriben como `$...$` (en línea) y `$$...$$` (en bloque).

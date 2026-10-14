@@ -12,6 +12,8 @@ El objetivo es construir geometrías sin software CAD externo, ejecutar **simula
 - `assets/`: figuras ligeras y esquemas.
 - `references/`: fuentes y procedencia de los casos heredados.
 
+**Portal y tabla de contenidos:** [abrir el índice maestro](docs/index.md).
+
 Leer las [convenciones editoriales y técnicas](docs/estructura-y-estilo.md).
 
 ## Estado de los tutoriales
