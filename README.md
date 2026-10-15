@@ -46,3 +46,8 @@ Se incorporó un [catálogo de tutoriales externos con sus URLs originales](docs
 - [Otras fuentes: radiación, convección y tensiones térmicas](docs/ejemplos-calor-radiacion-solidos.md).
 
 Ambos casos tienen estructura autocontenida y postprocesamiento; **solo revisión estática, sin ejecución ni validación**.
+
+
+## Modelo óptico 2D/3D (sin CFD)
+
+- [25: refracción de rayos en una interfaz aire–agua](cases/25-refraccion-luz/README.md): ley de Snell, reflexión interna total, CSV, PNG, GIF y variantes. Modelo Python autocontenido, sin OpenFOAM; **no ejecutado ni validado**.

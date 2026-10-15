@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+if [[ "$#" -eq 0 || "$1" != "--yes" ]]; then
+  echo "Se borraria solamente plots/."
+  echo "Para confirmar: bash Allclean --yes"
+  exit 0
+fi
+if [[ -d plots ]]; then
+  rm -rf -- plots
+  echo "Eliminada plots/."
+else
+  echo "No existe plots/."
+fi

@@ -114,3 +114,10 @@ Las fases 14B–14E y los casos 15–22 siguen siendo propuestas, no carpetas de
 | 24 · [Conducción térmica 1D](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/24-conduccion-1d/README.md) | laplacianFoam | [Carpeta autocontenida](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/24-conduccion-1d) | Archivos completos; no ejecutado |
 
 [Investigación adicional: calor, radiación, tensiones térmicas y convección](ejemplos-calor-radiacion-solidos.md). Los modelos radiativos son propuestas, no casos listos para ejecutar.
+
+
+## Caso 25: refracción de luz en líquidos (2D y 3D)
+
+- [Tutorial 25: modelo geométrico y ley de Snell](tutoriales/25-refraccion-luz.md).
+- [Caso autocontenido](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/25-refraccion-luz): Python, CSV, PNG, GIF opcionales, pruebas y variantes.
+- **No es un solver CFD ni necesita OpenFOAM**: interfaz plana fija; extensión a superficies libres pendiente. Revisión estática, sin ejecución.
