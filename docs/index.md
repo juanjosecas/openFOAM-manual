@@ -9,7 +9,7 @@ Portal de contenidos del repositorio [openFOAM-manual](https://github.com/juanjo
 1. [Estructura del repositorio y convenciones editoriales](estructura-y-estilo.md): archivos `0/`, `constant/`, `system/`, unidades y comentarios.
 2. [Ejecución y pequeñas variantes por caso](guia-ejecucion-y-variantes.md): preparación, malla, preprocesamiento y solver.
 3. [Gráficos y propiedades físicas](graficos-y-propiedades.md): perfiles, residuos, campos y diagnóstico.
-4. [Propiedades de materiales](propiedades-de-materiales.md): ejemplos orientativos de agua, etanol y glicerina.
+4. [Propiedades de materiales](propiedades-de-materiales.md): tablas rápidas de sólidos, líquidos y gases; viscosidad, densidad, calor específico, conductividad y difusividades.
 5. [PyVista](pyvista.md): lectura de resultados, cortes, vectores y animaciones.
 6. [STL y snappyHexMesh](stl-snappyhexmesh.md): escalas, superficies STL y generación de mallas volumétricas.
 
