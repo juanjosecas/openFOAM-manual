@@ -1,0 +1,24 @@
+FoamFile
+{
+ version 2.0;
+ format ascii;
+ class dictionary;
+ object blockMeshDict;
+}
+
+// 2D x-z: 80 x 60 mm, espesor numerico 1 mm, 80x1x60 celdas.
+scale 1;
+vertices
+(
+ (-0.04 0 0) (0.04 0 0) (0.04 0.001 0) (-0.04 0.001 0)
+ (-0.04 0 0.06) (0.04 0 0.06) (0.04 0.001 0.06) (-0.04 0.001 0.06)
+);
+blocks (hex (0 1 2 3 4 5 6 7) (80 1 60) simpleGrading (1 1 1));
+edges ();
+boundary
+(
+ walls {type wall; faces ((0 4 7 3) (1 2 6 5) (0 3 2 1));}
+ atmosphere {type patch; faces ((4 5 6 7));}
+ frontAndBack {type empty; faces ((0 1 5 4) (3 7 6 2));}
+);
+mergePatchPairs ();

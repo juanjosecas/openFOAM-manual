@@ -1,0 +1,23 @@
+FoamFile
+{
+ version 2.0;
+ format ascii;
+ class dictionary;
+ object setFieldsDict;
+}
+
+// Escalon de agua: izquierda 40 mm, derecha 22 mm.
+defaultFieldValues (volScalarFieldValue alpha.water 0);
+regions
+(
+ boxToCell
+ {
+  box (-0.0401 -0.0001 -0.0001) (0 0.0011 0.040);
+  fieldValues (volScalarFieldValue alpha.water 1);
+ }
+ boxToCell
+ {
+  box (0 -0.0001 -0.0001) (0.0401 0.0011 0.022);
+  fieldValues (volScalarFieldValue alpha.water 1);
+ }
+);

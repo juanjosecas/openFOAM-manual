@@ -1,0 +1,16 @@
+FoamFile
+{
+ version 2.0;
+ format ascii;
+ class volScalarField;
+ object alpha.water;
+}
+
+dimensions [0 0 0 0 0 0 0]; // fraccion volumetrica
+internalField uniform 0; // setFields inicializa agua
+boundaryField
+{
+ walls { type zeroGradient; }
+ atmosphere { type inletOutlet; inletValue uniform 0; value uniform 0; }
+ frontAndBack { type empty; }
+}

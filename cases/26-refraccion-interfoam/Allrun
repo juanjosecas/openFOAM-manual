@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+for exe in blockMesh checkMesh setFields interFoam; do
+ command -v "$exe" >/dev/null || { echo "Falta $exe"; exit 1; }
+done
+[[ -d constant/polyMesh ]] || bash Allmesh
+if find . -maxdepth 1 -type d -regextype posix-extended -regex './[0-9]+([.][0-9]+)?' ! -name 0 | grep -q .; then
+ echo "Hay tiempos calculados; usar Allclean --yes antes de repetir." >&2
+ exit 1
+fi
+setFields > log.setFields 2>&1 || { tail -n 50 log.setFields; exit 1; }
+interFoam > log.interFoam 2>&1 || { tail -n 80 log.interFoam; exit 1; }
+echo "CFD finalizado. Ejecutar python3 postprocessing/trazar.py --gif"

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+if [[ "$#" -eq 0 || "$1" != "--yes" ]]; then
+ echo "Se borrarian constant/polyMesh, tiempos >0, plots/, logs y case.foam"
+ echo "Confirmar: bash Allclean --yes"
+ exit 0
+fi
+rm -rf -- constant/polyMesh plots postProcessing
+rm -f -- case.foam log.blockMesh log.checkMesh log.setFields log.interFoam
+for d in [0-9]*; do
+ [[ -d "$d" && "$d" != "0" ]] || continue
+ [[ "$d" =~ ^[0-9]+([.][0-9]+)?$ ]] && rm -rf -- "$d"
+done
+echo "Limpieza terminada; 0/ conservado."

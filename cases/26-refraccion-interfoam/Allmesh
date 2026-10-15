@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+command -v blockMesh >/dev/null || { echo "Falta OpenFOAM"; exit 1; }
+[[ ! -d constant/polyMesh ]] || { echo "Malla existente. Ejecutar Allclean --yes."; exit 1; }
+blockMesh > log.blockMesh 2>&1 || { tail -n 50 log.blockMesh; exit 1; }
+checkMesh > log.checkMesh 2>&1 || { tail -n 50 log.checkMesh; exit 1; }
+echo "Malla OK"
