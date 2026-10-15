@@ -37,3 +37,12 @@ Los casos contienen scripts `Allmesh` y `Allclean` cuando usan `blockMesh`, y va
 ## Investigación de nuevas aplicaciones
 
 Se incorporó un [catálogo de tutoriales externos con sus URLs originales](docs/investigacion-fuentes-openfoam.md), una [propuesta biofísica de difusión y liberación de fármacos](docs/propuesta-difusion-farmacos.md) y una [hoja de ruta de futuros casos](docs/investigacion-hoja-de-ruta.md). Son referencias y proyectos **no implementados ni validados**; no se han copiado ni ejecutado casos externos.
+
+
+## Nuevos ejemplos mínimos de sólidos y calor
+
+- [23: flexión estática de viga 3D](cases/23-flexion-viga/README.md), solidDisplacementFoam.
+- [24: conducción térmica estacionaria 1D](cases/24-conduccion-1d/README.md), laplacianFoam.
+- [Otras fuentes: radiación, convección y tensiones térmicas](docs/ejemplos-calor-radiacion-solidos.md).
+
+Ambos casos tienen estructura autocontenida y postprocesamiento; **solo revisión estática, sin ejecución ni validación**.

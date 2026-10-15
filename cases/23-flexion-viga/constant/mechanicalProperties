@@ -1,0 +1,6 @@
+FoamFile { version 2.0; format ascii; class dictionary; object mechanicalProperties; }
+// Elaboracion didactica propia; no ejecutado.
+rho { type uniform; value 1200; }  // kg/m3
+E { type uniform; value 2e9; }      // Pa
+nu { type uniform; value 0.30; }   // Poisson [-]
+planeStress no;                    // 3D

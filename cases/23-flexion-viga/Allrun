@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "$0")"
+command -v foamDictionary >/dev/null || { echo "Activar OpenFOAM" >&2; exit 2; }
+solver="$(foamDictionary system/controlDict -entry application -value)"
+[[ "$solver" =~ ^[A-Za-z][A-Za-z0-9_]*$ ]] || exit 2
+command -v "$solver" >/dev/null || { echo "Solver no instalado: $solver" >&2; exit 2; }
+if find . -maxdepth 1 -mindepth 1 -type d -regextype posix-extended -regex './[1-9][0-9]*(\.[0-9]+)?' | grep -q .; then
+  echo "Resultados previos: ejecutar en copia limpia." >&2; exit 3
+fi
+if [[ ! -e constant/polyMesh/points ]]; then bash Allmesh; else
+  checkMesh > log.checkMesh 2>&1 || { tail -n 60 log.checkMesh >&2; exit 1; }
+  grep -q 'Mesh OK' log.checkMesh || exit 1
+fi
+"$solver" > "log.$solver" 2>&1 || { tail -n 80 "log.$solver" >&2; exit 1; }
+echo "Solver finalizado. Inspeccionar residuos y campos."

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "$0")"
+for cmd in blockMesh checkMesh; do
+  command -v "$cmd" >/dev/null || { echo "Falta $cmd: activar OpenFOAM" >&2; exit 2; }
+done
+if [[ -e constant/polyMesh/points ]]; then
+  echo "Malla previa; limpiar en una copia antes de regenerar." >&2; exit 3
+fi
+blockMesh > log.blockMesh 2>&1 || { tail -n 60 log.blockMesh >&2; exit 1; }
+checkMesh > log.checkMesh 2>&1 || { tail -n 60 log.checkMesh >&2; exit 1; }
+grep -q 'Mesh OK' log.checkMesh || { echo "checkMesh no confirmo Mesh OK" >&2; exit 1; }
+echo "Malla creada; no equivale a validacion fisica."

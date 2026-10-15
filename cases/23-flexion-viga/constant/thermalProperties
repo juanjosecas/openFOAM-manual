@@ -1,0 +1,3 @@
+FoamFile { version 2.0; format ascii; class dictionary; object thermalProperties; }
+// Elaboracion didactica propia; no ejecutado.
+thermalStress no; // Sin acoplamiento termico ni campo 0/T.

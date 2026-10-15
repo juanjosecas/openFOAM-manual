@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "$0")"
+if [[ "$1" != "--yes" ]]; then
+  echo "PREVISUALIZACION: usar bash Allclean --yes para confirmar."
+  find . -maxdepth 1 -mindepth 1 \( -name 'log.*' -o -name 'postProcessing' -o -name 'VTK' -o -name 'plots' -o -name '*.foam' \) -print
+  find . -maxdepth 1 -mindepth 1 -type d -regextype posix-extended -regex './[1-9][0-9]*(\.[0-9]+)?' -print
+  [[ ! -d constant/polyMesh ]] || echo constant/polyMesh
+  exit 0
+fi
+find . -maxdepth 1 -mindepth 1 \( -name 'log.*' -o -name 'postProcessing' -o -name 'VTK' -o -name 'plots' -o -name '*.foam' \) -exec rm -rf -- {} +
+find . -maxdepth 1 -mindepth 1 -type d -regextype posix-extended -regex './[1-9][0-9]*(\.[0-9]+)?' -exec rm -rf -- {} +
+rm -rf -- constant/polyMesh
+echo "Limpieza terminada; 0/ intacto."

@@ -45,3 +45,10 @@ La investigación original sugería importar nuevamente `cavity`, `damBreak`, `G
 ## Implementación documental inicial
 
 El [caso 14A](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-farmaco) ya tiene estructura, diccionarios y postprocesamiento autocontenidos, **sin ejecución ni validación**. El resto de casos numerados de esta hoja sigue pendiente de implementación. Consultar el [estándar de autocontención](estandar-casos-autocontenidos.md).
+
+
+## Nuevas implementaciones 23 y 24 (2026-10-15)
+
+- [23: flexión de viga](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/23-flexion-viga): configuración mínima de sólido 3D, sin ejecutar.
+- [24: conducción 1D](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/24-conduccion-1d): configuración mínima estacionaria, sin ejecutar.
+- [Fuentes para radiación y calor](ejemplos-calor-radiacion-solidos.md): propuestas no implementadas.

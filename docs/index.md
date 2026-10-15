@@ -104,3 +104,13 @@ Las extensiones **no resuelven** los archivos ausentes de los casos 04 y 07 ni a
 - [Estándar obligatorio para futuros casos](estandar-casos-autocontenidos.md): estructura, scripts, variantes, procedencia y verificaciones.
 
 Las fases 14B–14E y los casos 15–22 siguen siendo propuestas, no carpetas de simulación.
+
+
+## Casos 23 y 24: sólidos y calor (revisión estática)
+
+| Caso | Solver | Configuración | Estado |
+| --- | --- | --- | --- |
+| 23 · [Flexión de viga 3D](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/23-flexion-viga/README.md) | solidDisplacementFoam | [Carpeta autocontenida](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/23-flexion-viga) | Archivos completos; no ejecutado |
+| 24 · [Conducción térmica 1D](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/24-conduccion-1d/README.md) | laplacianFoam | [Carpeta autocontenida](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/24-conduccion-1d) | Archivos completos; no ejecutado |
+
+[Investigación adicional: calor, radiación, tensiones térmicas y convección](ejemplos-calor-radiacion-solidos.md). Los modelos radiativos son propuestas, no casos listos para ejecutar.
