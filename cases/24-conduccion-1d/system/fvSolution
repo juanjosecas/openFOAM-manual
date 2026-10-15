@@ -10,3 +10,8 @@ solvers
         relTol 0;
     }
 }
+
+SIMPLE
+{
+    nNonOrthogonalCorrectors 0; // malla ortogonal; requerido por simpleControl
+}
