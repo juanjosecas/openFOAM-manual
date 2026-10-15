@@ -121,3 +121,10 @@ Las fases 14B–14E y los casos 15–22 siguen siendo propuestas, no carpetas de
 - [Tutorial 25: modelo geométrico y ley de Snell](tutoriales/25-refraccion-luz.md).
 - [Caso autocontenido](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/25-refraccion-luz): Python, CSV, PNG, GIF opcionales, pruebas y variantes.
 - **No es un solver CFD ni necesita OpenFOAM**: interfaz plana fija; extensión a superficies libres pendiente. Revisión estática, sin ejecución.
+
+
+## Caso 26: refracción acoplada a una superficie de OpenFOAM
+
+- [Tutorial 26: interFoam + rayos 2D/3D](tutoriales/26-refraccion-interfoam.md).
+- [Archivos CFD autocontenidos y postprocesamiento](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/26-refraccion-interfoam): 0/, constant/, system/, setFields, Allrun, CSV, PNG y GIF.
+- **CFD real en OpenFOAM (2D)**; óptica geométrica como postprocesamiento, con extrusión visual 3D. Revisión estática, no ejecutado.

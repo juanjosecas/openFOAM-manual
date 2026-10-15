@@ -31,6 +31,7 @@ nav:
       - 13 · STL y snappyHexMesh: stl-snappyhexmesh.md
       - 14A · Difusión de fármaco (caso autocontenido): https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-farmaco
       - 23 · Flexión de viga 3D: https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/23-flexion-viga
+      - 26 · OpenFOAM y refracción en agua: tutoriales/26-refraccion-interfoam.md
       - 25 · Refracción de luz 2D y 3D: tutoriales/25-refraccion-luz.md
       - 24 · Conducción térmica 1D: https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/24-conduccion-1d
   - Investigación y futuros casos:

@@ -51,3 +51,8 @@ Ambos casos tienen estructura autocontenida y postprocesamiento; **solo revisió
 ## Modelo óptico 2D/3D (sin CFD)
 
 - [25: refracción de rayos en una interfaz aire–agua](cases/25-refraccion-luz/README.md): ley de Snell, reflexión interna total, CSV, PNG, GIF y variantes. Modelo Python autocontenido, sin OpenFOAM; **no ejecutado ni validado**.
+
+
+## Refracción con OpenFOAM
+
+- [26: superficie libre calculada con interFoam y rayos refractados](cases/26-refraccion-interfoam/README.md). CFD agua–aire 2D con postprocesamiento óptico 2D/3D, CSV, PNG y GIF temporal. **Revisión estática; sin ejecutar.**
