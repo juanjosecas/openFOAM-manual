@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 cd -- "$(dirname -- "$0")"
-if [[ "$1" != "--yes" ]]; then
+if [[ "$#" -eq 0 || "$1" != "--yes" ]]; then
   echo "PREVISUALIZACION: usar bash Allclean --yes para confirmar."
   find . -maxdepth 1 -mindepth 1 \( -name 'log.*' -o -name 'postProcessing' -o -name 'VTK' -o -name 'plots' -o -name '*.foam' \) -print
   find . -maxdepth 1 -mindepth 1 -type d -regextype posix-extended -regex './[1-9][0-9]*(\.[0-9]+)?' -print
