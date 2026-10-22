@@ -47,4 +47,4 @@ wallDist
 {
     method meshWave;
 }
-Como utilizamos una malla de prismas con geometría curva aproximada mediante segmentos, los esquemas corrected serán útiles si aparecen celdas no ortogonales.
+// Como utilizamos una malla de prismas con geometría curva aproximada mediante segmentos, los esquemas corrected serán útiles si aparecen celdas no ortogonales.
