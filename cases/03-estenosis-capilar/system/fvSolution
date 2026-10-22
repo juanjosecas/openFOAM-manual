@@ -52,4 +52,4 @@ relaxationFactors
         U 0.7;
     }
 }
-Utilizamos un corrector de no ortogonalidad porque la malla contiene celdas deformadas en la región de estenosis.
+// Utilizamos un corrector de no ortogonalidad porque la malla contiene celdas deformadas en la región de estenosis.
