@@ -1,0 +1,62 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object blockMeshDict;
+}
+
+// Dimensiones en metros. Caja de fondo: 4 m x 4 m x 4 m.
+// El STL de ejemplo es una esfera de radio 0.5 m en el origen.
+// Coordenadas en metros. No escala el STL: sus unidades se convierten al generarlo.
+scale 1;
+
+// Caja actual: x, y, z entre -2 y 2 m.
+// Para probar [-4,4] m, cambiar todos los +/-2 por +/-4 y las
+// subdivisiones 24 por 48 para conservar el tamaño de celda de fondo.
+vertices
+(
+    (-2 -2 -2)
+    ( 2 -2 -2)
+    ( 2  2 -2)
+    (-2  2 -2)
+    (-2 -2  2)
+    ( 2 -2  2)
+    ( 2  2  2)
+    (-2  2  2)
+);
+
+blocks
+(
+    // Malla base deliberadamente poco costosa.
+    // Subdivisiones (nx ny nz); 24^3 = 13824 celdas antes de snappyHexMesh.
+    // Ejemplos: (32 32 32) = 32768; (48 48 48) = 110592.
+    // El número final cambia al refinar y retirar el sólido. Revisar límites
+    // maxLocalCells/maxGlobalCells si se aumenta esta resolución.
+    hex (0 1 2 3 4 5 6 7) (24 24 24) simpleGrading (1 1 1)
+);
+
+edges ();
+
+// Los índices de vértices definen las caras. Cambiar solo las coordenadas
+// conserva sus nombres y conectividad; los campos 0/U y 0/p deben usar
+// exactamente los nombres de patches de la malla final.
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces ((3 0 4 7));
+    }
+    outlet
+    {
+        type patch;
+        faces ((1 2 6 5));
+    }
+    sides
+    {
+        type patch;
+        faces ((0 3 2 1) (4 5 6 7) (0 1 5 4) (2 3 7 6));
+    }
+);
+mergePatchPairs ();

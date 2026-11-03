@@ -1,0 +1,22 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class volScalarField;
+    location "0";
+    object p;
+}
+
+// Presión cinemática p/rho en m2/s2, no presión en Pa.
+// Una diferencia en Pa se obtiene multiplicando por la densidad elegida.
+dimensions [0 2 -2 0 0 0 0];
+internalField uniform 0;
+boundaryField
+{
+    inlet { type zeroGradient; }
+    // Referencia de presión. Cambiar 0 por una constante desplaza el nivel
+    // de presión; no representa por sí solo un aumento del caudal de entrada.
+    outlet { type fixedValue; value uniform 0; }
+    sides { type zeroGradient; }
+    sphere { type zeroGradient; }
+}

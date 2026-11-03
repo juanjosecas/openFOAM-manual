@@ -14,7 +14,7 @@ application interFoam;
 startFrom startTime;
 startTime 0;
 stopAt endTime;
-endTime 0.30;
+endTime 20;
 
 // Paso inicial pequeño; el solver puede reducirlo por Courant.
 deltaT 1e-5;

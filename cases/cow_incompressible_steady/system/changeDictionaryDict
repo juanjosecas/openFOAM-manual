@@ -1,0 +1,15 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+
+// gmshToFoam crea todos los parches como "patch": la vaca debe ser "wall"
+// (requerido por las funciones de pared) y el plano 2D debe ser "empty".
+boundary
+{
+    cow           { type wall;  inGroups (wall); }
+    frontAndBack  { type empty; inGroups (empty); }
+}

@@ -1,33 +1,53 @@
 // NOTA DEL MANUAL: application indica el solver; endTime limita iteraciones de simpleFoam. writeInterval controla archivos guardados, no la resolucion fisica.
 // Mantener la fisica y los valores originales; verificar compatibilidad con la version instalada.
+// Cabecera: describe cómo leer el archivo, no sus condiciones físicas.
 FoamFile
 {
+    // Versión del formato, no del solver.
     version 2.0;
+    // Texto ASCII editable.
     format ascii;
+    // Clase de objeto: diccionario o campo escalar/vectorial por celda.
     class dictionary;
+    // Nombre del objeto que lee OpenFOAM.
     object controlDict;
 }
 
+// Solver estacionario; recirculación fija no equivale a desprendimiento periódico de vórtices.
 application simpleFoam;
 
+// Iniciar en el tiempo indicado, no en el último resultado disponible.
 startFrom startTime;
+// Leer la estimación inicial de 0/.
 startTime 0;
 
+// Parar al alcanzar el máximo o antes si cumple residualControl.
 stopAt endTime;
+// Máximo de iteraciones SIMPLE. Algunas variantes aumentan el límite sin cambiar la base.
 endTime 1500;
 
+// Incremento del contador; no paso temporal físico en este solver.
 deltaT 1;
 
+// Escritura por iteraciones.
 writeControl timeStep;
+// Guardar cada 100 iteraciones; no modifica la malla.
 writeInterval 100;
 
+// Conservar todas las escrituras. Las recetas pueden limitar el número para ahorrar disco.
 purgeWrite 0;
 
+// Campos en texto legible.
 writeFormat ascii;
+// Ocho dígitos de salida; aumentar este número no reduce el error de discretización.
 writePrecision 8;
+// Sin compresión de campos.
 writeCompression off;
 
+// Formato numérico de nombres de directorios de iteración.
 timeFormat general;
+// Precisión de los nombres de directorios.
 timePrecision 6;
 
+// Permitir releer las entradas modificables durante la ejecución.
 runTimeModifiable true;

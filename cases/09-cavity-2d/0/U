@@ -5,37 +5,51 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-// NOTA DEL MANUAL: Campo de velocidad en m/s. Revisar conditions de inlet, outlet, walls y los nombres de patches.
+// Campo vectorial de velocidad: tapa móvil, paredes fijas y caras 2D.
 // Se conservan todos los parametros numericos y fisicos del caso fuente.
+// Cabecera de lectura: describe el archivo, no las condiciones físicas.
 FoamFile
 {
+    // Versión del formato de archivo; no es la versión de OpenFOAM.
     version     2.0;
+    // Archivo de texto ASCII, editable con un editor.
     format      ascii;
+    // Clase de datos: diccionario o campo escalar/vectorial por celda.
     class       volVectorField;
+    // Nombre del objeto que OpenFOAM espera leer.
     object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// dimensiones de la velocidad: [0 1 -1 0 0 0 0] = m/s
 dimensions      [0 1 -1 0 0 0 0];
 
+// Velocidad inicial en las celdas interiores: fluido inicialmente en reposo.
 internalField   uniform (0 0 0);
 
+// Condiciones de contorno por patch; no son valores de las celdas interiores.
 boundaryField
 {
-    movingWall
+    movingWall // Tapa superior; su nombre coincide con el patch de blockMeshDict.
     {
+        // Impone el valor de velocidad indicado en esta pared.
         type            fixedValue;
+        // Tapa: 1 m/s en +x; uniform aplica el mismo vector a toda la cara.
         value           uniform (1 0 0);
     }
 
+    // Las otras tres paredes de la sección XY permanecen inmóviles.
     fixedWalls
     {
         type            fixedValue;
+        // Velocidad cero: condición de no deslizamiento sobre paredes fijas.
         value           uniform (0 0 0);
     }
 
+    // Caras perpendiculares a z: la solución se trata como bidimensional.
     frontAndBack
     {
+        // Sin ecuaciones en la dirección vacía; debe coincidir con la malla 2D.
         type            empty;
     }
 }

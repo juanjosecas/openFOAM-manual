@@ -1,0 +1,12 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    location "constant";
+    object turbulenceProperties;
+}
+
+// Modelo laminar para el estudio actual. Aumentar Reynolds no activa
+// un modelo turbulento automáticamente ni garantiza flujo estacionario.
+simulationType laminar;

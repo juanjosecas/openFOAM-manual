@@ -1,0 +1,125 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object snappyHexMeshDict;
+}
+
+// Genera una malla conforme a la superficie STL dentro de la malla de fondo.
+castellatedMesh true;   // Celdas cercanas al objeto y recorte.
+snap            true;   // Ajuste de puntos a la superficie triangulada.
+addLayers       false;  // Etapa de capas límite desactivada para el primer ejemplo.
+
+// sphere.stl debe estar cerrado y expresado en metros.
+// Mayor resolución del STL mejora la geometría, no aumenta por sí sola
+// la resolución volumétrica del fluido.
+geometry
+{
+    sphere.stl
+    {
+        type triSurfaceMesh;
+        name sphere;
+    }
+}
+
+castellatedMeshControls
+{
+    // Topes de refinamiento, no objetivos de cantidad de celdas.
+    // Si se aumenta la malla, ejemplos de topes: local 500000, global 2000000.
+    // Son orientativos: revisar el log y la memoria disponible; un límite
+    // puede impedir alcanzar el refinamiento solicitado.
+    maxLocalCells 100000;
+    maxGlobalCells 500000;
+    minRefinementCells 0;
+    maxLoadUnbalance 0.10;
+    // Transición entre niveles: probar 3 en vez de 2 para espaciar
+    // las transiciones; cambia la distribución y el coste de la malla.
+    nCellsBetweenLevels 2;
+
+    // Sin archivo eMesh: esfera sin aristas afiladas.
+    features ();
+
+    refinementSurfaces
+    {
+        sphere
+        {
+            // Niveles mínimo y máximo respecto de la celda de fondo.
+            // Cada nivel divide aproximadamente por 2 el tamaño de celda.
+            // Para esta esfera suave, (1 2) NO garantiza alcanzar nivel 2.
+            // Variantes: (2 2) fuerza nivel 2; (3 3) fuerza nivel 3.
+            // Refinar en 3D puede aumentar mucho las celdas y el coste.
+            level (1 2);  // Nivel de refinamiento próximo al STL.
+            patchInfo { type wall; }
+        }
+    }
+    resolveFeatureAngle 30;
+    refinementRegions {};
+
+    // Punto FUERA del sólido y DENTRO de la caja, en metros.
+    // Mantiene la región conectada que contiene este punto.
+    // Punto de fluido retenido, no centro ni posición de la esfera.
+    // Con radio 0.5 m y caja [-2,2] m, este punto está en el exterior del sólido.
+    // Conservarlo fuera del objeto y dentro de la caja al cambiar números.
+    locationInMesh (1.5 0 0);
+    allowFreeStandingZoneFaces true;
+}
+
+snapControls
+{
+    nSmoothPatch 3;
+    tolerance 2.0;
+    nSolveIter 30;
+    nRelaxIter 5;
+    nFeatureSnapIter 0;
+    implicitFeatureSnap false;
+    explicitFeatureSnap false;
+    multiRegionFeatureSnap false;
+}
+
+// Opciones no utilizadas mientras addLayers sea false; se conservan como
+// parámetros mínimos explícitos por compatibilidad con el diccionario.
+// Este bloque está INACTIVO mientras addLayers sea false.
+// Cambiar solo sus números no crea capas; habilitarlas requiere
+// además configurar layers y comprobar su cobertura y calidad.
+addLayersControls
+{
+    relativeSizes true;
+    layers {};
+    expansionRatio 1.0;
+    finalLayerThickness 0.3;
+    minThickness 0.1;
+    nGrow 0;
+    featureAngle 60;
+    nRelaxIter 3;
+    nSmoothSurfaceNormals 1;
+    nSmoothNormals 3;
+    nSmoothThickness 10;
+    maxFaceThicknessRatio 0.5;
+    maxThicknessToMedialRatio 0.3;
+    minMedialAxisAngle 90;
+    nBufferCellsNoExtrude 0;
+    nLayerIter 30;
+}
+
+// Criterios geométricos para construir la malla. No aflojarlos para
+// ocultar errores: comparar checkMesh y resolver la causa geométrica.
+meshQualityControls
+{
+    maxNonOrtho 65;
+    maxBoundarySkewness 20;
+    maxInternalSkewness 4;
+    maxConcave 80;
+    minVol 1e-13;
+    minTetQuality -1e30;
+    minArea -1;
+    minTwist 0.02;
+    minDeterminant 0.001;
+    minFaceWeight 0.02;
+    minVolRatio 0.01;
+    minTriangleTwist -1;
+    nSmoothScale 4;
+    errorReduction 0.75;
+}
+
+mergeTolerance 1e-6;

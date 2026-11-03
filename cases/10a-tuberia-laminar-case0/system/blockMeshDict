@@ -16,14 +16,18 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1;
+convertToMeters 1; // 1 unidad de longitud = 1 metro
 
+// Estas son las dimensiones de la malla, que se definen en el bloque "vertices" y "blocks"
 xmin 0;
 xmax 10;
 ymin -0.5;
 ymax 0.5;
 zmin 0;
 zmax 0.1;
+
+
+// más o menos se leería: el eje x va de 0  a 10 metros, el eje y va de -0.5 a 0.5 metros y el eje z va de 0 a 0.1 metros.
 
 vertices
 (
@@ -37,31 +41,45 @@ vertices
     ($xmin  $ymax  $zmax)
 );
 
+// los blocks definen la malla, en este caso un bloque hexaédrico (hex) con 100 celdas en x, 10 celdas en y y 1 celda en z. El simpleGrading (1 1 1) indica que la malla es uniforme en todas las direcciones.
+// podriamos cambiar la resolucion de la malla cambiando los valores (100 10 1) a otros valores, por ejemplo (200 20 2) para tener una malla más fina.
 blocks
 (
-    hex (0 1 2 3 4 5 6 7) (100 10 1) simpleGrading (1 1 1)
+    hex (0 1 2 3 4 5 6 7) (100 20 1) simpleGrading (1 1 1) // el grading simple (1 1 1) indica que la malla es uniforme en todas las direcciones, si quisiéramos una malla no uniforme podríamos cambiar los valores a otros valores, por ejemplo (2 1 1) para tener una malla más fina en x y más gruesa en y.
 );
+
+// los edges definen las aristas de la malla, en este caso no se definen aristas especiales, por lo que se deja vacío.
+// pero una arista especial podría ser una curva, por ejemplo, si quisiéramos definir una arista curva en lugar de una línea recta.
+
+// Ejemplo de arista curva (no se usa en este caso):
+// edges
+// (
+//     arc 0 1 (0.5 0.5 0)
+// );
 
 edges
 (
 );
 
+// boundary define los parches de la malla, en este caso se definen 6 parches: 
+// top, inlet, outlet, bottom, back y front. Cada parche tiene un tipo (wall o patch) y una lista de caras que lo definen. 
+// Las caras se definen por los índices de los vértices que las componen.
 boundary
 (
     top
     {
-        type wall;
+        type wall; // wall es una pared o sea que no traspasa nada
         faces
         (
-            (3 7 6 2)
+            (3 7 6 2) // las dimensiones de la cara son (3 7 6 2) que significa que la cara está formada por los vértices 3, 7, 6 y 2.
         );
     }
     inlet
     {
-        type patch;
+        type patch; // patch es un parche genérico sirve para definir una entrada o salida de flujo, por ejemplo.
         faces
         (
-            (0 4 7 3)
+            (0 4 7 3) // la entrada de flujo está formada por los vértices 0, 4, 7 y 3.
         );
     }
     outlet
@@ -69,7 +87,7 @@ boundary
         type patch;
         faces
         (
-            (2 6 5 1)
+            (2 6 5 1) // la salida de flujo está formada por los vértices 2, 6, 5 y 1.
         );
     }
     bottom
@@ -77,7 +95,7 @@ boundary
         type wall;
         faces
         (
-            (1 5 4 0)
+            (1 5 4 0) // la pared inferior está formada por los vértices 1, 5, 4 y 0.
         );
     }
     back

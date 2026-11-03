@@ -1,21 +1,41 @@
 // NOTA DEL MANUAL: Define el regimen laminar y el modelo reologico generalizedNewtonian/powerLaw. n es el exponente; nuMin/nuMax delimitan viscosidad efectiva. No sustituir k y n por propiedades newtonianas.
 // Valores originales conservados. Consultar docs/propiedades-de-materiales.md.
+// Cabecera de lectura: tipo y nombre del archivo; no define la física.
 FoamFile
 {
+    // Versión del formato de archivo, no versión del solver.
     version 2.0;
+    // Texto ASCII legible y editable.
     format ascii;
+    // Tipo de objeto: diccionario o campo escalar/vectorial por celda.
     class dictionary;
+    // Nombre del objeto que OpenFOAM lee.
     object turbulenceProperties;
 }
 
+// Régimen laminar: sin modelo de turbulencia. El nombre del archivo
+// no implica que haya turbulencia en el microcanal.
 simulationType laminar;
 
+// Aquí se especifica la ley constitutiva del esfuerzo del fluido continuo.
 laminar
 {
+    // Viscosidad dependiente de la tasa de deformación local; sin memoria
+    // viscoelástica ni seguimiento de eritrocitos individuales.
     model generalizedNewtonian;
+    // Ley acotada: nu_eff = min(nuMax, max(nuMin, k*gammaDot^(n-1))).
+    // gammaDot es la tasa de cizallamiento equivalente [1/s]. Ver fuentes en README.
     viscosityModel powerLaw;
+    // Cota inferior de viscosidad cinemática [m2/s]; evita valores menores
+    // en zonas de alta cizalla. No es un umbral clínico.
     nuMin 1e-6;
+    // Cota superior [m2/s]; limita la viscosidad en regiones de baja cizalla.
     nuMax 1e-4;
+    // Coeficiente de consistencia en la convención cinemática de esta ley.
+    // No es una densidad, un hematocrito ni una viscosidad dinámica constante.
     k 1e-4;
+    // Exponente adimensional: n<1 produce adelgazamiento por cizalla
+    // en el intervalo no limitado por las cotas. Es una idealización reológica,
+    // no un modelo de agregación/deformación de células ni del glicocálix.
     n 0.5;
 }

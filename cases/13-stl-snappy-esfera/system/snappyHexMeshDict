@@ -11,6 +11,9 @@ castellatedMesh true;   // Celdas cercanas al objeto y recorte.
 snap            true;   // Ajuste de puntos a la superficie triangulada.
 addLayers       false;  // Etapa de capas límite desactivada para el primer ejemplo.
 
+// sphere.stl debe estar cerrado y expresado en metros.
+// Mayor resolución del STL mejora la geometría, no aumenta por sí sola
+// la resolución volumétrica del fluido.
 geometry
 {
     sphere.stl
@@ -22,10 +25,16 @@ geometry
 
 castellatedMeshControls
 {
+    // Topes de refinamiento, no objetivos de cantidad de celdas.
+    // Si se aumenta la malla, ejemplos de topes: local 500000, global 2000000.
+    // Son orientativos: revisar el log y la memoria disponible; un límite
+    // puede impedir alcanzar el refinamiento solicitado.
     maxLocalCells 100000;
     maxGlobalCells 500000;
     minRefinementCells 0;
     maxLoadUnbalance 0.10;
+    // Transición entre niveles: probar 3 en vez de 2 para espaciar
+    // las transiciones; cambia la distribución y el coste de la malla.
     nCellsBetweenLevels 2;
 
     // Sin archivo eMesh: esfera sin aristas afiladas.
@@ -35,6 +44,11 @@ castellatedMeshControls
     {
         sphere
         {
+            // Niveles mínimo y máximo respecto de la celda de fondo.
+            // Cada nivel divide aproximadamente por 2 el tamaño de celda.
+            // Para esta esfera suave, (1 2) NO garantiza alcanzar nivel 2.
+            // Variantes: (2 2) fuerza nivel 2; (3 3) fuerza nivel 3.
+            // Refinar en 3D puede aumentar mucho las celdas y el coste.
             level (1 2);  // Nivel de refinamiento próximo al STL.
             patchInfo { type wall; }
         }
@@ -44,6 +58,9 @@ castellatedMeshControls
 
     // Punto FUERA del sólido y DENTRO de la caja, en metros.
     // Mantiene la región conectada que contiene este punto.
+    // Punto de fluido retenido, no centro ni posición de la esfera.
+    // Con radio 0.5 m y caja [-2,2] m, este punto está en el exterior del sólido.
+    // Conservarlo fuera del objeto y dentro de la caja al cambiar números.
     locationInMesh (1.5 0 0);
     allowFreeStandingZoneFaces true;
 }
@@ -62,6 +79,9 @@ snapControls
 
 // Opciones no utilizadas mientras addLayers sea false; se conservan como
 // parámetros mínimos explícitos por compatibilidad con el diccionario.
+// Este bloque está INACTIVO mientras addLayers sea false.
+// Cambiar solo sus números no crea capas; habilitarlas requiere
+// además configurar layers y comprobar su cobertura y calidad.
 addLayersControls
 {
     relativeSizes true;
@@ -82,6 +102,8 @@ addLayersControls
     nLayerIter 30;
 }
 
+// Criterios geométricos para construir la malla. No aflojarlos para
+// ocultar errores: comparar checkMesh y resolver la causa geométrica.
 meshQualityControls
 {
     maxNonOrtho 65;

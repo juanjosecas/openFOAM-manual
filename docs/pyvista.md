@@ -9,10 +9,10 @@ En un entorno virtual de Python distinto del entorno CFD, si corresponde:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install pyvista numpy matplotlib imageio
+python -m pip install -r requirements-postprocessing.txt
 ```
 
-En servidores sin pantalla puede ser necesario instalar bibliotecas OpenGL/Xvfb o usar un entorno gráfico adecuado para renderizar. Estos comandos no ejecutan OpenFOAM.
+Para exportar MP4 también se necesita `ffmpeg` disponible en el `PATH`. En servidores sin pantalla puede ser necesario instalar bibliotecas OpenGL/Xvfb o usar un entorno gráfico adecuado para renderizar. Estos comandos no ejecutan OpenFOAM.
 
 ## Uso con cualquier caso del manual
 
@@ -30,10 +30,10 @@ Produce una imagen PNG de **magnitud de velocidad** en un corte central. Tambié
 
 ```bash
 python scripts/pyvista_openfoam.py cases/08-tuberia-cilindrica-3d/tuberia.foam \
-  --output plots/08-pyvista --gif --fps 15
+  --output plots/08-pyvista --gif --mp4 --fps 15
 ```
 
-Produce un GIF de los estados disponibles y utiliza **una escala de color constante** para que las diferencias entre fotogramas sean comparables. Un GIF puede resultar grande; reducir el número de estados guardados o convertirlo posteriormente a MP4 con `ffmpeg`.
+Produce `velocidad.gif` y `velocidad.mp4` de los estados disponibles, además de una imagen PNG. La animación utiliza **una escala de color constante** para que las diferencias entre fotogramas sean comparables. Se puede omitir `--gif` o `--mp4` para generar solo uno de los formatos.
 
 **Importante:** en los tutoriales basados en `simpleFoam`, los estados corresponden a *iteraciones*, no a instantes físicos. Un GIF de ese solver representa evolución hacia una solución estacionaria, **no movimiento real del fluido**.
 

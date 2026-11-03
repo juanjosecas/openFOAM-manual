@@ -1,0 +1,14 @@
+// Configuración auxiliar del caso de mallado; no define un solver CFD.
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object fvSolution;
+}
+
+// Vacío intencionadamente: este ejemplo solo genera malla.
+// Para CFD usar 13b-esfera-agua-laminar, con campos y solvers definidos.
+solvers
+{
+}

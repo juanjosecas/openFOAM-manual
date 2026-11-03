@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+trap 'printf "ERROR: fallo en línea %s\n" "$LINENO" >&2' ERR
+
+command -v simpleFoam >/dev/null || { echo "ERROR: cargar el entorno de OpenFOAM." >&2; exit 1; }
+
+# Malla: convertir la malla Gmsh solo si aún no existe polyMesh.
+if [[ ! -f constant/polyMesh/points ]]; then
+    gmshToFoam cow_tunnel.msh > log.gmshToFoam 2>&1
+    changeDictionary > log.changeDictionary 2>&1
+fi
+
+# La malla de la vaca tiene unas pocas caras muy sesgadas: se avisa pero se continúa.
+checkMesh > log.checkMesh 2>&1 || echo "AVISO: checkMesh reporta fallos de calidad (ver log.checkMesh)." >&2
+grep -q 'Mesh OK' log.checkMesh || grep -q 'Failed 1 mesh checks' log.checkMesh || { tail -n 60 log.checkMesh >&2; exit 1; }
+
+simpleFoam 2>&1 | tee log.simpleFoam

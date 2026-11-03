@@ -12,6 +12,7 @@ python scripts/plot_solver_log.py cases/08-tuberia-cilindrica-3d/log.pimpleFoam 
 ```
 
 El script analiza las líneas `Solving for ... Initial residual` y `Courant Number mean ... max ...` presentes en un log. No todos los solvers registran ambas. Las curvas son **diagnósticos numéricos**, no propiedades físicas, y el eje horizontal de residuos identifica posiciones de registro, no segundos.
+Además de `residuos.png` y `courant.png` cuando esos datos existen, genera `resumen.png`, una lámina de alta resolución con los diagnósticos detectados.
 
 ## Propiedades físicas
 

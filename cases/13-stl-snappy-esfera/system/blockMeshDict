@@ -8,8 +8,12 @@ FoamFile
 
 // Dimensiones en metros. Caja de fondo: 4 m x 4 m x 4 m.
 // El STL de ejemplo es una esfera de radio 0.5 m en el origen.
+// Coordenadas en metros. No escala el STL: sus unidades se convierten al generarlo.
 scale 1;
 
+// Caja actual: x, y, z entre -2 y 2 m.
+// Para probar [-4,4] m, cambiar todos los +/-2 por +/-4 y las
+// subdivisiones 24 por 48 para conservar el tamaño de celda de fondo.
 vertices
 (
     (-2 -2 -2)
@@ -25,11 +29,17 @@ vertices
 blocks
 (
     // Malla base deliberadamente poco costosa.
+    // Subdivisiones (nx ny nz); 24^3 = 13824 celdas antes de snappyHexMesh.
+    // Ejemplos: (32 32 32) = 32768; (48 48 48) = 110592.
+    // El número final cambia al refinar y retirar el sólido. Revisar límites
+    // maxLocalCells/maxGlobalCells si se aumenta esta resolución.
     hex (0 1 2 3 4 5 6 7) (24 24 24) simpleGrading (1 1 1)
 );
 
 edges ();
 
+// outerBox representa el exterior de la caja; snappyHexMesh añade sphere.
+// Este caso no asigna condiciones físicas a estos patches.
 boundary
 (
     outerBox

@@ -1,0 +1,11 @@
+{
+  "descripcion": "Mismo fluido y BC de la base, doble resolución en x e y: 31360 celdas.",
+  "refinamiento": 2,
+  "ajustes": {
+    "system/controlDict": {
+      "endTime": "8000",
+      "purgeWrite": "2",
+      "writePrecision": "12"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+// Configuración auxiliar del caso de mallado; no define un solver CFD.
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object fvSchemes;
+}
+
+// Esquemas auxiliares para cargar y operar sobre la malla.
+// No se resuelven campos de velocidad ni presión en este caso.
+ddtSchemes
+{
+    default steadyState;
+}
+gradSchemes
+{
+    default Gauss linear;
+}
+divSchemes
+{
+    // No se define un esquema convectivo genérico para un solver CFD.
+    default none;
+}
+laplacianSchemes
+{
+    default Gauss linear corrected;
+}
+interpolationSchemes
+{
+    default linear;
+}
+snGradSchemes
+{
+    default corrected;
+}

@@ -1,19 +1,25 @@
 // NOTA DEL MANUAL: Propiedades del material. nu expresa viscosidad cinematica en m2/s cuando es dimensional; rho densidad en kg/m3.
 // No se alteran propiedades ni parametros originales. Consultar la guia de materiales si procede.
+// Cabecera de lectura: tipo y nombre del archivo; no define la física.
 FoamFile
 {
+    // Versión del formato de archivo, no versión del solver.
     version 2.0;
+    // Texto ASCII legible y editable.
     format ascii;
+    // Tipo de objeto: diccionario o campo escalar/vectorial por celda.
     class dictionary;
+    // Nombre del objeto que OpenFOAM lee.
     object transportProperties;
 }
 
+// Transporte base de viscosidad constante. La respuesta reológica
+// se configura además con generalizedNewtonian/powerLaw en turbulenceProperties.
+// La palabra Newtonian aquí no significa que deba ignorarse ese segundo modelo.
 transportModel Newtonian;
 
-// Referencias aproximadas a 20 C para fluidos NEWTONIANOS:
-// Agua: nu = 1.00e-6 m2/s; etanol puro: 1.52e-6 m2/s;
-// glicerina pura: 1.18e-3 m2/s. NO se aplican directamente a
-// este caso no newtoniano sin ajustar su modelo constitutivo.
-// Ver docs/propiedades-de-materiales.md.
+// Viscosidad cinemática base [m2/s]; no viscosidad dinámica de sangre en Pa.s.
+// No confundir este valor con la viscosidad efectiva local del modelo powerLaw.
+// Los parámetros son los del ejemplo y no un ajuste hematológico individual.
 nu [0 2 -1 0 0 0 0] 1e-4;
 

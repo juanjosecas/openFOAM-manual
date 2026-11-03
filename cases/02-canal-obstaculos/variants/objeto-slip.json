@@ -1,0 +1,13 @@
+{
+  "descripcion": "Mismo fluido de la base; solo el objeto tiene deslizamiento ideal.",
+  "ajustes": {
+    "0/U": {
+      "boundaryField/obstacle": "{ type slip; }"
+    },
+    "system/controlDict": {
+      "endTime": "5000",
+      "purgeWrite": "2",
+      "writePrecision": "12"
+    }
+  }
+}

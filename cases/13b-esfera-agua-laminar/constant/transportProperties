@@ -1,0 +1,16 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    location "constant";
+    object transportProperties;
+}
+
+// Fluido newtoniano monofásico: no hay superficie libre ni alpha.water.
+transportModel Newtonian;
+// Viscosidad cinemática [m2/s]. Con U=1e-5 m/s y D=1 m:
+// nu=2e-6 -> Re=5; nu=1e-6 -> Re=10; nu=5e-7 -> Re=20.
+// Son variaciones de viscosidad del modelo, no una conversión a temperatura.
+// Actualizar también nu= en graficar_esfera para calcular Reynolds correctamente.
+nu [0 2 -1 0 0 0 0] 1e-6;

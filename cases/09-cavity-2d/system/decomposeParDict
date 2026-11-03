@@ -7,17 +7,25 @@
 \*---------------------------------------------------------------------------*/
 // NOTA DEL MANUAL: Paralelizacion opcional. En modo serial no se necesita ejecutar decomposePar.
 // Archivo heredado de Foundation: revisar compatibilidad con OpenFOAM.com.
+// Cabecera de lectura: describe el archivo, no las condiciones físicas.
 FoamFile
 {
+    // Versión del formato de archivo; no es la versión de OpenFOAM.
     version     2.0;
+    // Archivo de texto ASCII, editable con un editor.
     format      ascii;
+    // Clase de datos: diccionario o campo escalar/vectorial por celda.
     class       dictionary;
+    // Nombre del objeto que OpenFOAM espera leer.
     object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Particiones que produciría decomposePar; normalmente coinciden con
+// los procesos MPI de una ejecución paralela. No inicia procesos por sí solo.
 numberOfSubdomains 4;
 
+// Método de partición basado en el grafo de conectividad de la malla.
 method          scotch;
 
 // ************************************************************************* //

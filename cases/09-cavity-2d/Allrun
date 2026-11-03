@@ -1,37 +1,51 @@
 #!/usr/bin/env bash
+# Detener ante errores, variables no definidas y fallos en tuberías; heredar ERR.
 set -Eeuo pipefail
+# Trabajar desde la carpeta del script aunque se invoque desde otro directorio.
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+# Informar línea y código de salida cuando falla un comando.
 trap 'printf "ERROR: fallo en línea %s (código %s)\n" "$LINENO" "$?" >&2' ERR
 
+# Comprobar que el entorno OpenFOAM permite leer diccionarios.
 if ! command -v foamDictionary >/dev/null 2>&1; then
     echo "ERROR: cargar el entorno de OpenFOAM antes de ejecutar Allrun." >&2
     exit 1
 fi
+# Exigir el archivo que indica qué solver ejecutar.
 if [[ ! -f system/controlDict ]]; then
     echo "ERROR: falta system/controlDict." >&2
     exit 1
 fi
+# Leer application; no mantener un segundo nombre de solver fijo en el script.
 solver="$(foamDictionary system/controlDict -entry application -value)"
+# Aceptar un nombre de ejecutable simple y comprobar su disponibilidad.
 if [[ ! "$solver" =~ ^[a-zA-Z][a-zA-Z0-9_]*$ ]] || ! command -v "$solver" >/dev/null 2>&1; then
     echo "ERROR: solver no disponible o inválido: $solver" >&2
     exit 1
 fi
+# Mostrar el directorio y solver elegidos.
 printf 'Caso: %s\nSolver: %s\n' "$PWD" "$solver"
+# Mostrar la versión si existe este comando; su ausencia no interrumpe la ejecución.
 foamVersion || true
 
+# Generar la malla solo si hay diccionario y aún no existen puntos de malla.
 if [[ -f system/blockMeshDict ]]; then
     if [[ ! -f constant/polyMesh/points ]]; then
         echo 'Generando malla con blockMesh...'
+        # Guardar ambas salidas en el log; si falla, mostrar las últimas 50 líneas y terminar.
         blockMesh > log.blockMesh 2>&1 || { tail -n 50 log.blockMesh >&2; exit 1; }
     else
         echo 'Malla existente: se reutiliza; eliminarla manualmente si cambió blockMeshDict.'
     fi
+# Si no hay diccionario ni malla existente, no se puede continuar.
 elif [[ ! -f constant/polyMesh/points ]]; then
     echo 'ERROR: no hay malla y el caso no contiene blockMeshDict.' >&2
     exit 1
 fi
 
+# Verificar la malla y conservar el diagnóstico en log.checkMesh.
 checkMesh > log.checkMesh 2>&1 || { tail -n 60 log.checkMesh >&2; exit 1; }
+# No basta un código de salida cero: exigir la confirmación de checkMesh.
 if ! grep -q 'Mesh OK' log.checkMesh; then
     echo 'ERROR: checkMesh no confirmó "Mesh OK".' >&2
     tail -n 60 log.checkMesh >&2
@@ -39,4 +53,5 @@ if ! grep -q 'Mesh OK' log.checkMesh; then
 fi
 
 echo "Ejecutando $solver..."
+# Ejecutar el solver; tee muestra y guarda la salida. pipefail propaga su fallo.
 "$solver" 2>&1 | tee "log.$solver"

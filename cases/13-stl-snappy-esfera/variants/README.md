@@ -7,3 +7,8 @@ Cambiar un parámetro por vez, sobre una **copia limpia** y regenerando siempre 
 3. **Dimensión del objeto:** generar una nueva esfera de radio 0.4 m mediante `scripts/preparar_stl.py`.
 
 La malla sigue representando el fluido exterior. Comprobar `surfaceCheck`, `locationInMesh` y `checkMesh`; los cambios de escala pueden requerir recalcular todos los límites de dominio.
+
+Los diccionarios originales están comentados y conservan sus valores activos.
+Para variar también el flujo de agua, usar las [variantes numéricas del caso
+13B](../../13b-esfera-agua-laminar/variants/README.md). Cambiar solo números en
+los diccionarios de este ejemplo de mallado no lo convierte en un caso CFD.

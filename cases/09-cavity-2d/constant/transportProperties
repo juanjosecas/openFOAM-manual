@@ -7,16 +7,25 @@
 \*---------------------------------------------------------------------------*/
 // NOTA DEL MANUAL: Viscosidad del fluido. Valores del caso heredado, no actualizados sin verificar compatibilidad.
 // Archivo heredado de Foundation: revisar compatibilidad con OpenFOAM.com.
+// Cabecera de lectura: describe el archivo, no las condiciones físicas.
 FoamFile
 {
+    // Versión del formato de archivo; no es la versión de OpenFOAM.
     version     2.0;
+    // Archivo de texto ASCII, editable con un editor.
     format      ascii;
+    // Clase de datos: diccionario o campo escalar/vectorial por celda.
     class       dictionary;
+    // Nombre del objeto que OpenFOAM espera leer.
     object      transportProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-nu              nu [ 0 2 -1 0 0 0 0 ] 0.01;	//Re 100
-//nu              nu [ 0 2 -1 0 0 0 0 ] 0.001;	//Re 1000
+// Viscosidad cinemática en m2/s. El primer nu es la clave y el segundo
+// identifica la magnitud dimensional en esta sintaxis heredada.
+// Re = U_tapa * (xmax-xmin) / nu. Cambiar nu cambia el régimen físico.
+// La línea que empieza por // debajo es solo un ejemplo y no se aplica.
+nu              nu [ 0 2 -1 0 0 0 0 ] 0.0001;	// Re = 10000 para U_tapa=1 m/s y L=1 m.
+//nu              nu [ 0 2 -1 0 0 0 0 ] 0.001;	// Alternativa inactiva: Re=1000 con U_tapa=1 m/s y L=1 m.
 
 // ************************************************************************* //

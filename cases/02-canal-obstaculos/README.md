@@ -1,6 +1,6 @@
 # Tutorial 02 — Flujo no newtoniano en un canal con obstáculos
 
-**Estado:** Revisión estática; **sin ejecución comprobada**.
+**Estado:** caso base ejecutado con OpenFOAM.com v2406; comentarios y variantes documentados. La convergencia numérica no equivale a validación física.
 
 ## Archivos presentes
 
@@ -13,9 +13,29 @@
 - `system/fvSchemes`
 - `system/fvSolution`
 
+## Configuración comentada e interacción con el objeto
+
+La plantilla conserva todos sus valores físicos y numéricos originales. Los
+diccionarios explican unidades, función de las entradas y simplificaciones. Los
+scripts también están comentados. El canal mide 200 x 20 mm y contiene un
+obstáculo rectangular de 20 x 4 mm; la malla planar tiene 7840 celdas y una
+celda en z. El espesor de 1 mm no convierte el objeto en una esfera o un cilindro.
+
+El patch `obstacle` es independiente de `lowerWall` y `upperWall`. Puede tener
+`slip` o `partialSlip` mientras ambas paredes siguen `noSlip`, manteniendo
+inalterados geometría y patches de presión. Las [recetas preparadas](variants/README.md)
+permiten comparar esos comportamientos, agua newtoniana y una malla más fina.
+Se aplican solo en copias nuevas de `runs/` y dejan la plantilla intacta.
+
+Las configuraciones de transporte base y `generalizedNewtonian/powerLaw` actúan
+en distintos niveles. Cambiar solo `nu` no convierte esta base en agua de
+viscosidad constante; las recetas `agua-*` modifican ambos archivos de forma
+coordinada. La presión es cinemática, no Pa; requiere una densidad para convertir
+diferencias. Los diagnósticos opcionales permanecen inactivos.
+
 ## Ejecución
 
-Desde esta carpeta y con OpenFOAM cargado: `./Allrun`. Conserva logs y no elimina resultados previos.
+Desde esta carpeta y con OpenFOAM cargado: `./Allrun`. Registra logs y no elimina directorios de resultados previos; los logs con el mismo nombre pueden sobrescribirse.
 
 
 ## Preparación y ejecución
@@ -31,7 +51,7 @@ foamDictionary system/controlDict -entry application -value
 simpleFoam 2>&1 | tee log.simpleFoam
 ```
 
-**Estado:** Comandos documentados, no comprobados mediante ejecución. Alternativamente, ejecutar `bash Allrun` desde la carpeta del caso; no combinar los dos procedimientos.
+**Verificación:** mallado y solver base comprobados en Docker v2406. Alternativamente, ejecutar `bash Allrun` desde la carpeta del caso; no combinar los dos procedimientos.
 
 ## Variaciones pequeñas
 

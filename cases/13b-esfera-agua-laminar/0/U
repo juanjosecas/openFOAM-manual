@@ -1,0 +1,29 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class volVectorField;
+    location "0";
+    object U;
+}
+
+// Velocidad en m/s; mantener estas dimensiones.
+dimensions [0 1 -1 0 0 0 0];
+// Estimación inicial, no condición de todo el flujo ya convergido.
+// Al variar la entrada, usar el mismo vector aquí para iniciar cerca de ella.
+internalField uniform (1e-5 0 0);
+boundaryField
+{
+    // Entrada en +x. Con D=1 m y nu=1e-6 m2/s: Re = U*D/nu.
+    // Ux=1e-6 -> Re=1; 1e-5 -> Re=10; 5e-5 -> Re=50; 1e-4 -> Re=100.
+    // Cambiar conjuntamente Ux en inlet y en internalField.
+    // Revisar convergencia y resolución para cada variante.
+    inlet { type fixedValue; value uniform (1e-5 0 0); }
+    // Salida sin gradiente normal de velocidad; la presión se fija en 0/p.
+    outlet { type zeroGradient; }
+    // Laterales impermeables sin esfuerzo tangencial: existe confinamiento.
+    // Ampliar la caja permite estudiar cuánto influyen en el resultado.
+    sides { type slip; }
+    // Esfera fija: velocidad cero en la pared; no se prescribe un movimiento.
+    sphere { type noSlip; }
+}

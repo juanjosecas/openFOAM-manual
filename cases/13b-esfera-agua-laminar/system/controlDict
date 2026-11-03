@@ -1,0 +1,33 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    location "system";
+    object controlDict;
+}
+
+// Solver estacionario: los directorios numéricos son iteraciones, no segundos.
+application simpleFoam;
+startFrom startTime;
+startTime 0;
+stopAt endTime;
+// Máximo de iteraciones. Probar 3000 si no alcanza los criterios de convergencia.
+// SIMPLE puede terminar antes; más iteraciones no refinan la malla.
+endTime 1500;
+// Incremento del contador de iteraciones; no es un paso temporal físico aquí.
+deltaT 1;
+writeControl timeStep;
+// Guardar cada 100 iteraciones; probar 25 para más estados intermedios.
+// No cambia la resolución espacial ni crea una película física transitoria.
+writeInterval 100;
+// Retener dos escrituras recientes además de los campos iniciales.
+// Usar 0 conserva todas las escrituras: aumenta el espacio en disco.
+purgeWrite 2;
+writeFormat ascii;
+// Dígitos de los campos exportados. Más dígitos no mejoran la precisión CFD.
+writePrecision 12;
+writeCompression off;
+timeFormat general;
+timePrecision 8;
+runTimeModifiable true;

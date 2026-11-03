@@ -1,38 +1,59 @@
 // NOTA DEL MANUAL: Solucion de sistemas lineales y acoplamiento; tolerancias alteran convergencia.
 // Se conservan todos los parametros numericos y fisicos del caso fuente.
+// Cabecera de lectura: tipo y nombre del archivo; no define la física.
 FoamFile
 {
+    // Versión del formato de archivo, no versión del solver.
     version 2.0;
+    // Texto ASCII legible y editable.
     format ascii;
+    // Tipo de objeto: diccionario o campo escalar/vectorial por celda.
     class dictionary;
+    // Nombre del objeto que OpenFOAM lee.
     object fvSolution;
 }
 
+// Solvers de sistemas lineales dentro de cada iteración SIMPLE;
+// no son distintos modelos fisiológicos.
 solvers
 {
+    // Sistema de presión cinemática.
     p
     {
+        // Multimalla algebraica para acelerar la resolución de presión.
         solver GAMG;
+        // Umbral del residual lineal; no error experimental ni umbral de perfusión.
         tolerance 1e-9;
+        // También permite parar al reducir el residual a 1% de su valor inicial.
         relTol 0.01;
+        // Suavizador de Gauss-Seidel del ciclo multimalla.
         smoother GaussSeidel;
     }
 
+    // Sistema de las componentes de velocidad.
     U
     {
+        // Solver iterativo con barridos de suavizado.
         solver smoothSolver;
+        // Gauss-Seidel simétrico para suavizar el error del sistema.
         smoother symGaussSeidel;
         tolerance 1e-9;
+        // Reducción relativa permitida hasta 10% del residual lineal inicial.
         relTol 0.1;
     }
 }
 
+// Acoplamiento presión-velocidad hasta obtener una solución estacionaria.
 SIMPLE
 {
+    // Una corrección adicional por celdas no ortogonales en las pendientes.
     nNonOrthogonalCorrectors 1;
 
+    // Usa el acoplamiento SIMPLE sin la variante consistente SIMPLEC.
     consistent no;
 
+    // Criterios globales de parada: p=1e-7, U=1e-8.
+    // Converger algebraicamente no equivale a validar el comportamiento de sangre.
     residualControl
     {
         p 1e-7;
@@ -40,15 +61,18 @@ SIMPLE
     }
 }
 
+// Subrelajación numérica; regula cambios entre iteraciones, no elasticidad vascular.
 relaxationFactors
 {
     fields
     {
+        // Amortiguación de las actualizaciones del campo de presión.
         p 0.3;
     }
 
     equations
     {
+        // Subrelajación de la ecuación de velocidad.
         U 0.7;
     }
 }

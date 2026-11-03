@@ -1,16 +1,24 @@
 #!/usr/bin/env bash
 # Construye y comprueba SOLO la malla; no ejecuta el solver.
+# Aplicar manejo estricto de errores y tuberías.
 set -Eeuo pipefail
+# Situarse en la carpeta del caso.
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+# Exigir la definición geométrica y de subdivisiones.
 if [[ ! -f system/blockMeshDict ]]; then echo 'Falta system/blockMeshDict' >&2; exit 2; fi
+# Comprobar que están disponibles ambas utilidades de mallado.
 for tool in blockMesh checkMesh; do
   command -v "$tool" >/dev/null || { echo "Falta $tool; cargar OpenFOAM" >&2; exit 2; }
 done
+# Proteger la malla existente: detenerse en vez de reemplazarla.
 if [[ -e constant/polyMesh/points ]]; then
   echo 'Hay una malla previa. Para proteger resultados, no se sobrescribe.' >&2
   echo 'Usar una copia limpia, o Allclean --yes tras revisar las salidas.' >&2
   exit 3
 fi
+# Construir la malla y guardar stdout/stderr; mostrar el final del log si falla.
 blockMesh > log.blockMesh 2>&1 || { tail -n 70 log.blockMesh >&2; exit 1; }
+# Comprobar la malla y registrar el resultado. Revisar también el texto Mesh OK.
 checkMesh > log.checkMesh 2>&1 || { tail -n 70 log.checkMesh >&2; exit 1; }
+# Informar el final; este script no ejecuta el solver ni valida la física.
 echo 'Malla generada. Revisar log.checkMesh; no equivale a validación física.'

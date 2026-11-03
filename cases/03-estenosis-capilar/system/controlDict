@@ -1,33 +1,53 @@
 // NOTA DEL MANUAL: Control de solver, tiempo o iteraciones y escrituras. simpleFoam es estacionario y pimpleFoam transitorio.
 // Se conservan todos los parametros numericos y fisicos del caso fuente.
+// Cabecera de lectura: tipo y nombre del archivo; no define la física.
 FoamFile
 {
+    // Versión del formato de archivo, no versión del solver.
     version 2.0;
+    // Texto ASCII legible y editable.
     format ascii;
+    // Tipo de objeto: diccionario o campo escalar/vectorial por celda.
     class dictionary;
+    // Nombre del objeto que OpenFOAM lee.
     object controlDict;
 }
 
+// Flujo incompresible estacionario: no resuelve pulso cardiaco ni tránsito celular.
 application simpleFoam;
 
+// Iniciar desde el valor startTime indicado, no desde el último resultado.
 startFrom startTime;
+// Cargar los campos iniciales de 0/.
 startTime 0;
 
+// Detener al alcanzar el límite configurado o antes si cumple residualControl.
 stopAt endTime;
+// Máximo de iteraciones SIMPLE; no son 2000 segundos de perfusión.
 endTime 2000;
 
+// Incremento del contador de iteraciones, no paso temporal fisiológico.
 deltaT 1;
 
+// Programar escritura por número de iteraciones.
 writeControl timeStep;
+// Guardar campos cada 100 iteraciones; no refina malla ni resolución temporal física.
 writeInterval 100;
 
+// Conservar todas las escrituras; aumenta el uso de disco.
 purgeWrite 0;
 
+// Campos de salida en texto legible.
 writeFormat ascii;
+// Diez dígitos de salida; no garantiza precisión de presión ni esfuerzos.
 writePrecision 10;
+// No comprimir los campos guardados.
 writeCompression off;
 
+// Formato de los nombres de directorios de iteración.
 timeFormat general;
+// Precisión de esos nombres, distinta de writePrecision para campos.
 timePrecision 6;
 
+// Permitir releer diccionarios modificables durante la ejecución.
 runTimeModifiable true;

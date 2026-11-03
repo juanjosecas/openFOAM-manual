@@ -1,0 +1,13 @@
+{
+  "descripcion": "Mismo fluido de la base; objeto con deslizamiento parcial e impermeable.",
+  "ajustes": {
+    "0/U": {
+      "boundaryField/obstacle": "{ type partialSlip; refValue uniform (0 0 0); valueFraction uniform 0.5; value uniform (0 0 0); }"
+    },
+    "system/controlDict": {
+      "endTime": "5000",
+      "purgeWrite": "2",
+      "writePrecision": "12"
+    }
+  }
+}

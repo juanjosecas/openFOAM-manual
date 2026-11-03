@@ -7,44 +7,63 @@
 \*---------------------------------------------------------------------------*/
 // NOTA DEL MANUAL: Esquemas de discretizacion y terminos convectivos.
 // Archivo heredado de Foundation: revisar compatibilidad con OpenFOAM.com.
+// Cabecera de lectura: describe el archivo, no las condiciones físicas.
 FoamFile
 {
+    // Versión del formato de archivo; no es la versión de OpenFOAM.
     version     2.0;
+    // Archivo de texto ASCII, editable con un editor.
     format      ascii;
+    // Clase de datos: diccionario o campo escalar/vectorial por celda.
     class       dictionary;
+    // Nombre del objeto que OpenFOAM espera leer.
     object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Discretización de derivadas temporales.
 ddtSchemes
 {
+    // Esquema temporal implícito de segundo orden cuando dispone del historial necesario.
     default         backward;
 }
 
+// Reconstrucción de gradientes espaciales.
 gradSchemes
 {
+    // Gauss con interpolación lineal como opción general para gradientes.
     default         Gauss linear;
+    // Selección explícita del mismo esquema para el gradiente de presión.
     grad(p)         Gauss linear;
 }
 
+// Esquemas de términos de divergencia, incluidos los convectivos.
 divSchemes
 {
+    // Sin esquema genérico: los términos que se usen deben estar declarados.
     default         none;
+    // Convección de U con el flujo volumétrico phi; interpolación central lineal.
     div(phi,U)      Gauss linear;
 }
 
+// Términos difusivos de tipo laplaciano.
 laplacianSchemes
 {
+    // Gauss lineal sin corrección no ortogonal; apropiado para la malla cartesiana actual.
     default         Gauss linear orthogonal;
 }
 
+// Interpolación de valores desde centros de celda hacia caras.
 interpolationSchemes
 {
+    // Interpolación lineal.
     default         linear;
 }
 
+// Aproximación de la derivada normal a las caras.
 snGradSchemes
 {
+    // Sin corrección no ortogonal, coherente con el bloque rectangular actual.
     default         orthogonal;
 }
 

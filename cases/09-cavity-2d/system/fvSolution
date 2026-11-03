@@ -7,24 +7,36 @@
 \*---------------------------------------------------------------------------*/
 // NOTA DEL MANUAL: Solvers lineales, presion, velocidad y algoritmos de acoplamiento.
 // Archivo heredado de Foundation: revisar compatibilidad con OpenFOAM.com.
+// Cabecera de lectura: describe el archivo, no las condiciones físicas.
 FoamFile
 {
+    // Versión del formato de archivo; no es la versión de OpenFOAM.
     version     2.0;
+    // Archivo de texto ASCII, editable con un editor.
     format      ascii;
+    // Clase de datos: diccionario o campo escalar/vectorial por celda.
     class       dictionary;
+    // Nombre del objeto que OpenFOAM espera leer.
     object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Solvers de sistemas lineales; no confundirlos con el solver CFD icoFoam.
 solvers
 {
+    // Sistema lineal de presión.
     p
     {
+        // Gradiente conjugado precondicionado para la matriz de presión.
         solver          PCG;
+        // Precondicionador de Cholesky incompleto diagonal.
         preconditioner  DIC;
+        // Umbral del residual del sistema lineal, distinto del error físico de la solución.
         tolerance       1e-06;
+        // No detener por reducción relativa; exigir el umbral tolerance.
         relTol          0;
 
+// Alternativa GAMG desactivada: este bloque es un comentario y no se aplica.
 /*
         solver           GAMG;
         tolerance        1e-6;
@@ -39,26 +51,38 @@ solvers
 */
     }
 
+    // Opciones para la corrección final de presión si el solver solicita pFinal.
     pFinal
     {
+        // Hereda las entradas del bloque p; después puede sobrescribir opciones.
         $p;
         relTol          0;
     }
 
+    // Sistema lineal de las componentes de velocidad.
     U
     {
+        // Solver iterativo basado en barridos de suavizado.
         solver          smoothSolver;
+        // Suavizador de Gauss-Seidel simétrico.
         smoother        symGaussSeidel;
+        // Umbral del residual de velocidad, más estricto que el de presión.
         tolerance       1e-08;
         relTol          0;
     }
 }
 
+// Acoplamiento presión-velocidad dentro de cada paso temporal de icoFoam.
 PISO
 {
+    // Número de correcciones PISO por paso.
     nCorrectors     1;
+    // Sin correcciones adicionales por no ortogonalidad en esta malla cartesiana.
     nNonOrthogonalCorrectors 0;
+    // Celda de referencia que elimina la indeterminación del nivel de presión
+    // en una cavidad cerrada con condiciones zeroGradient en todas las paredes.
     pRefCell        0;
+    // Valor de presión cinemática de referencia, en m2/s2.
     pRefValue       0;
 }
 

@@ -7,34 +7,48 @@
 \*---------------------------------------------------------------------------*/
 // NOTA DEL MANUAL: Muestreo de perfiles; su presencia no implica muestreo automatico.
 // Archivo heredado de Foundation: revisar compatibilidad con OpenFOAM.com.
+// Cabecera de lectura: describe el archivo, no las condiciones físicas.
 FoamFile
 {
+    // Versión del formato de archivo; no es la versión de OpenFOAM.
     version     2.0;
+    // Archivo de texto ASCII, editable con un editor.
     format      ascii;
+    // Clase de datos: diccionario o campo escalar/vectorial por celda.
     class       dictionary;
+    // Nombre del objeto que OpenFOAM espera leer.
     object      sampleDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Muestreo en conjuntos de puntos o líneas; no se activa solo por existir el archivo.
 type sets;
 
+// Escribir tablas de texto con coordenadas y valores muestreados.
 setFormat raw;
 
 //interpolationScheme cell;
 //interpolationScheme cellPoint;
+// Interpola usando datos de celdas, puntos y caras para estimar valores muestreados.
 interpolationScheme cellPointFace;
 
 // Fields to sample.
+// Campos a exportar; aquí solo se selecciona la velocidad U.
 fields
 (
     U
 );
 
+// Lista de líneas de muestreo; sus nombres identifican las salidas.
 sets
 (
 
+    // Perfil horizontal. Los extremos exceden la caja [0,1] y cruzan su interior.
+    // La línea usa z=0, una cara delgada del dominio; para un corte interior
+    // podría elegirse z=0.5 cambiando ambos extremos, sin hacerlo aquí.
     l1
     {
+        // Muestrea centros de segmentos dentro de celdas y cruces con caras.
         type            midPointAndFace;
         //type            midPoint;
         //type            face;
@@ -42,19 +56,26 @@ sets
         //type            uniform;
 	//nPoints 	  100;
 
+        // Usa la coordenada x para identificar las muestras de esta línea.
         axis            x;
+        // Extremo inicial (x,y,z) en metros; no se prescribe velocidad aquí.
         start           ( -1  0.5 0);
+        // Extremo final de la línea horizontal, a y=0.5.
         end             ( 2  0.5 0);
     }
 
+    // Perfil vertical a x=0.5; comparte el plano z=0 del perfil horizontal.
     l2
     {
         type            midPointAndFace;
         //type            midPoint;
         //type            face;
 
+        // Usa la coordenada y como abscisa del perfil vertical.
         axis            y;
+        // Inicio por debajo de la caja; la línea la atraviesa verticalmente.
         start           (0.5 -1 0);
+        // Final por encima de la caja; los puntos válidos dependen de la intersección con la malla.
         end             (0.5 2 0);
     }
 

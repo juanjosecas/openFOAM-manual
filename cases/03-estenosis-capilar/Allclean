@@ -1,15 +1,26 @@
 #!/usr/bin/env bash
 # Limpieza opt-in: evita borrar 0/, constant/ o system/.
+# Aplicar manejo estricto de errores.
 set -Eeuo pipefail
+# Limitar las rutas relativas de limpieza a este caso.
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+# Sin el argumento --yes solo se muestran candidatos; no se borra nada.
 if [[ "${1:-}" != "--yes" ]]; then
     echo "Simulación de limpieza. Ejecutar bash Allclean --yes para borrar:"
+    # Listar logs, salidas de posprocesamiento y particiones del primer nivel.
     find . -mindepth 1 -maxdepth 1 \( -name 'processor[0-9]*' -o -name 'postProcessing' -o -name 'VTK' -o -name 'log.*' \) -print
+    # Listar directorios con nombres numéricos, excluyendo exactamente 0/.
     find . -mindepth 1 -maxdepth 1 -type d -regex './[0-9]+\(\.[0-9]+\)?' ! -name '0' -print
+    # Mostrar la malla generada si existe.
     [[ -d constant/polyMesh ]] && echo constant/polyMesh
+    # Terminar la previsualización sin entrar en la sección destructiva.
     exit 0
 fi
+# Con --yes: eliminar los logs y directorios de resultados seleccionados.
+# -mindepth/-maxdepth restringen la búsqueda; -- evita interpretar nombres como opciones.
 find . -mindepth 1 -maxdepth 1 \( -name 'processor[0-9]*' -o -name 'postProcessing' -o -name 'VTK' -o -name 'log.*' \) -exec rm -rf -- {} +
+# Eliminar tiempos numéricos distintos de 0; revisar previamente la previsualización.
 find . -mindepth 1 -maxdepth 1 -type d -regex './[0-9]+\(\.[0-9]+\)?' ! -name '0' -exec rm -rf -- {} +
+# Eliminar solo la malla generada dentro de constant, conservando sus propiedades.
 rm -rf -- constant/polyMesh
 echo 'Limpieza terminada. Se conserva 0/, constant/ original y system/.'

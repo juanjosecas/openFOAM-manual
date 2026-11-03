@@ -1,0 +1,28 @@
+// Configuración auxiliar del caso de mallado; no define un solver CFD.
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object controlDict;
+}
+
+// Utilidad de mallado, no solver de flujo. Los números de tiempo de
+// este archivo son auxiliares y no representan evolución física.
+application         snappyHexMesh;
+
+startFrom           startTime;
+startTime           0;
+stopAt              endTime;
+endTime             1;
+deltaT              1;
+
+// Formato de salida de las utilidades. El refinamiento se cambia
+// en blockMeshDict/snappyHexMeshDict, no en writeInterval.
+writeControl        timeStep;
+writeInterval       1;
+writeFormat         ascii;
+writePrecision      8;
+writeCompression    off;
+
+runTimeModifiable   false;

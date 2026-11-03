@@ -1,46 +1,63 @@
 // NOTA DEL MANUAL: Presion del solver: comprobar dimensions antes de rotular Pa. En varios solvers incompresibles se utiliza presion cinematica.
 // Mantener la fisica y los valores originales; verificar compatibilidad con la version instalada.
+// Cabecera: describe cómo leer el archivo, no sus condiciones físicas.
 FoamFile
 {
+    // Versión del formato, no del solver.
     version 2.0;
+    // Texto ASCII editable.
     format ascii;
+    // Clase de objeto: diccionario o campo escalar/vectorial por celda.
     class volScalarField;
+    // Carpeta de los campos iniciales.
     location "0";
+    // Nombre del objeto que lee OpenFOAM.
     object p;
 }
 
+// Presión cinemática p/rho [m2/s2]; para diferencias en Pa multiplicar por rho.
 dimensions [0 2 -2 0 0 0 0];
 
+// Presión inicial uniforme, no presión absoluta del fluido.
 internalField uniform 0;
 
+// Condiciones de presión correspondientes a los patches de la malla.
 boundaryField
 {
+    // Con velocidad impuesta, la presión se ajusta al flujo obtenido.
     inlet
     {
         type zeroGradient;
     }
 
+    // Referencia fija de presión cinemática en la salida.
     outlet
     {
         type fixedValue;
+        // Cero relativo; desplazarlo por una constante no aumenta el caudal impuesto.
         value uniform 0;
     }
 
+    // Derivada normal de presión nula sobre la pared inferior.
     lowerWall
     {
         type zeroGradient;
     }
 
+    // Derivada normal de presión nula sobre la pared superior.
     upperWall
     {
         type zeroGradient;
     }
 
+    // La presión puede mantenerse zeroGradient también en las variantes
+    // slip/partialSlip de un objeto fijo e impermeable.
     obstacle
     {
         type zeroGradient;
     }
 
+    // Sin resolución en z, de forma consistente con U y blockMeshDict.
     frontAndBack
     {
         type empty;

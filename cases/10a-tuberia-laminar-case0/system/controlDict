@@ -16,9 +16,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     icoFoam;
+application     icoFoam; // sirve para resolver flujos incompresibles transitorios, laminares o turbulentos. icoFoam es un solver transitorio, mientras que simpleFoam es un solver estacionario.
 
-startFrom       startTime;
+startFrom       startTime; // es el 
 
 startTime       0;
 

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+trap 'printf "ERROR: fallo en línea %s (código %s)\n" "$LINENO" "$?" >&2' ERR
+for cmd in surfaceCheck blockMesh checkMesh snappyHexMesh simpleFoam; do
+    command -v "$cmd" >/dev/null || { echo "ERROR: falta $cmd; cargar OpenFOAM.com v2406." >&2; exit 1; }
+done
+[[ -f constant/triSurface/sphere.stl ]] || { echo 'ERROR: generar constant/triSurface/sphere.stl antes de ejecutar.' >&2; exit 1; }
+[[ ! -e constant/polyMesh ]] || { echo 'ERROR: malla previa; usar una copia nueva.' >&2; exit 1; }
+[[ ! -e log.simpleFoam ]] || { echo 'ERROR: log previo; usar una copia nueva.' >&2; exit 1; }
+surfaceCheck constant/triSurface/sphere.stl > log.surfaceCheck 2>&1
+grep -q 'Surface is closed.' log.surfaceCheck
+grep -q 'Surface has no illegal triangles.' log.surfaceCheck
+blockMesh > log.blockMesh 2>&1
+checkMesh > log.checkMeshBase 2>&1
+grep -q 'Mesh OK.' log.checkMeshBase
+snappyHexMesh -overwrite > log.snappyHexMesh 2>&1
+checkMesh > log.checkMesh 2>&1
+grep -q 'Mesh OK.' log.checkMesh
+simpleFoam 2>&1 | tee log.simpleFoam
+touch esfera-agua.foam
+if ! grep -q 'SIMPLE solution converged' log.simpleFoam; then
+    echo 'AVISO: revisar convergencia; el solver terminó sin confirmar los criterios SIMPLE.' >&2
+fi

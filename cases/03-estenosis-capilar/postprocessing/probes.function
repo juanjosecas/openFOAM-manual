@@ -1,16 +1,27 @@
 // Fragmento OPCIONAL para system/controlDict, dentro de functions { ... }.
 // No se activa por estar en esta carpeta. Coordenadas en metros.
 // Leer campos U y p; revisar las unidades de p en cada solver.
+// Sondas opcionales; copiar dentro de functions para activarlas, si se desea.
+// En simpleFoam registrarían iteraciones, no latidos ni tiempos de tránsito.
 caseProbes
 {
+    // Muestreo en puntos fijos; no siguen partículas ni eritrocitos.
     type probes;
+    // Biblioteca de muestreo requerida por el objeto.
     libs ("libsampling.so");
+    // Activo solo si este fragmento se incorpora a controlDict.
     enabled true;
+    // Registrar velocidad y presión cinemática; no oxígeno, hematocrito ni daño celular.
     fields (U p);
+    // Coordenadas (x,y,z) en metros; z=0.5 um sitúa las sondas dentro del espesor.
     probeLocations
     (
+        // Antes del estrechamiento: x=20 um, eje del canal y=5 um.
         (2e-5 5e-6 5e-7)
+        // Centro de la garganta: x=50 um, y=5 um.
         (5e-5 5e-6 5e-7)
+        // Después del estrechamiento: x=80 um.
+        // Diferencias entre sondas son valores puntuales, no promedios de sección.
         (8e-5 5e-6 5e-7)
     );
 }

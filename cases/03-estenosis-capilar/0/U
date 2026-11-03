@@ -1,43 +1,67 @@
-// NOTA DEL MANUAL: Campo de velocidad en m/s. Revisar conditions de inlet, outlet, walls y los nombres de patches.
+// Velocidad de un fluido continuo en un canal estrechado de inspiración microvascular.
 // Se conservan todos los parametros numericos y fisicos del caso fuente.
+// Cabecera de lectura: tipo y nombre del archivo; no define la física.
 FoamFile
 {
+    // Versión del formato de archivo, no versión del solver.
     version 2.0;
+    // Texto ASCII legible y editable.
     format ascii;
+    // Tipo de objeto: diccionario o campo escalar/vectorial por celda.
     class volVectorField;
+    // Carpeta que contiene los campos iniciales.
     location "0";
+    // Nombre del objeto que OpenFOAM lee.
     object U;
 }
 
+// Velocidad en m/s; multiplicar por 1000 para mostrar mm/s.
+// las dimensiones son, en orden: L, M, T, Q, Θ, N, J; 
+
 dimensions [0 1 -1 0 0 0 0];
 
+// Estimación inicial en el interior: 0.5 mm/s en +x, no solución convergida.
 internalField uniform (0.0005 0 0);
 
+// Condiciones de contorno; los nombres deben coincidir con blockMeshDict.
 boundaryField
 {
+    // Entrada: se prescribe velocidad, no una diferencia de presión fisiológica.
     inlet
     {
+        // Impone el vector especificado en toda la sección de entrada.
         type fixedValue;
+        // Entrada uniforme a 0.5 mm/s. No incluye pulsación ni perfil desarrollado.
+        // Fija el flujo entrante del canal; al estrecharlo no se simula automáticamente
+        // una disminución de perfusión a presión impulsora constante.
         value uniform (0.0005 0 0);
     }
 
+    // Salida: zeroGradient deja ajustar la velocidad; 0/p fija la referencia de presión.
     outlet
     {
+        // Derivada normal de U nula; no impone velocidad cero.
         type zeroGradient;
     }
 
+    // Pared inferior rígida de la luz idealizada; no modela células endoteliales.
     lowerWall
     {
+        // Velocidad nula en la pared fija, sin deslizamiento ni filtración.
         type noSlip;
     }
 
+    // Pared superior rígida, con la misma condición de no deslizamiento.
     upperWall
     {
         type noSlip;
     }
 
+    // Caras del espesor artificial: empty representa un flujo planar 2D.
+    // No es un tubo cilíndrico, ni un modelo axisimétrico de un capilar.
     frontAndBack
     {
+        // Sin resolución de las ecuaciones en z; debe coincidir con la malla.
         type empty;
     }
 }

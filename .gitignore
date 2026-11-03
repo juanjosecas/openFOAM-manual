@@ -27,3 +27,18 @@ plots/
 __pycache__/
 *.py[cod]
 .venv/
+
+# Ejecuciones generadas
+/runs/
+
+# Archivos temporales y basura del sistema/editor
+.DS_Store
+Thumbs.db
+*~
+*.tmp
+*.temp
+*.bak
+*.orig
+*.swp
+*.swo
+.ipynb_checkpoints/

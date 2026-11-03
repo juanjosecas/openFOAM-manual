@@ -14,6 +14,37 @@
 - `system/fvSolution`
 - `system/sampleDict`
 
+## Cómo leer la configuración
+
+Los archivos incluyen comentarios breves junto a las entradas y comandos.
+En los diccionarios, `clave valor;` define una entrada, `{ ... }` agrupa un
+subdiccionario y `( ... )` delimita listas o vectores. `$nombre` reutiliza una
+entrada definida en el diccionario. `//` comenta una línea y `/* ... */` un
+bloque: los ejemplos comentados no se ejecutan. En los scripts Bash, `#`
+introduce un comentario.
+
+| Archivo | Función |
+| --- | --- |
+| `0/U` | Velocidad inicial y condiciones de la tapa, paredes y caras 2D. |
+| `0/p` | Presión cinemática inicial y sus condiciones de contorno. |
+| `constant/transportProperties` | Viscosidad cinemática del fluido. |
+| `system/blockMeshDict` | Vértices, subdivisiones, bloque y patches de la malla. |
+| `system/controlDict` | Solver, tiempos físicos, escrituras y diagnósticos. |
+| `system/fvSchemes` | Aproximaciones numéricas de derivadas e interpolaciones. |
+| `system/fvSolution` | Solvers lineales, acoplamiento PISO y referencia de presión. |
+| `system/decomposeParDict` | Partición opcional para una ejecución paralela. |
+| `system/sampleDict` | Definición de perfiles; necesita invocación de muestreo. |
+| `Allmesh` | Generar y comprobar la malla sin ejecutar el solver. |
+| `Allrun` | Preparar o reutilizar la malla, verificarla y ejecutar el solver. |
+| `Allclean` | Mostrar candidatos de limpieza; borrar solo con `--yes`. |
+
+Con los valores activos, la tapa se mueve a 1 m/s, la longitud de la cavidad
+es 1 m y `nu=0.0001 m²/s`: `Re=U L/nu=10000`. La malla contiene 20 × 20 × 1
+celdas. Estos datos describen el caso; no demuestran resolución suficiente ni
+validación física. En `icoFoam`, `deltaT=0.01` y `endTime=50` son segundos de
+tiempo simulado, mientras que las tolerancias de `fvSolution` son controles
+numéricos de los sistemas lineales.
+
 ## Ejecución
 
 Desde esta carpeta y con OpenFOAM cargado: `./Allrun`. Conserva logs y no elimina resultados previos.

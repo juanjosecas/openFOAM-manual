@@ -3,8 +3,12 @@
 from __future__ import annotations
 import argparse
 from pathlib import Path
+import shutil
+import subprocess
+import tempfile
 import numpy as np
 import pyvista as pv
+
 
 def internal_grid(reader):
     data = reader.read()
@@ -37,12 +41,55 @@ def prepare(grid):
     grid.point_data["U_magnitude"] = np.linalg.norm(vec, axis=1)
     return grid
 
+
+def render_frame(plotter, grid, normal, time_value, clim):
+    section = grid.slice(normal=normal)
+    if section.n_points == 0:
+        raise RuntimeError(f"El corte no contiene puntos para el estado {time_value:g}.")
+    plotter.clear()
+    plotter.set_background("#101522")
+    plotter.add_mesh(
+        section,
+        scalars="U_magnitude",
+        clim=clim,
+        cmap="magma",
+        smooth_shading=True,
+        show_edges=False,
+        scalar_bar_args={
+            "title": "Velocidad |U|",
+            "color": "#f4f6fb",
+            "label_font_size": 12,
+            "title_font_size": 14,
+            "n_labels": 5,
+            "fmt": "%.2e",
+            "vertical": True,
+            "position_x": 0.88,
+            "position_y": 0.18,
+            "height": 0.66,
+            "width": 0.06,
+        },
+    )
+    contours = section.contour(isosurfaces=10, scalars="U_magnitude")
+    if contours.n_cells:
+        plotter.add_mesh(contours, color="#fff2cc", opacity=0.3, line_width=1)
+    plotter.add_text(
+        f"CAMPO DE VELOCIDAD   ·   tiempo/iteración = {time_value:g}",
+        position="upper_left",
+        font_size=15,
+        color="#f4f6fb",
+        shadow=True,
+    )
+    plotter.add_axes(line_width=2, color="#f4f6fb")
+    plotter.view_xy() if normal == "z" else plotter.view_xz()
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("foam", type=Path, help="Archivo .foam en la raíz del caso")
     ap.add_argument("--output", type=Path, default=Path("plots/pyvista"))
     ap.add_argument("--time-index", type=int, default=-1)
     ap.add_argument("--gif", action="store_true", help="Animar los estados disponibles")
+    ap.add_argument("--mp4", action="store_true", help="Exportar video MP4 con ffmpeg")
     ap.add_argument("--fps", type=int, default=15)
     args = ap.parse_args()
     if not args.foam.is_file():
@@ -60,41 +107,72 @@ def main():
     grid = prepare(internal_grid(reader))
     # Un corte central ofrece una representación útil tanto de dominios 2D como 3D.
     normal = "z" if (grid.bounds[5] - grid.bounds[4]) < (grid.bounds[3] - grid.bounds[2]) else "y"
-    sl = grid.slice(normal=normal)
-    if sl.n_points == 0:
-        raise SystemExit("El corte no contiene puntos; revisar geometría y normal.")
-    plotter = pv.Plotter(off_screen=True, window_size=(1280, 720))
-    plotter.add_mesh(sl, scalars="U_magnitude", cmap="viridis", show_edges=False)
-    plotter.add_axes()
-    plotter.view_xy() if normal == "z" else plotter.view_xz()
+    if args.gif or args.mp4:
+        if len(times) < 2:
+            raise SystemExit("Se necesitan al menos dos tiempos/iteraciones para animar.")
+        vmax = 0.0
+        for time_value in times:
+            reader.set_active_time_value(time_value)
+            current = prepare(internal_grid(reader))
+            vmax = max(vmax, float(np.nanmax(current.point_data["U_magnitude"])))
+        clim = (0.0, max(vmax, 1e-12))
+    else:
+        clim = (0.0, max(float(np.nanmax(grid.point_data["U_magnitude"])), 1e-12))
+
+    plotter = pv.Plotter(off_screen=True, window_size=(1600, 900))
+    render_frame(plotter, grid, normal, times[args.time_index], clim)
     plotter.screenshot(str(args.output / "velocidad.png"))
     plotter.close()
     print(args.output / "velocidad.png")
 
-    if args.gif:
-        if len(times) < 2:
-            raise SystemExit("Se necesitan al menos dos tiempos/iteraciones para un GIF.")
-        # Rango fijo para permitir comparación visual; recorre los tiempos disponibles.
-        vmax = 0.0
-        for t in times:
-            reader.set_active_time_value(t)
-            g = prepare(internal_grid(reader))
-            vmax = max(vmax, float(np.nanmax(g.point_data["U_magnitude"])))
-        plotter = pv.Plotter(off_screen=True, window_size=(1280, 720))
-        gif = args.output / "velocidad.gif"
-        plotter.open_gif(str(gif), fps=args.fps)
-        for t in times:
-            reader.set_active_time_value(t)
-            g = prepare(internal_grid(reader))
-            s = g.slice(normal=normal)
-            plotter.clear()
-            plotter.add_mesh(s, scalars="U_magnitude", clim=(0.0, max(vmax, 1e-12)),
-                             cmap="viridis", show_scalar_bar=True)
-            plotter.add_text(f"Time/iteration: {t:g}", font_size=11)
-            plotter.add_axes()
-            plotter.view_xy() if normal == "z" else plotter.view_xz()
-            plotter.write_frame()
-        plotter.close()
-        print(gif)
+    if args.gif or args.mp4:
+        plotter = pv.Plotter(off_screen=True, window_size=(1600, 900))
+        if args.gif:
+            gif = args.output / "velocidad.gif"
+            plotter.open_gif(str(gif), fps=args.fps)
+        ffmpeg = None
+        if args.mp4:
+            ffmpeg = shutil.which("ffmpeg")
+            if ffmpeg is None:
+                raise SystemExit("No se encontró ffmpeg; instálalo para exportar MP4.")
+        with tempfile.TemporaryDirectory(prefix="openfoam-frames-") as temp_dir:
+            frame_dir = Path(temp_dir)
+            for index, time_value in enumerate(times):
+                reader.set_active_time_value(time_value)
+                current = prepare(internal_grid(reader))
+                render_frame(plotter, current, normal, time_value, clim)
+                if args.gif:
+                    plotter.write_frame()
+                if args.mp4:
+                    plotter.screenshot(str(frame_dir / f"frame-{index:06d}.png"))
+            plotter.close()
+            if args.mp4:
+                mp4 = args.output / "velocidad.mp4"
+                subprocess.run(
+                    [
+                        ffmpeg,
+                        "-y",
+                        "-framerate",
+                        str(args.fps),
+                        "-i",
+                        str(frame_dir / "frame-%06d.png"),
+                        "-c:v",
+                        "libx264",
+                        "-pix_fmt",
+                        "yuv420p",
+                        "-movflags",
+                        "+faststart",
+                        str(mp4),
+                    ],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+        if args.gif:
+            print(gif)
+        if args.mp4:
+            print(mp4)
+
+
 if __name__ == "__main__":
     main()

@@ -1,0 +1,16 @@
+{
+  "descripcion": "Fluido newtoniano nu=1e-6 m2/s, U=0.01 m/s, objeto noSlip; Re_h=40.",
+  "ajustes": {
+    "constant/transportProperties": {
+      "nu": "[0 2 -1 0 0 0 0] 1e-6"
+    },
+    "constant/turbulenceProperties": {
+      "laminar": "{ model Stokes; }"
+    },
+    "system/controlDict": {
+      "endTime": "5000",
+      "purgeWrite": "2",
+      "writePrecision": "12"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+if [[ "${1:-}" != "--yes" ]]; then
+    echo "Simulación de limpieza. Ejecutar bash Allclean --yes para borrar:"
+    find . -mindepth 1 -maxdepth 1 \( -name postProcessing -o -name 'log.*' \) -print
+    find . -mindepth 1 -maxdepth 1 -type d -regex './[0-9]+\(\.[0-9]+\)?' ! -name 0 -print
+    echo constant/polyMesh
+    exit 0
+fi
+find . -mindepth 1 -maxdepth 1 \( -name postProcessing -o -name 'log.*' \) -exec rm -rf -- {} +
+find . -mindepth 1 -maxdepth 1 -type d -regex './[0-9]+\(\.[0-9]+\)?' ! -name 0 -exec rm -rf -- {} +
+rm -rf -- constant/polyMesh

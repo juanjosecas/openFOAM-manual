@@ -7,31 +7,42 @@
 \*---------------------------------------------------------------------------*/
 // NOTA DEL MANUAL: Presion: consultar dimensions para distinguir presion cinematica de Pa.
 // Se conservan todos los parametros numericos y fisicos del caso fuente.
+// Cabecera de lectura: describe el archivo, no las condiciones físicas.
 FoamFile
 {
+    // Versión del formato de archivo; no es la versión de OpenFOAM.
     version     2.0;
+    // Archivo de texto ASCII, editable con un editor.
     format      ascii;
+    // Clase de datos: diccionario o campo escalar/vectorial por celda.
     class       volScalarField;
+    // Nombre del objeto que OpenFOAM espera leer.
     object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Presión cinemática p/rho, en m2/s2; no presión en Pa.
 dimensions      [0 2 -2 0 0 0 0];
 
+// Estimación inicial uniforme de presión cinemática.
 internalField   uniform 0;
 
+// Condiciones de presión sobre los mismos patches definidos para U.
 boundaryField
 {
+    // Tapa móvil; zeroGradient prescribe derivada normal de presión nula.
     movingWall
     {
         type            zeroGradient;
     }
 
+    // Paredes fijas con derivada normal de presión nula.
     fixedWalls
     {
         type            zeroGradient;
     }
 
+    // Caras 2D sin resolución en z; la referencia de presión está en fvSolution.
     frontAndBack
     {
         type            empty;

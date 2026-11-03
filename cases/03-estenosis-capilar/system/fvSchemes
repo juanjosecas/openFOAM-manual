@@ -1,49 +1,71 @@
 // NOTA DEL MANUAL: Esquemas numericos; no cambiar sin examinar estabilidad, orden y compatibilidad.
 // Se conservan todos los parametros numericos y fisicos del caso fuente.
+// Cabecera de lectura: tipo y nombre del archivo; no define la física.
 FoamFile
 {
+    // Versión del formato de archivo, no versión del solver.
     version 2.0;
+    // Texto ASCII legible y editable.
     format ascii;
+    // Tipo de objeto: diccionario o campo escalar/vectorial por celda.
     class dictionary;
+    // Nombre del objeto que OpenFOAM lee.
     object fvSchemes;
 }
 
+// Discretización temporal: steadyState anula las derivadas temporales.
+// Una secuencia de iteraciones no representa una onda de pulso.
 ddtSchemes
 {
     default steadyState;
 }
 
+// Gradientes espaciales de los campos, importantes en la zona estrechada.
 gradSchemes
 {
+    // Teorema de Gauss e interpolación lineal para reconstruir gradientes.
     default Gauss linear;
 }
 
+// Discretización de divergencias y transporte convectivo.
 divSchemes
 {
+    // Sin esquema genérico; declarar explícitamente los términos que usa el solver.
     default none;
 
+    // Convección de velocidad usando phi, el flujo volumétrico en caras.
+    // Upwind es robusto pero difusivo: una figura suave no demuestra
+    // que los gradientes cercanos a la pared estén bien resueltos.
     div(phi,U) bounded Gauss upwind;
 
+    // Parte del término de esfuerzo viscoso; nuEff es la viscosidad cinemática
+    // efectiva local. No sustituirla por una constante al interpretar cizalla.
     div((nuEff*dev2(T(grad(U)))))
         Gauss linear;
 }
 
+// Términos difusivos: corrected añade corrección de no ortogonalidad.
 laplacianSchemes
 {
     default Gauss linear corrected;
 }
 
+// Interpolación de valores desde centros de celda hacia las caras.
 interpolationSchemes
 {
+    // Interpolación lineal.
     default linear;
 }
 
+// Derivadas normales a caras, con corrección de no ortogonalidad.
 snGradSchemes
 {
     default corrected;
 }
 
+// Método geométrico para calcular distancia a la pared si un modelo lo solicita.
 wallDist
 {
+    // Propagación de distancias desde los patches wall; no mide espesor endotelial.
     method meshWave;
 }

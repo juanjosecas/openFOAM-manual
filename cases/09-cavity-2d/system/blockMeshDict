@@ -7,28 +7,41 @@
 \*---------------------------------------------------------------------------*/
 // NOTA DEL MANUAL: Definicion de malla, geometria y patches. Regenerar la malla tras modificarla.
 // Archivo heredado de Foundation: revisar compatibilidad con OpenFOAM.com.
+// Cabecera de lectura: describe el archivo, no las condiciones físicas.
 FoamFile
 {
+    // Versión del formato de archivo; no es la versión de OpenFOAM.
     version     2.0;
+    // Archivo de texto ASCII, editable con un editor.
     format      ascii;
+    // Clase de datos: diccionario o campo escalar/vectorial por celda.
     class       dictionary;
+    // Nombre del objeto que OpenFOAM espera leer.
     object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Factor de escala de los vértices: 1 conserva las coordenadas en metros.
 convertToMeters 1;	//This is an scaling operation. Done at the end.
 
+// Límites de la caja. Con estos valores, la sección XY mide 1 m x 1 m.
 xmin 0;
 xmax 1;
 ymin 0;
 ymax 1;
+// Espesor geométrico en z: 1 m; empty y una celda en z definen el caso 2D.
 zmin 0;
 zmax 1;
 
+// Número de celdas en x.
 xcells 20;
+// Número de celdas en y; 20 x 20 x 1 produce 400 celdas.
 ycells 20;
+// Una sola celda en la dirección vacía; conservarla para este planteo 2D.
 zcells 1;
 
+// Ejemplos desactivados: deltax, #calc y $xcells no se evalúan
+// mientras sus líneas empiecen por //. #calc permite calcular valores.
 //deltax 0.00775;	//As in Ghia et al 129 x 129 cells
 //deltax 0.05;
 //lx #calc "$xmax-$xmin";
@@ -36,15 +49,25 @@ zcells 1;
 
 //ycells $xcells;
 
+// Lista ordenada de vértices; se numeran de 0 a 7.
+// $nombre sustituye una coordenada por el valor definido más arriba.
 vertices
 (
+    // 0: esquina inferior izquierda del plano frontal, z=zmin.
     ($xmin  $ymin  $zmin)
+    // 1: esquina inferior derecha del plano frontal.
     ($xmax  $ymin  $zmin)
+    // 2: esquina superior derecha del plano frontal.
     ($xmax  $ymax  $zmin)
+    // 3: esquina superior izquierda del plano frontal.
     ($xmin  $ymax  $zmin)
+    // 4: correspondiente al vértice 0 en el plano posterior, z=zmax.
     ($xmin  $ymin  $zmax)
+    // 5: correspondiente al vértice 1 en el plano posterior.
     ($xmax  $ymin  $zmax)
+    // 6: correspondiente al vértice 2 en el plano posterior.
     ($xmax  $ymax  $zmax)
+    // 7: correspondiente al vértice 3 en el plano posterior.
     ($xmin  $ymax  $zmax)
 
 /*
@@ -59,17 +82,24 @@ vertices
 */
 );
 
+// Bloques de volumen: hex usa ocho índices de vértice.
+// La segunda terna da las subdivisiones; simpleGrading (1 1 1)
+// usa celdas sin expansión de tamaño dentro del bloque.
 blocks
 (
     hex (0 1 2 3 4 5 6 7) ($xcells $ycells $zcells) simpleGrading (1 1 1)
 );
 
+// Aristas curvas opcionales; vacío significa aristas rectas.
+// Los ejemplos arc comentados no cambian la malla.
 edges
 (
     //arc 0 1 (0.5 -0.1 0)
     //arc 4 5 (0.5 -0.1 1)
 );
 
+// Agrupa caras externas en patches. Cada cara enumera sus vértices;
+// type wall es un tipo geométrico, mientras 0/U y 0/p fijan la física.
 boundary
 (
     movingWall
@@ -77,6 +107,7 @@ boundary
         type wall;
         faces
         (
+            // Tapa superior de la cavidad, y=ymax.
             (3 7 6 2)
         );
     }
@@ -85,22 +116,29 @@ boundary
         type wall;
         faces
         (
+            // Pared izquierda, x=xmin.
             (0 4 7 3)
+            // Pared derecha, x=xmax.
             (2 6 5 1)
+            // Pared inferior, y=ymin.
             (1 5 4 0)
         );
     }
+    // Caras que cierran el espesor; empty debe coincidir en malla y campos.
     frontAndBack
     {
         type empty;
         faces
         (
+            // Cara frontal, z=zmin.
             (0 3 2 1)
+            // Cara posterior, z=zmax.
             (4 5 6 7)
         );
     }
 );
 
+// Pares de patches que se fusionarían; vacío porque hay un único bloque.
 mergePatchPairs
 (
     //(interface1 interface2)

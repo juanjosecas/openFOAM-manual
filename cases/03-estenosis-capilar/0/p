@@ -1,41 +1,60 @@
 // NOTA DEL MANUAL: Presion: consultar dimensions para distinguir presion cinematica de Pa.
 // Se conservan todos los parametros numericos y fisicos del caso fuente.
+// Cabecera de lectura: tipo y nombre del archivo; no define la física.
 FoamFile
 {
+    // Versión del formato de archivo, no versión del solver.
     version 2.0;
+    // Texto ASCII legible y editable.
     format ascii;
+    // Tipo de objeto: diccionario o campo escalar/vectorial por celda.
     class volScalarField;
+    // Carpeta que contiene los campos iniciales.
     location "0";
+    // Nombre del objeto que OpenFOAM lee.
     object p;
 }
 
+// Presión cinemática p/rho [m2/s2], no Pa ni mmHg.
+// Para diferencias: DeltaP[Pa]=rho*Deltap; se necesita una densidad
+// justificada, que este archivo no especifica.
 dimensions [0 2 -2 0 0 0 0];
 
+// Estimación inicial; no implica presión sanguínea absoluta nula.
 internalField uniform 0;
 
+// Presión en los mismos patches que el campo U.
 boundaryField
 {
+    // Entrada con velocidad prescrita: la presión se ajusta al flujo calculado.
     inlet
     {
+        // Derivada normal de presión nula en este patch.
         type zeroGradient;
     }
 
+    // Referencia relativa de presión; el cero no equivale a 0 mmHg intravascular.
     outlet
     {
+        // Fija la referencia en toda la sección de salida.
         type fixedValue;
+        // Desplazar esta referencia por una constante no aumenta por sí solo el caudal.
         value uniform 0;
     }
 
+    // Condición de presión sobre la pared inferior rígida.
     lowerWall
     {
         type zeroGradient;
     }
 
+    // Condición de presión sobre la pared superior rígida.
     upperWall
     {
         type zeroGradient;
     }
 
+    // Caras 2D; no representan una pared vascular adicional en z.
     frontAndBack
     {
         type empty;

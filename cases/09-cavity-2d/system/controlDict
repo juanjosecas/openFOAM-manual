@@ -7,73 +7,107 @@
 \*---------------------------------------------------------------------------*/
 // NOTA DEL MANUAL: Solver y control temporal; icoFoam transitorio, simpleFoam estacionario.
 // Archivo heredado de Foundation: revisar compatibilidad con OpenFOAM.com.
+// Cabecera de lectura: describe el archivo, no las condiciones físicas.
 FoamFile
 {
+    // Versión del formato de archivo; no es la versión de OpenFOAM.
     version     2.0;
+    // Archivo de texto ASCII, editable con un editor.
     format      ascii;
+    // Clase de datos: diccionario o campo escalar/vectorial por celda.
     class       dictionary;
+    // Nombre del objeto que OpenFOAM espera leer.
     object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Solver transitorio, incompresible y laminar; aquí los tiempos sí son físicos.
 application     icoFoam;
 
+// Inicia desde el tiempo indicado por startTime, no desde el último guardado.
 startFrom       startTime;
 
+// Instante inicial en segundos; carga los campos de la carpeta 0/.
 startTime       0;
 
+// Finaliza al alcanzar endTime.
 stopAt          endTime;
 
-endTime         50;
 
+// Tiempo físico final: 120 s.
+endTime         120;
+
+// Paso temporal fijo: 0.01 s; comprobar estabilidad y resolución temporal.
+// No se configura ajuste automático de paso en este archivo.
 deltaT          0.01;
 
+// Programa la escritura según tiempo simulado, no por número de pasos.
 writeControl    runTime;
 
-writeInterval   1;
+// Guardar campos cada 1 s simulado; no cambia el paso de integración.
+writeInterval   0.5;
 
+// No borrar escrituras previas; conservar todos los tiempos generados.
 purgeWrite      0;
 
+// Exportar campos como texto legible.
 writeFormat     ascii;
 
+// Precisión de salida de los campos: 8 dígitos; no determina el error CFD.
 writePrecision  8;
 
+// Guardar campos sin compresión.
 writeCompression off;
 
+// Formato numérico de los nombres de directorios de tiempo.
 timeFormat      general;
 
+// Precisión de los nombres de tiempo; no es el paso deltaT.
 timePrecision   6;
 
+// Permitir releer diccionarios modificables durante la ejecución.
 runTimeModifiable true;
 
 // ************************************************************************* //
 
+// Objetos de diagnóstico que se ejecutan junto con el solver.
 functions
 {
 
 ///////////////////////////////////////////////////////////////////////////
 
+// Nombre elegido para registrar extremos de presión y velocidad.
 minmaxdomain
 {
+    // Calcula mínimos y máximos de los campos seleccionados.
     type fieldMinMax;
 
+    // Carga la biblioteca del diagnóstico; clave de la configuración heredada.
     functionObjectLibs ("libfieldFunctionObjects.so");
 
+    // Activa este objeto de diagnóstico.
     enabled true; //true or false
 
+    // Calcula extremos por componente de U, no únicamente de su magnitud.
     mode component;
 
+    // Este objeto usa su propio control de escritura, contado en pasos.
     writeControl timeStep;
+    // Registra el diagnóstico cada paso; no equivale al intervalo global de 1 s.
     writeInterval 1;
 
+    // También informa los resultados del objeto en la salida del solver.
     log true;
 
+    // Lista de campos analizados: presión cinemática y velocidad.
     fields (p U);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////
+// El bloque residuals siguiente está desactivado mediante /* ... */.
+// No se ejecuta ni carga su biblioteca mientras permanezca comentado.
 /*
 residuals
 {

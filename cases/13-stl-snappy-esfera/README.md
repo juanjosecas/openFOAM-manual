@@ -2,6 +2,22 @@
 
 **Objetivo:** obtener una malla de volumen **externa** alrededor de una esfera triangulada. Este es un caso de **mallado**, no incluye campos `0/U`, `0/p` ni solver CFD. No ejecutar simulación hasta asignar condiciones de contorno correctas.
 
+## Configuración incluida
+
+La carpeta `system/` contiene `blockMeshDict`, `snappyHexMeshDict`,
+`controlDict`, `fvSchemes` y `fvSolution`. Los tres últimos son diccionarios
+auxiliares para ejecutar las utilidades de mallado; no definen una simulación
+de flujo. El notebook copia esta configuración desde el caso original y ya
+no la genera dentro de las celdas.
+
+El STL se genera con `scripts/preparar_stl.py`. La malla `constant/polyMesh/`
+y los logs son resultados de ejecución. Se recomienda trabajar en una copia
+nueva dentro de `runs/` para conservar limpia la configuración original.
+
+Para simular agua alrededor de la esfera, usar el caso completo
+[`13b-esfera-agua-laminar`](../13b-esfera-agua-laminar/README.md), que ya incluye
+los campos iniciales y las propiedades del fluido.
+
 ## Pasos desde la raíz del repositorio
 
 ```bash
@@ -41,4 +57,8 @@ STL guarda triángulos **sin unidades**. Si el archivo fue exportado en milímet
 
 `snappyHexMesh` necesita una malla base: no se limita a convertir un STL a `polyMesh`. La superficie STL representa límites geométricos, mientras que las celdas volumétricas de la región fluida se obtienen del refinamiento de `blockMesh`.
 
-**Estado:** revisión documental, sin ejecución comprobada en OpenFOAM.com v2406/v2412.
+**Estado:** secuencia de mallado comprobada en Docker OpenFOAM.com v2406 el
+2026-10-22, en una copia del caso con el STL generado por `preparar_stl.py`.
+`surfaceCheck` confirmó una superficie cerrada y sin triángulos ilegales;
+`checkMesh` confirmó `Mesh OK.` antes y después de `snappyHexMesh`. No se ha
+verificado con v2412 ni realizado una validación física.

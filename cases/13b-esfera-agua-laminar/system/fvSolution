@@ -1,0 +1,52 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    location "system";
+    object fvSolution;
+}
+
+// Resolución de los sistemas lineales dentro de cada iteración SIMPLE.
+// tolerance y relTol controlan sus residuales, no el error físico de la malla.
+solvers
+{
+    p
+    {
+        solver GAMG;
+        tolerance 1e-9;
+        relTol 0.05;
+        smoother GaussSeidel;
+    }
+    U
+    {
+        solver smoothSolver;
+        smoother symGaussSeidel;
+        tolerance 1e-9;
+        relTol 0.05;
+    }
+}
+// Acoplamiento presión-velocidad para estado estacionario.
+SIMPLE
+{
+    // Una corrección por no ortogonalidad; probar 2 si la malla lo requiere.
+    // Aumenta el trabajo por iteración, no reemplaza una malla de buena calidad.
+    nNonOrthogonalCorrectors 1;
+    consistent yes;
+    // Criterios de parada globales: p=1e-6 y U=1e-7.
+    // Variante más estricta: p=1e-7 y U=1e-8. Comparar campos y magnitudes,
+    // no solo el número de iteraciones; no garantiza independencia de malla.
+    residualControl
+    {
+        p 1e-6;
+        U 1e-7;
+    }
+}
+// Subrelajación para estabilizar iteraciones. Ante oscilaciones, probar
+// p=0.2 y U=0.5; puede requerir más iteraciones. No cambia la física
+// objetivo, pero debe alcanzarse una solución convergida comparable.
+relaxationFactors
+{
+    fields { p 0.3; }
+    equations { U 0.7; }
+}
