@@ -22,3 +22,14 @@ Estabilidad: la malla tiene caras muy sesgadas y celdas finas junto a las pezuñ
 se usan esquemas upwind, relajación baja y `system/fvOptions` (limitVelocity,
 30 m/s), que al final de la corrida ya no actúa. Verificado con OpenFOAM v2406
 (Docker opencfd/openfoam-default:2406): 500 iteraciones sin fallos, Cd ≈ 0.93.
+
+## Visualización
+
+Este caso usa `simpleFoam` y genera **iteraciones estacionarias**, no una secuencia de tiempos físicos. `purgeWrite 2` solo mantiene los dos últimos estados. Para obtener una imagen del estado final:
+
+```bash
+python3 -m pip install pyvista numpy imageio
+python3 ../../scripts/animate_cow.py . --field speed --still
+```
+
+Para animar el flujo dependiente del tiempo, utilizar [`cow_incompressible_transient`](../cow_incompressible_transient/README.md) con `pimpleFoam`.
