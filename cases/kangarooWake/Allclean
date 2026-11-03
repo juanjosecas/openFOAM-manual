@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+foamListTimes -rm >/dev/null
+rm -rf constant/polyMesh VTK postProcessing geometry/kangaroo.msh log.*

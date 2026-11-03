@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+command -v gmshToFoam >/dev/null || { echo 'OpenFOAM no cargado' >&2; exit 1; }
+python3 geometry/build_mesh.py
+rm -rf constant/polyMesh
+gmshToFoam geometry/kangaroo.msh > log.gmshToFoam 2>&1
+changeDictionary > log.changeDictionary 2>&1
+checkMesh > log.checkMesh 2>&1 || { tail -n 70 log.checkMesh >&2; exit 1; }
+tail -n 20 log.checkMesh

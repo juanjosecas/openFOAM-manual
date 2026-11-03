@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+command -v pimpleFoam >/dev/null || { echo 'OpenFOAM no cargado' >&2; exit 1; }
+if [[ ! -f constant/polyMesh/points ]]; then bash Allmesh; fi
+pimpleFoam 2>&1 | tee log.pimpleFoam
