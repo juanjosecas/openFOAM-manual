@@ -155,6 +155,162 @@ bash cases/09-cavity-2d/run_docker.sh
 
 Consultar [lanzador general](ejecutar-con-docker.md) y [scripts por caso](docker-por-caso.md). Los resultados se conservan en el directorio del caso según el lanzador. La pertenencia al grupo `docker` concede privilegios elevados sobre el host; evitar agregar usuarios indiscriminadamente.
 
+
+### Docker sin sudo
+
+En Ubuntu, RHEL, Rocky y AlmaLinux, Docker Engine suele requerir privilegios para acceder al daemon. Hay dos opciones:
+
+**Grupo docker (sencillo, pero equivalente a privilegios de root sobre el host):**
+
+~~~bash
+sudo groupadd -f docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker info
+docker run --rm hello-world
+~~~
+
+La pertenencia al grupo se aplica tras abrir una nueva sesión o ejecutar `newgrp docker`. **El grupo docker otorga acceso prácticamente equivalente a root**: no utilizarlo en servidores multiusuario sin evaluar esa implicancia. No modificar los permisos del socket con `chmod 666` ni `chmod 777`. Documentación: [Docker post-install](https://docs.docker.com/engine/install/linux-postinstall/).
+
+**Docker rootless (daemon sin root):**
+
+~~~bash
+# Ubuntu con Docker Engine instalado desde el repositorio oficial
+sudo apt install -y uidmap docker-ce-rootless-extras
+dockerd-rootless-setuptool.sh install
+systemctl --user enable --now docker
+docker context ls
+docker context use rootless
+docker info
+~~~
+
+Si se necesita mantener el daemon del usuario activo sin sesión abierta, el administrador puede habilitar `loginctl enable-linger` para ese usuario. En RHEL/Rocky/Alma los nombres de paquetes y las dependencias son diferentes; consultar [instalación rootless oficial](https://docs.docker.com/engine/security/rootless/). Rootless requiere soporte para namespaces de usuario y puede tener restricciones de red/almacenamiento. No ejecutar el instalador rootless con sudo. Si `DOCKER_HOST` está definido, puede prevalecer sobre el contexto seleccionado.
+
+### Terminal interactiva de OpenFOAM v2406
+
+Desde la raíz de `openFOAM-manual`:
+
+~~~bash
+docker run --rm -it --init \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -v "$(pwd):/workspace" \
+  -w /workspace \
+  --entrypoint /bin/bash \
+  opencfd/openfoam-default:2406 \
+  -c 'source /usr/lib/openfoam/openfoam2406/etc/bashrc; exec bash -i'
+~~~
+
+| Opción | Función |
+| --- | --- |
+| `-it` | Abre una terminal interactiva con entrada estándar y TTY |
+| `--rm` | Elimina el contenedor al salir, no los archivos de la carpeta montada |
+| `--init` | Reenvía señales y recoge procesos hijos |
+| `--user "$(id -u):$(id -g)"` | Evita crear resultados propiedad de root |
+| `-e HOME=/tmp` | Proporciona un directorio HOME escribible |
+| `-v "$(pwd):/workspace"` | Comparte el repositorio con el host |
+| `-w /workspace` | Abre Bash en la carpeta compartida |
+| `--entrypoint /bin/bash` | Evita depender del entrypoint de la imagen |
+| `source .../etc/bashrc` | Carga el entorno de OpenFOAM v2406 |
+
+Dentro de la terminal:
+
+~~~bash
+echo "$WM_PROJECT_VERSION"
+which blockMesh
+cd cases/09-cavity-2d
+ls
+bash Allrun
+exit
+~~~
+
+Para ejecutar comandos sin interacción, **no agregar `-it`**. El montaje es esencial: los archivos fuera de `/workspace` se pierden al borrar el contenedor con `--rm`.
+
+### Función de Bash para abrir el contenedor con un comando
+
+Agregar a `~/.bashrc` del host:
+
+~~~bash
+foam2406() {
+  local repo
+  repo="$(realpath "$HOME/openFOAM-manual")"
+  if [[ ! -d "$repo/cases" ]]; then
+    echo "No se encuentra el repositorio: $repo" >&2
+    return 1
+  fi
+  docker run --rm -it --init \
+    --user "$(id -u):$(id -g)" \
+    -e HOME=/tmp \
+    --mount "type=bind,source=$repo,target=/workspace" \
+    -w /workspace \
+    --entrypoint /bin/bash \
+    opencfd/openfoam-default:2406 \
+    -c 'source /usr/lib/openfoam/openfoam2406/etc/bashrc; exec bash -i'
+}
+~~~
+
+Recargar Bash y entrar:
+
+~~~bash
+source ~/.bashrc
+foam2406
+~~~
+
+Si el repositorio no está en `~/openFOAM-manual`, cambiar la ruta dentro de la función. Este atajo no instala OpenFOAM en el host y deja todos los resultados del repositorio en el host.
+
+### Ejecutar un caso sin entrar a Docker
+
+Los lanzadores del repositorio ya configuran UID/GID, montaje, directorio de trabajo y carga de `etc/bashrc`:
+
+~~~bash
+bash scripts/run_docker.sh --list
+bash scripts/run_docker.sh 09-cavity-2d
+bash scripts/run_docker.sh 09-cavity-2d --mesh
+bash scripts/run_docker.sh 09-cavity-2d --dry-run
+~~~
+
+Para ejecutar casos desde cualquier carpeta, añadir a `~/.bashrc`:
+
+~~~bash
+foamrun() {
+  bash "$HOME/openFOAM-manual/scripts/run_docker.sh" "$@"
+}
+~~~
+
+Entonces:
+
+~~~bash
+source ~/.bashrc
+foamrun --list
+foamrun 09-cavity-2d
+foamrun cow_incompressible_transient
+~~~
+
+Si se clonó el repositorio en otra ubicación, modificar la ruta del atajo. Los resultados permanecen en `cases/`. `--rm` no borra los datos montados.
+
+### Opciones útiles para simulaciones
+
+- **Recursos:** agregar `--cpus 4 --memory 8g` al comando `docker run` para limitar CPU y RAM. Esto **no** activa MPI automáticamente.
+- **ParaView:** usar ParaView instalado en el host para abrir resultados de `cases/`; normalmente no se necesita X11 ni `--privileged`.
+- **SELinux (RHEL/Rocky/Alma):** si un bind mount privado falla por etiquetado, evaluar `-v "$(pwd):/workspace:Z"`. `:Z` cambia etiquetas SELinux y puede afectar otros procesos: no aplicarlo a carpetas compartidas sin comprobarlo.
+- **Reinicio de simulaciones:** conservar archivos `.cpt` y usar el mecanismo de continuación adecuado al solver. Los scripts `Allrun` no necesariamente reanudan un cálculo.
+- **Almacenamiento:** `docker system df` muestra uso de disco; evitar `docker system prune -a --volumes` sin revisar los datos que eliminaría.
+- **Imágenes:** fijar la etiqueta `2406`, no `latest`; para reproducibilidad estricta puede utilizarse un digest SHA256 verificado.
+- **Puertos:** los casos CFD no necesitan `-p`. Si se utiliza Jupyter, publicar el puerto exclusivamente en `127.0.0.1` salvo necesidad justificada.
+- **Comprobación:** `docker context ls`, `docker info`, `id -nG` y `docker image inspect opencfd/openfoam-default:2406` ayudan a diagnosticar problemas.
+
+### Errores frecuentes de Docker
+
+| Error | Comprobación |
+| --- | --- |
+| `permission denied /var/run/docker.sock` | Grupo `docker` con sesión renovada o daemon rootless |
+| `Cannot connect to Docker daemon` | `systemctl status docker` / `systemctl --user status docker` y `docker context ls` |
+| Archivos creados como root | Usar `--user "$(id -u):$(id -g)"` |
+| `blockMesh: command not found` | Cargar `source /usr/lib/openfoam/openfoam2406/etc/bashrc` |
+| `the input device is not a TTY` | Eliminar `-it` en scripts y CI |
+| `permission denied` en bind mount de RHEL | Verificar UID/GID y SELinux; evaluar `:Z` |
+| Archivos desaparecen al salir | Montar el directorio de resultados; `--rm` elimina el sistema de archivos interno |
+
 ## 4. Conda-forge / Mamba: sí existe OpenFOAM
 
 Existe un feedstock oficial de conda-forge llamado **`openfoam`**. La versión publicada en Anaconda.org es **2412**, para **Linux x86-64 (`linux-64`)**. No debe presentarse como instalación de v2406 ni como soporte nativo garantizado para Windows/macOS.
