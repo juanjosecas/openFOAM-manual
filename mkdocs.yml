@@ -25,6 +25,7 @@ theme:
 nav:
   - Portal: index.md
   - Comenzar:
+      - Instalación (Ubuntu, RHEL, Docker, Conda): instalacion-openfoam.md
       - Estructura y estilo: estructura-y-estilo.md
       - Ejecución y variantes: guia-ejecucion-y-variantes.md
       - De simpleFoam a transitorio: simplefoam-a-transitorio.md
