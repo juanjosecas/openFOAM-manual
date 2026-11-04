@@ -1,0 +1,193 @@
+// NOTA DEL MANUAL: vertices definen la geometria; blocks define celdas y grading;
+// boundary fija patches y condiciones geométricas. Asegurar la orientacion de
+// los bloques y correspondencia exacta con las condiciones de 0/U y 0/p.
+// Si se edita este archivo, reconstruir la malla con blockMesh y checkMesh.
+// Cabecera: describe cómo leer el archivo, no sus condiciones físicas.
+FoamFile
+{
+    // Versión del formato, no del solver.
+    version 2.0;
+    // Texto ASCII editable.
+    format ascii;
+    // Clase de objeto: diccionario o campo escalar/vectorial por celda.
+    class dictionary;
+    // Nombre del objeto que lee OpenFOAM.
+    object blockMeshDict;
+}
+
+// Coordenadas en metros: canal de 0.20 m de largo y 0.020 m de alto.
+scale 1;
+
+// Cuadrícula de vértices: columnas x=0,0.08,0.10,0.20 m y
+// filas y=0,0.008,0.012,0.020 m, duplicadas en z=0 y 0.001 m.
+// El obstáculo ocupa x=[0.08,0.10], y=[0.008,0.012]: 20 x 4 mm.
+vertices
+(
+    // z = 0
+    (0     0      0)      // 0
+    (0.08  0      0)      // 1
+    (0.10  0      0)      // 2
+    (0.20  0      0)      // 3
+
+    (0     0.008  0)      // 4
+    (0.08  0.008  0)      // 5
+    (0.10  0.008  0)      // 6
+    (0.20  0.008  0)      // 7
+
+    (0     0.012  0)      // 8
+    (0.08  0.012  0)      // 9
+    (0.10  0.012  0)      // 10
+    (0.20  0.012  0)      // 11
+
+    (0     0.020  0)      // 12
+    (0.08  0.020  0)      // 13
+    (0.10  0.020  0)      // 14
+    (0.20  0.020  0)      // 15
+
+    // z = 0.001
+    (0     0      0.001)  // 16
+    (0.08  0      0.001)  // 17
+    (0.10  0      0.001)  // 18
+    (0.20  0      0.001)  // 19
+
+    (0     0.008  0.001)  // 20
+    (0.08  0.008  0.001)  // 21
+    (0.10  0.008  0.001)  // 22
+    (0.20  0.008  0.001)  // 23
+
+    (0     0.012  0.001)  // 24
+    (0.08  0.012  0.001)  // 25
+    (0.10  0.012  0.001)  // 26
+    (0.20  0.012  0.001)  // 27
+
+    (0     0.020  0.001)  // 28
+    (0.08  0.020  0.001)  // 29
+    (0.10  0.020  0.001)  // 30
+    (0.20  0.020  0.001)  // 31
+);
+
+// Ocho bloques de fluido; se omite el bloque central ocupado por el objeto.
+// hex enumera vértices y la terna siguiente da celdas (x,y,z).
+// Total de la base: 7840 celdas. simpleGrading (1 1 1) no añade
+// expansión dentro del bloque. Conservar subdivisiones compatibles en interfaces.
+blocks
+(
+    // Tres bloques debajo del obstáculo, de y=0 a 8 mm.
+    // Fila inferior
+    hex (0 1 5 4 16 17 21 20)
+        (80 16 1) simpleGrading (1 1 1)
+
+    hex (1 2 6 5 17 18 22 21)
+        (20 16 1) simpleGrading (1 1 1)
+
+    hex (2 3 7 6 18 19 23 22)
+        (100 16 1) simpleGrading (1 1 1)
+
+    // Dos bloques a la altura del objeto: uno aguas arriba y otro aguas abajo.
+    // Fila central: no hay bloque en el obstáculo
+    hex (4 5 9 8 20 21 25 24)
+        (80 8 1) simpleGrading (1 1 1)
+
+    hex (6 7 11 10 22 23 27 26)
+        (100 8 1) simpleGrading (1 1 1)
+
+    // Tres bloques encima del obstáculo, de y=12 a 20 mm.
+    // Fila superior
+    hex (8 9 13 12 24 25 29 28)
+        (80 16 1) simpleGrading (1 1 1)
+
+    hex (9 10 14 13 25 26 30 29)
+        (20 16 1) simpleGrading (1 1 1)
+
+    hex (10 11 15 14 26 27 31 30)
+        (100 16 1) simpleGrading (1 1 1)
+);
+
+// Sin aristas curvas; paredes y caras del obstáculo son planas.
+edges
+(
+);
+
+// Agrupa los planos del espesor que no se enumeran en boundary.
+defaultPatch
+{
+    name frontAndBack;
+    // Modelo planar 2D con una celda en z; el espesor es de representación.
+    type empty;
+}
+
+// Patches geométricos. wall no impone por sí solo noSlip:
+// la interacción de velocidad se elige de forma independiente en 0/U.
+boundary
+(
+    // Tres caras de entrada en x=0, una por fila de bloques.
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 16 20 4)
+            (4 20 24 8)
+            (8 24 28 12)
+        );
+    }
+
+    // Tres caras de salida en x=0.20 m.
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (3 7 23 19)
+            (7 11 27 23)
+            (11 15 31 27)
+        );
+    }
+
+    // Tres caras inferiores, y=0.
+    lowerWall
+    {
+        type wall;
+        faces
+        (
+            (0 1 17 16)
+            (1 2 18 17)
+            (2 3 19 18)
+        );
+    }
+
+    // Tres caras superiores, y=0.020 m.
+    upperWall
+    {
+        type wall;
+        faces
+        (
+            (12 28 29 13)
+            (13 29 30 14)
+            (14 30 31 15)
+        );
+    }
+
+    // Cuatro caras del rectángulo; patch independiente de lowerWall/upperWall.
+    // Un slip o partialSlip aquí no cambia la geometría ni permite atravesar el objeto.
+    obstacle
+    {
+        type wall;
+        faces
+        (
+            // Cara frontal del objeto, x=0.08 m.
+            (5 21 25 9)
+            // Cara posterior, x=0.10 m; región de estela a continuación.
+            (6 10 26 22)
+            // Cara inferior del objeto, y=0.008 m.
+            (5 6 22 21)
+            // Cara superior del objeto, y=0.012 m.
+            (9 25 26 10)
+        );
+    }
+);
+
+// Sin fusiones adicionales; los bloques comparten vértices en sus interfaces.
+mergePatchPairs
+(
+);

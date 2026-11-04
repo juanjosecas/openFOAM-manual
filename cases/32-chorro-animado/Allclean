@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# No borra datos por defecto; requiere confirmación explícita.
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+[[ "${1:-}" == "--yes" ]] || { echo 'Para borrar resultados: bash Allclean --yes' >&2; exit 2; }
+rm -rf -- constant/polyMesh processor[0-9]* [1-9]* 0.[0-9]* log.*

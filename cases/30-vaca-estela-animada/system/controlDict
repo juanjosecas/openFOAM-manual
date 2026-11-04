@@ -1,0 +1,66 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+
+application     pimpleFoam;
+startFrom       startTime;
+startTime       0;
+stopAt          endTime;
+endTime         5;
+deltaT          1e-5;
+adjustTimeStep  yes;
+maxCo           0.5;
+maxDeltaT       0.001;
+writeControl    adjustableRunTime;
+writeInterval 0.02;
+purgeWrite      0;
+writeFormat     binary;
+writePrecision  8;
+writeCompression off;
+timeFormat      fixed;
+timePrecision   6;
+runTimeModifiable true;
+
+functions
+{
+    vorticity
+    {
+        type vorticity;
+        libs (fieldFunctionObjects);
+        writeControl writeTime;
+    }
+
+    forces
+    {
+        type            forces;
+        libs            (forces);
+        writeControl    timeStep;
+        writeInterval   10;
+        patches         (cow);
+        rho             rhoInf;
+        rhoInf          1.2;
+        CofR            (0 0 0);
+    }
+
+    forceCoeffs
+    {
+        type            forceCoeffs;
+        libs            (forces);
+        writeControl    timeStep;
+        writeInterval   10;
+        patches         (cow);
+        rho             rhoInf;
+        rhoInf          1.2;
+        CofR            (0 0 0);
+        liftDir         (0 1 0);
+        dragDir         (1 0 0);
+        pitchAxis       (0 0 1);
+        magUInf         10;
+        lRef            2.4;
+        Aref            0.1466;
+    }
+}

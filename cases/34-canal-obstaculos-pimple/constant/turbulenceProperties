@@ -1,0 +1,37 @@
+// NOTA DEL MANUAL: Define el regimen laminar y el modelo reologico generalizedNewtonian/powerLaw. n es el exponente; nuMin/nuMax delimitan viscosidad efectiva. No sustituir k y n por propiedades newtonianas.
+// Valores originales conservados. Consultar docs/propiedades-de-materiales.md.
+// Cabecera: describe cómo leer el archivo, no sus condiciones físicas.
+FoamFile
+{
+    // Versión del formato, no del solver.
+    version 2.0;
+    // Texto ASCII editable.
+    format ascii;
+    // Clase de objeto: diccionario o campo escalar/vectorial por celda.
+    class dictionary;
+    // Nombre del objeto que lee OpenFOAM.
+    object turbulenceProperties;
+}
+
+// Sin modelo de turbulencia; sí pueden existir recirculaciones laminares.
+simulationType laminar;
+
+// Modelo de esfuerzo viscoso del fluido.
+laminar
+{
+    // Viscosidad variable con la deformación local, sin memoria viscoelástica.
+    model           generalizedNewtonian;
+    // Ley acotada nu_eff = min(nuMax,max(nuMin,k*gammaDot^(n-1))).
+    // En la base no corresponde calcular Reynolds usando solo nu de transportProperties.
+    viscosityModel  powerLaw;
+
+    // Cota inferior de viscosidad cinemática [m2/s].
+    nuMin 1e-6;
+    // Cota superior [m2/s]; regula regiones con baja tasa de cizallamiento.
+    nuMax 1e-2;
+
+    // Coeficiente de consistencia de la ley cinemática; no densidad ni viscosidad dinámica.
+    k 1e-4;
+    // Exponente adimensional. n<1 produce adelgazamiento por cizalla entre las cotas.
+    n 0.5;
+}

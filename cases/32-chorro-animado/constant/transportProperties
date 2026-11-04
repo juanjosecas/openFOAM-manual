@@ -1,0 +1,31 @@
+// NOTA DEL MANUAL: Nu expresa viscosidad cinematica [m2/s]. Cuando aparecen rho y sigma, expresan densidad [kg/m3] y tension superficial [N/m]. En sistemas multifasicos las propiedades corresponden a cada fase.
+// Valores originales conservados. Consultar docs/propiedades-de-materiales.md.
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      transportProperties;
+}
+
+phases (water air);
+
+water
+{
+    transportModel Newtonian;
+
+    nu  [0 2 -1 0 0 0 0] 1e-6;
+
+    rho [1 -3 0 0 0 0 0] 1000;
+}
+
+air
+{
+    transportModel Newtonian;
+
+    nu  [0 2 -1 0 0 0 0] 1.5e-5;
+
+    rho [1 -3 0 0 0 0 0] 1.2;
+}
+
+sigma [1 0 -2 0 0 0 0] 0.072;
