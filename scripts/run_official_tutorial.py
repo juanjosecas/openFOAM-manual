@@ -33,12 +33,12 @@ def main() -> None:
     # Use the original official Allrun if provided, preserving its setup steps.
     allrun = case / "Allrun"
     if args.mesh_only:
-        cmd = "blockMesh > log.blockMesh 2>&1; checkMesh > log.checkMesh 2>&1"
+        cmd = "blockMesh > log.blockMesh 2>&1 && checkMesh > log.checkMesh 2>&1"
     elif allrun.is_file():
         cmd = "bash ./Allrun > log.Allrun 2>&1"
     else:
         solver = SOLVERS[args.case]
-        cmd = f"blockMesh > log.blockMesh 2>&1; checkMesh > log.checkMesh 2>&1; {solver} > log.{solver} 2>&1"
+        cmd = f"blockMesh > log.blockMesh 2>&1 && checkMesh > log.checkMesh 2>&1 && {solver} > log.{solver} 2>&1"
     # Do not hide failure of an intermediate stage.
     command = [
         "docker", "run", "--rm", "--init",
