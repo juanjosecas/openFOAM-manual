@@ -37,6 +37,7 @@ nav:
       - Scripts por caso: docker-por-caso.md
       - Lanzador general: ejecutar-con-docker.md
   - Tutoriales:
+      - Casos oficiales v2406 (cilindro, escalón, placa): tutoriales/oficiales-v2406.md
       - 01 · Canal no newtoniano: tutoriales/01-canal-no-newtoniano.md
       - 02 · Canal con obstáculos: tutoriales/02-canal-obstaculos.md
       - 03 · Estenosis capilar: tutoriales/03-estenosis-capilar.md
