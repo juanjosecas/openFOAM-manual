@@ -69,3 +69,8 @@ bash scripts/run_docker.sh cow_incompressible_transient
 ```
 
 El lanzador conserva logs y resultados en `cases/` y puede ejecutar únicamente el mallado con `--mesh`. Ver [explicación detallada y limitaciones](docs/ejecutar-con-docker.md).
+
+
+### Ejecutores Docker independientes en cada caso
+
+Los casos CFD incluyen un `run_docker.sh` propio, comentado y sin dependencias de `Allrun`/`Allmesh`. Por ejemplo: `bash cases/09-cavity-2d/run_docker.sh`. Consultar [etapas, controles y limitaciones](docs/docker-por-caso.md).
