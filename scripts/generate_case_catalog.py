@@ -17,9 +17,9 @@ def solver_for(case: Path) -> str:
         return "—"
     # Eliminar comentarios antes de buscar application.
     raw = control.read_text(encoding="utf-8", errors="replace")
-    raw = re.sub(r"/\\*.*?\\*/", "", raw, flags=re.S)
-    raw = re.sub(r"//[^\\n]*", "", raw)
-    match = re.search(r"(?m)^\\s*application\\s+([A-Za-z][A-Za-z0-9_]*)\\s*;", raw)
+    raw = re.sub(r"/\*.*?\*/", "", raw, flags=re.S)
+    raw = re.sub(r"//[^\n]*", "", raw)
+    match = re.search(r"(?m)^\s*application\s+([A-Za-z][A-Za-z0-9_]*)\s*;", raw)
     return match.group(1) if match else "—"
 
 def main() -> None:
@@ -57,7 +57,7 @@ def main() -> None:
         "y la [guía del lanzador general](ejecutar-con-docker.md).",
         "",
     ]
-    OUTPUT.write_text("\\n".join(lines).replace("\\n", "\n"), encoding="utf-8")
+    OUTPUT.write_text("\n".join(lines).replace("\n", "\n"), encoding="utf-8")
     print(f"Generado: {OUTPUT} ({len(lines)} líneas)")
 
 if __name__ == "__main__":
