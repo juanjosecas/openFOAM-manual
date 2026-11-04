@@ -1,0 +1,24 @@
+// NOTA DEL MANUAL: Propiedades del material. nu expresa viscosidad cinematica en m2/s cuando es dimensional; rho densidad en kg/m3.
+// No se alteran propiedades ni parametros originales. Consultar la guia de materiales si procede.
+// Cabecera: describe cómo leer el archivo, no sus condiciones físicas.
+FoamFile
+{
+    // Versión del formato, no del solver.
+    version 2.0;
+    // Texto ASCII editable.
+    format ascii;
+    // Clase de objeto: diccionario o campo escalar/vectorial por celda.
+    class dictionary;
+    // Nombre del objeto que lee OpenFOAM.
+    object transportProperties;
+}
+
+// Transporte base. En la base, generalizedNewtonian/powerLaw de
+// turbulenceProperties determina además la viscosidad efectiva local.
+transportModel Newtonian;
+
+// Viscosidad cinemática base [m2/s], no viscosidad dinámica en Pa.s.
+// La receta agua-estela cambia nu a 1e-6 y usa el esfuerzo laminar Stokes
+// para comparar un fluido newtoniano; cambiar solo nu no desactiva powerLaw.
+nu [0 2 -1 0 0 0 0] 1e-4;
+

@@ -1,0 +1,16 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvOptions;
+}
+
+// Red de seguridad durante el arranque (malla sesgada); al converger no actúa.
+limitU
+{
+    type            limitVelocity;
+    active          yes;
+    selectionMode   all;
+    max             30;
+}
