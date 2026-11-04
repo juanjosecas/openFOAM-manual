@@ -56,3 +56,16 @@ Ambos casos tienen estructura autocontenida y postprocesamiento; **solo revisió
 ## Refracción con OpenFOAM
 
 - [26: superficie libre calculada con interFoam y rayos refractados](cases/26-refraccion-interfoam/README.md). CFD agua–aire 2D con postprocesamiento óptico 2D/3D, CSV, PNG y GIF temporal. **Revisión estática; sin ejecutar.**
+
+
+## Ejecutar los casos con Docker
+
+Para lanzar los `Allrun` existentes con **OpenFOAM v2406** sin instalar OpenFOAM en el host:
+
+```bash
+bash scripts/run_docker.sh --list
+bash scripts/run_docker.sh 09-cavity-2d
+bash scripts/run_docker.sh cow_incompressible_transient
+```
+
+El lanzador conserva logs y resultados en `cases/` y puede ejecutar únicamente el mallado con `--mesh`. Ver [explicación detallada y limitaciones](docs/ejecutar-con-docker.md).
