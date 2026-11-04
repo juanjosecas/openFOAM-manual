@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
-[[ ! -f constant/polyMesh/points ]] || { echo 'La malla ya existe; no se sobreescribe.'; exit 0; }
-python3 geometry/build_mesh.py > log.gmsh 2>&1
+[[ ! -f constant/polyMesh/points ]] || { echo 'Malla existente'; exit 0; }
+[[ -f geometry/kangaroo.msh ]] || { echo 'Generar malla con python3 geometry/build_mesh.py en el host.' >&2; exit 1; }
 gmshToFoam geometry/kangaroo.msh > log.gmshToFoam 2>&1
 changeDictionary > log.changeDictionary 2>&1
 checkMesh > log.checkMesh 2>&1
