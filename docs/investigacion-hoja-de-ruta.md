@@ -23,7 +23,7 @@ Las numeraciones son **reservas editoriales**, no directorios `cases/` existente
 
 - Caso 09: añadir validación con Ghia usando la [guía de cavidad](https://openfoam.es/tutoriales/cavidad-lid-driven-icofoam), **no crear otra cavidad**.
 - Caso 11: documentar FSI de rotura de presa con columna flexible desde [preCICE](https://precice.org/tutorials), sin confundirlo con el damBreak ya existente.
-- Caso 12: mantener [pendientes de Goldschmidt](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/12-goldschmidt-particulas/PENDIENTES.md) antes de cualquier expansión lagrangiana.
+- Caso 12: mantener [pendientes de Goldschmidt](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/12-transporte-de-particulas/PENDIENTES.md) antes de cualquier expansión lagrangiana.
 - Caso 13: agregar mejores controles de calidad de malla y unidades desde [CFD-Online](https://www.cfd-online.com/Forums/openfoam-meshing/227156-setting-up-case-using-stl-files.html) y [CFDMonkey](https://cfdmonkey.com/tips-and-tricks-for-significantly-improving-your-snappyhexmesh/).
 - Postprocesamiento: ampliar [PyVista](pyvista.md) para campos escalares, isosuperficies, sondas, series de tiempo y balances.
 
@@ -44,11 +44,11 @@ La investigación original sugería importar nuevamente `cavity`, `damBreak`, `G
 
 ## Implementación documental inicial
 
-El [caso 14A](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-farmaco) ya tiene estructura, diccionarios y postprocesamiento autocontenidos, **sin ejecución ni validación**. El resto de casos numerados de esta hoja sigue pendiente de implementación. Consultar el [estándar de autocontención](estandar-casos-autocontenidos.md).
+El [caso 14A](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-de-farmaco) ya tiene estructura, diccionarios y postprocesamiento autocontenidos, **sin ejecución ni validación**. El resto de casos numerados de esta hoja sigue pendiente de implementación. Consultar el [estándar de autocontención](estandar-casos-autocontenidos.md).
 
 
 ## Nuevas implementaciones 23 y 24 (2026-10-15)
 
-- [23: flexión de viga](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/23-flexion-viga): configuración mínima de sólido 3D, sin ejecutar.
-- [24: conducción 1D](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/24-conduccion-1d): configuración mínima estacionaria, sin ejecutar.
+- [23: flexión de viga](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/23-flexion-de-viga): configuración mínima de sólido 3D, sin ejecutar.
+- [24: conducción 1D](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/24-conduccion-de-calor-1d): configuración mínima estacionaria, sin ejecutar.
 - [Fuentes para radiación y calor](ejemplos-calor-radiacion-solidos.md): propuestas no implementadas.

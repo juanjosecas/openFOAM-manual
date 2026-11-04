@@ -107,7 +107,7 @@ $$
 \alpha=\frac{k}{\rho C_p}.
 $$
 
-Si el solver usa una variable \`DT\`, comprobar **qué ecuación resuelve** antes de cargarle el número. En particular, el [caso 14A](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-farmaco) usa \`DT\` como **difusividad de un escalar normalizado**, mientras que en los archivos de sólidos el campo \`DT\` es compatible conceptualmente con una **difusividad térmica**. La igualdad de nombres **no** hace intercambiables sus significados físicos.
+Si el solver usa una variable \`DT\`, comprobar **qué ecuación resuelve** antes de cargarle el número. En particular, el [caso 14A](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-de-farmaco) usa \`DT\` como **difusividad de un escalar normalizado**, mientras que en los archivos de sólidos el campo \`DT\` es compatible conceptualmente con una **difusividad térmica**. La igualdad de nombres **no** hace intercambiables sus significados físicos.
 
 ## 6. Procedencia, limitaciones y fuentes para contrastar
 

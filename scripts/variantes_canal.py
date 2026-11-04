@@ -16,7 +16,7 @@ def preparar_canal_obstaculos(repo_dir, variante="base", *,
     Las recetas son archivos locales de confianza bajo variants/.
     """
     repo = Path(repo_dir).expanduser().resolve(strict=True)
-    source = repo / "cases/02-canal-obstaculos"
+    source = repo / "cases/02-flujo-canal-con-obstaculos"
     if not isinstance(variante, str) or not re.fullmatch(r"[a-z0-9-]+", variante):
         raise ValueError("Nombre de variante inválido")
     recipe_path = source / "variants" / f"{variante}.json"

@@ -19,11 +19,11 @@ Para una variante, copiar el directorio original a otro nombre y **modificar sol
 
 ## Tutoriales 01–03: canal y estenosis
 
-**01 – Canal no newtoniano.** `cd cases/01-canal-no-newtoniano`, `blockMesh`, `checkMesh`, `simpleFoam`. También dispone de `bash Allrun`. Ensayos: reducir `0/U` de 0.01 a 0.005 m/s; variar `n` de 0.5 a 0.7 en `constant/turbulenceProperties`; cambiar `(200 40 1)` a `(100 20 1)` en `blockMeshDict`, conservando una celda en Z. Comparar perfil y caída de presión.
+**01 – Canal no newtoniano.** `cd cases/01a-canal-no-newtoniano`, `blockMesh`, `checkMesh`, `simpleFoam`. También dispone de `bash Allrun`. Ensayos: reducir `0/U` de 0.01 a 0.005 m/s; variar `n` de 0.5 a 0.7 en `constant/turbulenceProperties`; cambiar `(200 40 1)` a `(100 20 1)` en `blockMeshDict`, conservando una celda en Z. Comparar perfil y caída de presión.
 
-**02 – Canal con obstáculos.** `cd cases/02-canal-obstaculos`, `blockMesh`, `checkMesh`, `simpleFoam` o `bash Allrun`. Ensayos: reducir 25 % la velocidad de entrada; aumentar `n` de 0.5 a 0.7; refinar celdas cerca del obstáculo **sin romper las subdivisiones comunes entre bloques**. Comparar gradientes y recirculación, si aparece.
+**02 – Canal con obstáculos.** `cd cases/02-flujo-canal-con-obstaculos`, `blockMesh`, `checkMesh`, `simpleFoam` o `bash Allrun`. Ensayos: reducir 25 % la velocidad de entrada; aumentar `n` de 0.5 a 0.7; refinar celdas cerca del obstáculo **sin romper las subdivisiones comunes entre bloques**. Comparar gradientes y recirculación, si aparece.
 
-**03 – Estenosis capilar.** `cd cases/03-estenosis-capilar`, `blockMesh`, `checkMesh`, `simpleFoam` o `bash Allrun`. Ensayos: reducir 20 % la velocidad impuesta; cambiar `n` de 0.5 a 0.7; refinar únicamente el estrechamiento manteniendo la conectividad. Comparar velocidad máxima local y caída de presión.
+**03 – Estenosis capilar.** `cd cases/03-flujo-en-estenosis`, `blockMesh`, `checkMesh`, `simpleFoam` o `bash Allrun`. Ensayos: reducir 20 % la velocidad impuesta; cambiar `n` de 0.5 a 0.7; refinar únicamente el estrechamiento manteniendo la conectividad. Comparar velocidad máxima local y caída de presión.
 
 Los tres utilizan `simpleFoam`: **sus carpetas numeradas son iteraciones, no instantes físicos**. Para convertirlos en transitorios se necesita un tutorial derivado, no cambiar solamente `application`.
 
@@ -32,7 +32,7 @@ Los tres utilizan `simpleFoam`: **sus carpetas numeradas son iteraciones, no ins
 **Estado: incompleto.** Contiene `system/blockMeshDict` y campos, pero **no** `system/controlDict`. Los únicos comandos de ejecución inequívocos son:
 
 ```bash
-cd cases/04-chorro-agua
+cd cases/04-chorro-de-agua
 blockMesh
 checkMesh
 ```
@@ -49,10 +49,10 @@ No ejecutar `interFoam` hasta reconstruir `controlDict` y verificar la sintaxis 
 
 ## Tutorial 07: SVG y Gmsh
 
-**Estado: incompleto.** Faltan en `cases/07-svg-gmsh` el SVG fuente y `geometry/svg_to_gmsh.py` / `geometry/ajustar_patches.py`. La cadena prevista es:
+**Estado: incompleto.** Faltan en `cases/07-mallado-desde-svg` el SVG fuente y `geometry/svg_to_gmsh.py` / `geometry/ajustar_patches.py`. La cadena prevista es:
 
 ```bash
-cd cases/07-svg-gmsh
+cd cases/07-mallado-desde-svg
 # Tras recuperar y verificar scripts y geometría:
 python geometry/svg_to_gmsh.py
 gmshToFoam dominio.msh
@@ -66,7 +66,7 @@ Los comandos anteriores son **secuencia prevista**, no ejecutable en el estado a
 ## Tutorial 08: tubería cilíndrica 3D
 
 ```bash
-cd cases/08-tuberia-cilindrica-3d
+cd cases/08-flujo-en-tuberia-3d
 blockMesh
 checkMesh
 pimpleFoam
@@ -77,7 +77,7 @@ También dispone de `bash Allrun`. Variantes: reducir el máximo de `0/U` de 0.0
 ## Tutorial 09: cavidad con tapa móvil
 
 ```bash
-cd cases/09-cavity-2d
+cd cases/09-cavidad-con-tapa-movil
 blockMesh
 checkMesh
 icoFoam
@@ -88,20 +88,20 @@ Dispone de `bash Allrun`, pero procede de OpenFOAM Foundation 4.x: comprobar com
 ## Tutoriales 10A–10C: tubería laminar heredada
 
 ```bash
-cd cases/10a-tuberia-laminar-case0  # o 10b-tuberia-laminar-case1
+cd cases/10a-tuberia-laminar-base  # o 10b-tuberia-laminar-variante-1
 blockMesh
 checkMesh
 icoFoam
 ```
 
-Para `10c-tuberia-laminar-case2`, emplear `simpleFoam` en lugar de `icoFoam`, como figura en su `controlDict`. Antes, verificar compatibilidad de cada caso con la edición instalada y comprobar si `modifyMeshDict` forma parte del procedimiento que se pretende reproducir; no ejecutarlo por defecto.
+Para `10c-tuberia-laminar-variante-2`, emplear `simpleFoam` en lugar de `icoFoam`, como figura en su `controlDict`. Antes, verificar compatibilidad de cada caso con la edición instalada y comprobar si `modifyMeshDict` forma parte del procedimiento que se pretende reproducir; no ejecutarlo por defecto.
 
 Variantes de 10A/10B: cambiar la velocidad de entrada un 20 % cuando se imponga mediante `fixedValue`; reducir `deltaT` a la mitad; cambiar `writeInterval` manteniendo `writeControl`. Variante de 10C: variar la velocidad un 20 %; refinar subdivisiones; modificar intervalo de escritura de **iteraciones**, no de tiempo físico.
 
 ## Tutorial 11: rotura de presa
 
 ```bash
-cd cases/11-dambreak-2d
+cd cases/11-rotura-de-presa-2d
 blockMesh
 checkMesh
 setFields
@@ -115,7 +115,7 @@ Variantes: reducir `maxCo` cuando exista en `controlDict`; cambiar `writeInterva
 ## Tutorial 12: Goldschmidt, nube de partículas
 
 ```bash
-cd cases/12-goldschmidt-particulas
+cd cases/12-transporte-de-particulas
 blockMesh
 checkMesh
 foamDictionary system/controlDict -entry application -value

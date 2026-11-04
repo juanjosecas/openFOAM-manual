@@ -17,27 +17,27 @@ Portal de contenidos del repositorio [openFOAM-manual](https://github.com/juanjo
 
 | Tutorial | Tema y documentación | Archivos del caso | Estado |
 | --- | --- | --- | --- |
-| 01 | [Canal 2D no newtoniano](tutoriales/01-canal-no-newtoniano.md) | [Caso 01](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/01-canal-no-newtoniano) | Configuración disponible; `simpleFoam` estacionario |
-| 02 | [Canal con obstáculos](tutoriales/02-canal-obstaculos.md) | [Caso 02](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/02-canal-obstaculos) | Configuración disponible; `simpleFoam` estacionario |
-| 03 | [Estenosis capilar](tutoriales/03-estenosis-capilar.md) | [Caso 03](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/03-estenosis-capilar) | Configuración disponible; `simpleFoam` estacionario |
-| 04 | [Chorro de agua](tutoriales/04-chorro-agua.md) | [Caso 04](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/04-chorro-agua) | Control temporal reconstruido; pendiente de validación |
+| 01 | [Canal 2D no newtoniano](tutoriales/01a-canal-no-newtoniano.md) | [Caso 01](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/01a-canal-no-newtoniano) | Configuración disponible; `simpleFoam` estacionario |
+| 02 | [Canal con obstáculos](tutoriales/02-flujo-canal-con-obstaculos.md) | [Caso 02](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/02-flujo-canal-con-obstaculos) | Configuración disponible; `simpleFoam` estacionario |
+| 03 | [Estenosis capilar](tutoriales/03-flujo-en-estenosis.md) | [Caso 03](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/03-flujo-en-estenosis) | Configuración disponible; `simpleFoam` estacionario |
+| 04 | [Chorro de agua](tutoriales/04-chorro-de-agua.md) | [Caso 04](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/04-chorro-de-agua) | Control temporal reconstruido; pendiente de validación |
 | 05 | [Esfera en agua](tutoriales/05-esfera-agua.md) | — | Conceptual: no existe un caso autónomo completo |
 | 06 | [Automatización con foamlib](tutoriales/06-foamlib.md) | — | Guía Python; no es un caso CFD independiente |
-| 07 | [Geometrías SVG/Gmsh](tutoriales/07-svg-gmsh.md) | [Caso 07](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/07-svg-gmsh) | Alternativa Gmsh disponible; SVG original pendiente |
-| 08 | [Tubería cilíndrica 3D transitoria](tutoriales/08-tuberia-cilindrica-3d.md) | [Caso 08](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/08-tuberia-cilindrica-3d) | `pimpleFoam`; revisión documental |
-| 09 | [Cavidad 2D con tapa móvil](tutoriales/09-cavity-2d.md) | [Caso 09](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/09-cavity-2d) | Heredado de Foundation; `icoFoam` |
-| 10A | [Tubería laminar, variante 0](tutoriales/10a-tuberia-laminar-case0.md) | [Caso 10A](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/10a-tuberia-laminar-case0) | Heredado; `icoFoam` |
-| 10B | [Tubería laminar, variante 1](tutoriales/10b-tuberia-laminar-case1.md) | [Caso 10B](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/10b-tuberia-laminar-case1) | Heredado; `icoFoam` |
-| 10C | [Tubería laminar, variante 2](tutoriales/10c-tuberia-laminar-case2.md) | [Caso 10C](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/10c-tuberia-laminar-case2) | Heredado; `simpleFoam` estacionario |
-| 11 | [Rotura de presa 2D](tutoriales/11-dambreak-2d.md) | [Caso 11](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/11-dambreak-2d) | Heredado; requiere `setFields` |
-| 12 | [Goldschmidt: partículas](tutoriales/12-goldschmidt-particulas.md) | [Caso 12](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/12-goldschmidt-particulas) | Heredado de Foundation 8; migración pendiente |
-| 13 | [STL → snappyHexMesh](stl-snappyhexmesh.md) | [Caso 13](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/13-stl-snappy-esfera) | Generación de malla, no incluye solver CFD |
+| 07 | [Geometrías SVG/Gmsh](tutoriales/07-mallado-desde-svg.md) | [Caso 07](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/07-mallado-desde-svg) | Alternativa Gmsh disponible; SVG original pendiente |
+| 08 | [Tubería cilíndrica 3D transitoria](tutoriales/08-flujo-en-tuberia-3d.md) | [Caso 08](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/08-flujo-en-tuberia-3d) | `pimpleFoam`; revisión documental |
+| 09 | [Cavidad 2D con tapa móvil](tutoriales/09-cavidad-con-tapa-movil.md) | [Caso 09](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/09-cavidad-con-tapa-movil) | Heredado de Foundation; `icoFoam` |
+| 10A | [Tubería laminar, variante 0](tutoriales/10a-tuberia-laminar-base.md) | [Caso 10A](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/10a-tuberia-laminar-base) | Heredado; `icoFoam` |
+| 10B | [Tubería laminar, variante 1](tutoriales/10b-tuberia-laminar-variante-1.md) | [Caso 10B](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/10b-tuberia-laminar-variante-1) | Heredado; `icoFoam` |
+| 10C | [Tubería laminar, variante 2](tutoriales/10c-tuberia-laminar-variante-2.md) | [Caso 10C](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/10c-tuberia-laminar-variante-2) | Heredado; `simpleFoam` estacionario |
+| 11 | [Rotura de presa 2D](tutoriales/11-rotura-de-presa-2d.md) | [Caso 11](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/11-rotura-de-presa-2d) | Heredado; requiere `setFields` |
+| 12 | [Goldschmidt: partículas](tutoriales/12-transporte-de-particulas.md) | [Caso 12](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/12-transporte-de-particulas) | Heredado de Foundation 8; migración pendiente |
+| 13 | [STL → snappyHexMesh](stl-snappyhexmesh.md) | [Caso 13](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/13-mallado-esfera-desde-stl) | Generación de malla, no incluye solver CFD |
 
 ## Postprocesamiento y visualización
 
 | Recurso | Uso |
 | --- | --- |
-| [Exportación a VTK, CSV y otros programas](tutoriales/01-anexo-exportacion.md) | Preparación de resultados para aplicaciones externas |
+| [Exportación a VTK, CSV y otros programas](tutoriales/01b-exportacion-resultados.md) | Preparación de resultados para aplicaciones externas |
 | [PyVista](pyvista.md) | Lectura directa de `.foam`, cortes, vectores y GIF |
 | [Gráficos de propiedades](graficos-y-propiedades.md) | Comparación de perfiles y diagnósticos |
 | [`plot_csv.py`](https://github.com/juanjosecas/openFOAM-manual/blob/main/scripts/plot_csv.py) | Gráficos de columnas exportadas a CSV |
@@ -50,7 +50,7 @@ Portal de contenidos del repositorio [openFOAM-manual](https://github.com/juanjo
 | --- | --- |
 | [STL y snappyHexMesh](stl-snappyhexmesh.md) | Importar STL, revisar unidades y generar malla volumétrica |
 | [`preparar_stl.py`](https://github.com/juanjosecas/openFOAM-manual/blob/main/scripts/preparar_stl.py) | Crear esfera STL o convertir milímetros/centímetros a metros |
-| [SVG y Gmsh](tutoriales/07-svg-gmsh.md) | Flujo de trabajo con Gmsh; archivos auxiliares pendientes |
+| [SVG y Gmsh](tutoriales/07-mallado-desde-svg.md) | Flujo de trabajo con Gmsh; archivos auxiliares pendientes |
 | [`audit_cases.py`](https://github.com/juanjosecas/openFOAM-manual/blob/main/scripts/audit_cases.py) | Auditoría estructural de casos sin ejecutarlos |
 
 ## Archivos del proyecto
@@ -79,9 +79,9 @@ Las extensiones **no resuelven** los archivos ausentes de los casos 04 y 07 ni a
 
 ## Actualizaciones de los casos previamente incompletos
 
-- [Chorro de agua: configuración temporal reconstruida](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/04-chorro-agua/COMPLETADO.md).
-- [SVG/Gmsh: alternativa rectangular reproducible](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/07-svg-gmsh/COMPLETADO.md). El SVG histórico no está disponible.
-- [Goldschmidt: dependencias que no es seguro inventar](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/12-goldschmidt-particulas/PENDIENTES.md).
+- [Chorro de agua: configuración temporal reconstruida](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/04-chorro-de-agua/COMPLETADO.md).
+- [SVG/Gmsh: alternativa rectangular reproducible](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/07-mallado-desde-svg/COMPLETADO.md). El SVG histórico no está disponible.
+- [Goldschmidt: dependencias que no es seguro inventar](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/12-transporte-de-particulas/PENDIENTES.md).
 
 
 ## De régimen estacionario a transitorio
@@ -100,7 +100,7 @@ Las extensiones **no resuelven** los archivos ausentes de los casos 04 y 07 ni a
 
 ## Nuevo caso 14A: difusión de concentración normalizada
 
-- [Caso 14A autocontenido](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-farmaco): `scalarTransportFoam`, `0/T`, `0/U`, `DT`, malla 1D, scripts propios y CSV/PNG/GIF. **Revisión estática; no ejecutado.**
+- [Caso 14A autocontenido](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-de-farmaco): `scalarTransportFoam`, `0/T`, `0/U`, `DT`, malla 1D, scripts propios y CSV/PNG/GIF. **Revisión estática; no ejecutado.**
 - [Estándar obligatorio para futuros casos](estandar-casos-autocontenidos.md): estructura, scripts, variantes, procedencia y verificaciones.
 
 Las fases 14B–14E y los casos 15–22 siguen siendo propuestas, no carpetas de simulación.
@@ -110,21 +110,21 @@ Las fases 14B–14E y los casos 15–22 siguen siendo propuestas, no carpetas de
 
 | Caso | Solver | Configuración | Estado |
 | --- | --- | --- | --- |
-| 23 · [Flexión de viga 3D](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/23-flexion-viga/README.md) | solidDisplacementFoam | [Carpeta autocontenida](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/23-flexion-viga) | Archivos completos; no ejecutado |
-| 24 · [Conducción térmica 1D](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/24-conduccion-1d/README.md) | laplacianFoam | [Carpeta autocontenida](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/24-conduccion-1d) | Archivos completos; no ejecutado |
+| 23 · [Flexión de viga 3D](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/23-flexion-de-viga/README.md) | solidDisplacementFoam | [Carpeta autocontenida](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/23-flexion-de-viga) | Archivos completos; no ejecutado |
+| 24 · [Conducción térmica 1D](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/24-conduccion-de-calor-1d/README.md) | laplacianFoam | [Carpeta autocontenida](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/24-conduccion-de-calor-1d) | Archivos completos; no ejecutado |
 
 [Investigación adicional: calor, radiación, tensiones térmicas y convección](ejemplos-calor-radiacion-solidos.md). Los modelos radiativos son propuestas, no casos listos para ejecutar.
 
 
 ## Caso 25: refracción de luz en líquidos (2D y 3D)
 
-- [Tutorial 25: modelo geométrico y ley de Snell](tutoriales/25-refraccion-luz.md).
-- [Caso autocontenido](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/25-refraccion-luz): Python, CSV, PNG, GIF opcionales, pruebas y variantes.
+- [Tutorial 25: modelo geométrico y ley de Snell](tutoriales/25-refraccion-de-luz.md).
+- [Caso autocontenido](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/25-refraccion-de-luz): Python, CSV, PNG, GIF opcionales, pruebas y variantes.
 - **No es un solver CFD ni necesita OpenFOAM**: interfaz plana fija; extensión a superficies libres pendiente. Revisión estática, sin ejecución.
 
 
 ## Caso 26: refracción acoplada a una superficie de OpenFOAM
 
-- [Tutorial 26: interFoam + rayos 2D/3D](tutoriales/26-refraccion-interfoam.md).
-- [Archivos CFD autocontenidos y postprocesamiento](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/26-refraccion-interfoam): 0/, constant/, system/, setFields, Allrun, CSV, PNG y GIF.
+- [Tutorial 26: interFoam + rayos 2D/3D](tutoriales/26-refraccion-en-interfaz-de-fluidos.md).
+- [Archivos CFD autocontenidos y postprocesamiento](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/26-refraccion-en-interfaz-de-fluidos): 0/, constant/, system/, setFields, Allrun, CSV, PNG y GIF.
 - **CFD real en OpenFOAM (2D)**; óptica geométrica como postprocesamiento, con extrusión visual 3D. Revisión estática, no ejecutado.

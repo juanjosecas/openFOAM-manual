@@ -37,8 +37,8 @@ Aquí la presión `p` de los solvers incompresibles suele ser **cinemática** (m
 Partiendo de la raíz del repositorio:
 
 ```bash
-cp -a cases/02-canal-obstaculos cases/02-canal-obstaculos-transitorio
-cd cases/02-canal-obstaculos-transitorio
+cp -a cases/02-flujo-canal-con-obstaculos cases/02-flujo-canal-con-obstaculos-transitorio
+cd cases/02-flujo-canal-con-obstaculos-transitorio
 # No copiar tiempos calculados ni processor*/ a la variante.
 # Revisar primero condiciones y modelos antes de ejecutar.
 ```
@@ -158,7 +158,7 @@ En los canales 01–03 y el obstáculo del 02 resultan especialmente útiles **s
 
 ## 10. Referencias y ejemplos del manual
 
-- [Tutorial 08: tubería pulsátil con `pimpleFoam`](tutoriales/08-tuberia-cilindrica-3d.md).
+- [Tutorial 08: tubería pulsátil con `pimpleFoam`](tutoriales/08-flujo-en-tuberia-3d.md).
 - [Ejecución y variantes de los casos](guia-ejecucion-y-variantes.md).
 - [Gráficos y propiedades físicas](graficos-y-propiedades.md).
 - [PyVista para animaciones](pyvista.md).

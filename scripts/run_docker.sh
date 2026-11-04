@@ -17,11 +17,11 @@ Uso:
   bash scripts/run_docker.sh --list
 
 Ejemplos:
-  bash scripts/run_docker.sh 09-cavity-2d
-  bash scripts/run_docker.sh cow_incompressible_steady
-  bash scripts/run_docker.sh cow_incompressible_transient
-  bash scripts/run_docker.sh 09-cavity-2d --mesh
-  bash scripts/run_docker.sh 09-cavity-2d --dry-run
+  bash scripts/run_docker.sh 09-cavidad-con-tapa-movil
+  bash scripts/run_docker.sh 27-flujo-estacionario-alrededor-vaca
+  bash scripts/run_docker.sh 28-flujo-transitorio-alrededor-vaca
+  bash scripts/run_docker.sh 09-cavidad-con-tapa-movil --mesh
+  bash scripts/run_docker.sh 09-cavidad-con-tapa-movil --dry-run
 
 Opciones:
   --list          Listar casos y scripts existentes.
@@ -80,7 +80,7 @@ SCRIPT=Allrun
 }
 
 # Montamos TODO el repo porque algunos Allrun usan archivos de otras carpetas
-# (por ejemplo, cow_incompressible_transient usa la malla del caso steady).
+# (por ejemplo, 28-flujo-transitorio-alrededor-vaca usa la malla del caso steady).
 # --user evita crear resultados como root en el equipo anfitrión.
 # --entrypoint anula el entrypoint propio de la imagen y permite cargar bashrc.
 # --rm elimina el contenedor al terminar, pero conserva los resultados montados.

@@ -149,8 +149,8 @@ Para ejecutar un caso existente **sin escribir comandos Docker a mano**, el repo
 
 ```bash
 bash scripts/run_docker.sh --list
-bash scripts/run_docker.sh 09-cavity-2d
-bash cases/09-cavity-2d/run_docker.sh
+bash scripts/run_docker.sh 09-cavidad-con-tapa-movil
+bash cases/09-cavidad-con-tapa-movil/run_docker.sh
 ```
 
 Consultar [lanzador general](ejecutar-con-docker.md) y [scripts por caso](docker-por-caso.md). Los resultados se conservan en el directorio del caso según el lanzador. La pertenencia al grupo `docker` concede privilegios elevados sobre el host; evitar agregar usuarios indiscriminadamente.
@@ -218,7 +218,7 @@ Dentro de la terminal:
 ~~~bash
 echo "$WM_PROJECT_VERSION"
 which blockMesh
-cd cases/09-cavity-2d
+cd cases/09-cavidad-con-tapa-movil
 ls
 bash Allrun
 exit
@@ -264,9 +264,9 @@ Los lanzadores del repositorio ya configuran UID/GID, montaje, directorio de tra
 
 ~~~bash
 bash scripts/run_docker.sh --list
-bash scripts/run_docker.sh 09-cavity-2d
-bash scripts/run_docker.sh 09-cavity-2d --mesh
-bash scripts/run_docker.sh 09-cavity-2d --dry-run
+bash scripts/run_docker.sh 09-cavidad-con-tapa-movil
+bash scripts/run_docker.sh 09-cavidad-con-tapa-movil --mesh
+bash scripts/run_docker.sh 09-cavidad-con-tapa-movil --dry-run
 ~~~
 
 Para ejecutar casos desde cualquier carpeta, añadir a `~/.bashrc`:
@@ -282,8 +282,8 @@ Entonces:
 ~~~bash
 source ~/.bashrc
 foamrun --list
-foamrun 09-cavity-2d
-foamrun cow_incompressible_transient
+foamrun 09-cavidad-con-tapa-movil
+foamrun 28-flujo-transitorio-alrededor-vaca
 ~~~
 
 Si se clonó el repositorio en otra ubicación, modificar la ruta del atajo. Los resultados permanecen en `cases/`. `--rm` no borra los datos montados.
@@ -362,7 +362,7 @@ blockMesh -help | head -n 12
 
 Si un comando no aparece, no ejecutar todavía un caso: primero identificar qué distribución, versión y entorno están activos. En versiones recientes algunos solvers se invocan mediante `foamRun` en lugar de ejecutables independientes; **la ausencia de `simpleFoam` en una distribución diferente no demuestra por sí sola una instalación defectuosa**.
 
-Para comprobar el flujo de trabajo del manual, utilizar el [caso 09: cavidad 2D](tutoriales/09-cavity-2d.md), o su lanzador Docker. Una instalación funcional no garantiza que todos los tutoriales estén validados numéricamente.
+Para comprobar el flujo de trabajo del manual, utilizar el [caso 09: cavidad 2D](tutoriales/09-cavidad-con-tapa-movil.md), o su lanzador Docker. Una instalación funcional no garantiza que todos los tutoriales estén validados numéricamente.
 
 ## 6. Errores habituales
 

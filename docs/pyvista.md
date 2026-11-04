@@ -19,8 +19,8 @@ Para exportar MP4 también se necesita `ffmpeg` disponible en el `PATH`. En serv
 En la raíz del repositorio, después de disponer de resultados reales:
 
 ```bash
-touch cases/08-tuberia-cilindrica-3d/tuberia.foam
-python scripts/pyvista_openfoam.py cases/08-tuberia-cilindrica-3d/tuberia.foam \
+touch cases/08-flujo-en-tuberia-3d/tuberia.foam
+python scripts/pyvista_openfoam.py cases/08-flujo-en-tuberia-3d/tuberia.foam \
   --output plots/08-pyvista
 ```
 
@@ -29,7 +29,7 @@ Produce una imagen PNG de **magnitud de velocidad** en un corte central. Tambié
 ### Animación
 
 ```bash
-python scripts/pyvista_openfoam.py cases/08-tuberia-cilindrica-3d/tuberia.foam \
+python scripts/pyvista_openfoam.py cases/08-flujo-en-tuberia-3d/tuberia.foam \
   --output plots/08-pyvista --gif --mp4 --fps 15
 ```
 
@@ -42,7 +42,7 @@ Produce `velocidad.gif` y `velocidad.mp4` de los estados disponibles, además de
 ```python
 import pyvista as pv
 
-reader = pv.OpenFOAMReader("cases/08-tuberia-cilindrica-3d/tuberia.foam")
+reader = pv.OpenFOAMReader("cases/08-flujo-en-tuberia-3d/tuberia.foam")
 print("Tiempos disponibles:", reader.time_values)
 reader.set_active_time_value(reader.time_values[-1])
 blocks = reader.read()

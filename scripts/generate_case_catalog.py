@@ -49,8 +49,8 @@ def main() -> None:
         "Cuando el caso tiene `run_docker.sh`, puede ejecutarse desde la raíz del repositorio:",
         "",
         "```bash",
-        "bash cases/09-cavity-2d/run_docker.sh --dry-run",
-        "bash cases/09-cavity-2d/run_docker.sh",
+        "bash cases/09-cavidad-con-tapa-movil/run_docker.sh --dry-run",
+        "bash cases/09-cavidad-con-tapa-movil/run_docker.sh",
         "```",
         "",
         "Consultar también la [guía de Docker por caso](docker-por-caso.md) "

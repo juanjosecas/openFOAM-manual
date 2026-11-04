@@ -61,7 +61,7 @@ El factor de concentración de tensiones tiende a 3 para una placa infinita con 
 
 ## Otros casos ya presentes
 
-La cavidad 2D (09-cavity-2d) y la rotura de presa (11-dambreak-2d) ya tienen implementaciones propias. Se recomienda ampliarlas con estudios de refinamiento, Reynolds y sensibilidad de parámetros, sin duplicar los casos.
+La cavidad 2D (09-cavidad-con-tapa-movil) y la rotura de presa (11-rotura-de-presa-2d) ya tienen implementaciones propias. Se recomienda ampliarlas con estudios de refinamiento, Reynolds y sensibilidad de parámetros, sin duplicar los casos.
 
 ## Alcance y límites
 
