@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+[[ ! -f constant/polyMesh/points ]] || { echo 'La malla ya existe; no se sobreescribe.'; exit 0; }
+blockMesh > log.blockMesh 2>&1
+checkMesh > log.checkMesh 2>&1

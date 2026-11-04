@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Caso independiente para animación. No modifica el caso de origen.
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+if [[ ! -f constant/polyMesh/points ]]; then
+gmshToFoam cow_tunnel.msh > log.gmshToFoam 2>&1
+changeDictionary > log.changeDictionary 2>&1
+fi
+checkMesh > log.checkMesh 2>&1 || { tail -n 60 log.checkMesh >&2; exit 1; }
+pimpleFoam 2>&1 | tee log.pimpleFoam

@@ -1,0 +1,68 @@
+// NOTA DEL MANUAL: Esquemas de tiempo, gradiente, divergencia y laplaciano; modificaciones pueden cambiar difusion numerica o estabilidad.
+// Mantener la fisica y los valores originales; verificar compatibilidad con la version instalada.
+// Cabecera: describe cómo leer el archivo, no sus condiciones físicas.
+FoamFile
+{
+    // Versión del formato, no del solver.
+    version 2.0;
+    // Texto ASCII editable.
+    format ascii;
+    // Clase de objeto: diccionario o campo escalar/vectorial por celda.
+    class dictionary;
+    // Nombre del objeto que lee OpenFOAM.
+    object fvSchemes;
+}
+
+// Euler de primer orden integra la derivada temporal del flujo.
+ddtSchemes
+{
+    default Euler;
+}
+
+// Reconstrucción de gradientes espaciales.
+gradSchemes
+{
+    // Gauss con interpolación lineal para gradientes.
+    default Gauss linear;
+}
+
+// Términos de divergencia, incluido transporte de cantidad de movimiento.
+divSchemes
+{
+    // Exigir un esquema explícito para los términos que use el solver.
+    default none;
+
+    // Convección robusta de primer orden: puede suavizar la estela por difusión
+    // numérica. Comparar mallas antes de interpretar detalles pequeños.
+    div(phi,U) Gauss upwind;
+
+    // Parte del esfuerzo viscoso con la viscosidad efectiva, que depende
+    // de la ley constitutiva elegida.
+    div((nuEff*dev2(T(grad(U)))))
+        Gauss linear;
+}
+
+// Difusión con corrección no ortogonal.
+laplacianSchemes
+{
+    default Gauss linear corrected;
+}
+
+// Interpolación lineal de centros de celda a caras.
+interpolationSchemes
+{
+    default linear;
+}
+
+// Derivada normal a las caras, corregida por no ortogonalidad.
+snGradSchemes
+{
+    default corrected;
+}
+
+// Método geométrico de distancia a la pared, si un modelo lo solicita.
+wallDist
+{
+    // Propagar distancias desde las superficies wall.
+    method meshWave;
+}

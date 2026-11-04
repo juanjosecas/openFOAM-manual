@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+[[ ! -f constant/polyMesh/points ]] || { echo 'La malla ya existe; no se sobreescribe.'; exit 0; }
+gmshToFoam cow_tunnel.msh > log.gmshToFoam 2>&1
+changeDictionary > log.changeDictionary 2>&1
+checkMesh > log.checkMesh 2>&1

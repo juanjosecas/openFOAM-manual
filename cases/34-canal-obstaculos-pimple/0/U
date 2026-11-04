@@ -1,0 +1,69 @@
+// NOTA DEL MANUAL: Velocidad en m/s; boundaryField debe coincidir con los nombres de patches. fixedValue impone velocidad; zeroGradient no fija el valor.
+// Mantener la fisica y los valores originales; verificar compatibilidad con la version instalada.
+// Cabecera: describe cómo leer el archivo, no sus condiciones físicas.
+FoamFile
+{
+    // Versión del formato, no del solver.
+    version 2.0;
+    // Texto ASCII editable.
+    format ascii;
+    // Clase de objeto: diccionario o campo escalar/vectorial por celda.
+    class volVectorField;
+    // Carpeta de los campos iniciales.
+    location "0";
+    // Nombre del objeto que lee OpenFOAM.
+    object U;
+}
+
+// Exponente SI: masa^0 longitud^1 tiempo^-1; velocidad en m/s.
+dimensions [0 1 -1 0 0 0 0];
+
+// Estimación inicial: 1 cm/s en +x, no el resultado convergido.
+internalField uniform (0.01 0 0);
+
+// Condiciones por patch; deben coincidir con los nombres de blockMeshDict.
+boundaryField
+{
+    // Entrada prescrita: fija velocidad y flujo entrante, no caída de presión.
+    inlet
+    {
+        type fixedValue;
+        // Vector uniforme de entrada. Al variar Ux, actualizar también internalField.
+        value uniform (0.01 0 0);
+    }
+
+    // Salida: zeroGradient no impone velocidad cero; deja ajustar el perfil.
+    outlet
+    {
+        type zeroGradient;
+    }
+
+    // Pared inferior del canal: noSlip mantiene velocidad cero.
+    lowerWall
+    {
+        type noSlip;
+    }
+
+    // Pared superior del canal: noSlip mantiene velocidad cero.
+    upperWall
+    {
+        type noSlip;
+    }
+
+    // Patch propio: puede usar una condición distinta de las paredes del canal.
+    // Base: noSlip. Variante slip: impermeable sin fricción tangencial ideal.
+    // Variante partialSlip: interpolación con valueFraction entre 0 y 1;
+    // con refValue cero, 0 corresponde a slip y 1 a velocidad cero.
+    // Las recetas están en variants/*.json; no modificar aquí para conservar la base.
+    obstacle
+    {
+        type noSlip;
+    }
+
+    // Dirección z vacía: flujo 2D planar; el objeto es rectangular, no una esfera.
+    frontAndBack
+    {
+        // Debe coincidir con el patch geométrico y mantenerse una celda en z.
+        type empty;
+    }
+}
