@@ -14,7 +14,7 @@ fi
 # Montar todo el repo: algunas geometrías y mallas se comparten entre casos.
 # Ejecutar con el UID/GID local para evitar archivos propiedad de root.
 # El contenedor es efímero; los datos persisten en el bind mount.
-cmd=(docker run --rm --init --user "$(id -u):$(id -g)" --env HOME=/tmp
+cmd=(docker run -i --rm --init --user "$(id -u):$(id -g)" --env HOME=/tmp
     --mount "type=bind,source=$REPO_DIR,target=/workspace"
     --workdir "/workspace/cases/08-tuberia-cilindrica-3d"
     --entrypoint /bin/bash "$IMAGE" -c
@@ -43,7 +43,12 @@ run_step() {
 }
 verify_mesh() {
     local policy="${1:-strict}"
-    run_step checkMesh checkMesh || return 1
+    if [[ "$policy" == cow ]]; then
+        need checkMesh
+        checkMesh > log.checkMesh 2>&1 || echo "AVISO: checkMesh informó problemas; se revisará el diagnóstico." >&2
+    else
+        run_step checkMesh checkMesh
+    fi
     if [[ "$policy" == cow ]]; then
         grep -Eq 'Mesh OK|Failed 1 mesh checks' log.checkMesh || die "Calidad de malla no aceptada (ver log.checkMesh)"
     else
