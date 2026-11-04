@@ -18,6 +18,10 @@ Leer las [convenciones editoriales y técnicas](docs/estructura-y-estilo.md).
 
 **Instalación:** [Ubuntu, Red Hat/Rocky/AlmaLinux, Docker y Conda-forge](docs/instalacion-openfoam.md). Los tutoriales utilizan OpenFOAM.com **v2406**; el paquete conda-forge disponible es **v2412**.
 
+## Casos oficiales de OpenFOAM v2406
+
+Se añadió un [módulo para importar y ejecutar los tutoriales oficiales de cilindro, escalón turbulento y placa perforada](docs/tutoriales/oficiales-v2406.md) desde la imagen Docker v2406. Los casos se importan completos y no sobrescriben los ejemplos propios. La compatibilidad numérica está pendiente de comprobación con Docker.
+
 ## Estado de los tutoriales
 
 Cada caso debe declarar su versión de OpenFOAM, solver, estado de revisión, fecha de prueba y limitaciones. **Revisión estática no equivale a ejecución ni a validación física**.
