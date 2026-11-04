@@ -42,7 +42,7 @@ solvers
     }
 }
 
-// Acoplamiento presión-velocidad para alcanzar un estado estacionario.
+// Acoplamiento presión-velocidad PIMPLE para flujo transitorio.
 PIMPLE
 {
     nOuterCorrectors 2;
