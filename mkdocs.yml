@@ -5,6 +5,23 @@ repo_url: https://github.com/juanjosecas/openFOAM-manual
 theme:
   name: material
   language: es
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Cambiar a modo oscuro
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Cambiar a modo claro
 nav:
   - Portal: index.md
   - Comenzar:
@@ -13,6 +30,10 @@ nav:
       - De simpleFoam a transitorio: simplefoam-a-transitorio.md
       - Propiedades de materiales: propiedades-de-materiales.md
       - Estándar de casos autocontenidos: estandar-casos-autocontenidos.md
+  - Catálogo de casos: catalogo-casos.md
+  - Ejecutar con Docker:
+      - Scripts por caso: docker-por-caso.md
+      - Lanzador general: ejecutar-con-docker.md
   - Tutoriales:
       - 01 · Canal no newtoniano: tutoriales/01-canal-no-newtoniano.md
       - 02 · Canal con obstáculos: tutoriales/02-canal-obstaculos.md
@@ -48,6 +69,10 @@ markdown_extensions:
   - tables
   - pymdownx.superfences
   - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.arithmatex:
       generic: true
 extra_javascript:
