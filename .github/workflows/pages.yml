@@ -1,0 +1,58 @@
+name: Publicar manual MkDocs en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "cases/**"
+      - "mkdocs.yml"
+      - "requirements-docs.txt"
+      - "scripts/generate_case_catalog.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-docs.txt
+      - name: Instalar MkDocs y Material
+        run: pip install -r requirements-docs.txt
+      - name: Generar catálogo de casos
+        run: python scripts/generate_case_catalog.py
+      - name: Construir sitio
+        run: mkdocs build --clean --site-dir site
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+      - name: Subir sitio generado
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
