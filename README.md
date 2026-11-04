@@ -18,6 +18,10 @@ Leer las [convenciones editoriales y técnicas](docs/estructura-y-estilo.md).
 
 **Instalación:** [Ubuntu, Red Hat/Rocky/AlmaLinux, Docker y Conda-forge](docs/instalacion-openfoam.md). Los tutoriales utilizan OpenFOAM.com **v2406**; el paquete conda-forge disponible es **v2412**.
 
+## Casos oficiales de OpenFOAM v2406
+
+Se añadió un [módulo para importar y ejecutar los tutoriales oficiales de cilindro, escalón turbulento y placa perforada](docs/tutoriales/oficiales-v2406.md) desde la imagen Docker v2406. Los casos se importan completos y no sobrescriben los ejemplos propios. La compatibilidad numérica está pendiente de comprobación con Docker.
+
 ## Casos transitorios para animaciones
 
 Cinco [casos independientes para generar animaciones CFD](docs/tutoriales/casos-transitorios-animaciones.md): vaca, canguro, chorro de agua, rotura de presa y canal con obstáculos convertido a `pimpleFoam`. Cada uno vive en una carpeta nueva bajo `cases/`; los originales permanecen intactos. Incluye un renderizador básico con `pvpython`.
