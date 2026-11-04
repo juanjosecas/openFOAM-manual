@@ -31,6 +31,7 @@ nav:
       - Propiedades de materiales: propiedades-de-materiales.md
       - Estándar de casos autocontenidos: estandar-casos-autocontenidos.md
   - Catálogo de casos: catalogo-casos.md
+  - Publicación de esta web: publicacion-pages.md
   - Ejecutar con Docker:
       - Scripts por caso: docker-por-caso.md
       - Lanzador general: ejecutar-con-docker.md
