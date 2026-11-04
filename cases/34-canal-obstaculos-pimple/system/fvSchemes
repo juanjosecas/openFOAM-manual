@@ -13,7 +13,7 @@ FoamFile
     object fvSchemes;
 }
 
-// steadyState elimina la derivada temporal: modificar deltaT no crea una película física.
+// Euler de primer orden integra la derivada temporal del flujo.
 ddtSchemes
 {
     default Euler;
