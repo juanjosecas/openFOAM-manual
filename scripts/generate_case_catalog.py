@@ -57,7 +57,7 @@ def main() -> None:
         "y la [guía del lanzador general](ejecutar-con-docker.md).",
         "",
     ]
-    OUTPUT.write_text("\n".join(lines).replace("\n", "\n"), encoding="utf-8")
+    OUTPUT.write_text("\n".join(lines), encoding="utf-8")
     print(f"Generado: {OUTPUT} ({len(lines)} líneas)")
 
 if __name__ == "__main__":
