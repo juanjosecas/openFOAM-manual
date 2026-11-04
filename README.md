@@ -51,8 +51,8 @@ Se incorporó un [catálogo de tutoriales externos con sus URLs originales](docs
 
 ## Nuevos ejemplos mínimos de sólidos y calor
 
-- [23: flexión estática de viga 3D](cases/23-flexion-viga/README.md), solidDisplacementFoam.
-- [24: conducción térmica estacionaria 1D](cases/24-conduccion-1d/README.md), laplacianFoam.
+- [23: flexión estática de viga 3D](cases/23-flexion-de-viga/README.md), solidDisplacementFoam.
+- [24: conducción térmica estacionaria 1D](cases/24-conduccion-de-calor-1d/README.md), laplacianFoam.
 - [Otras fuentes: radiación, convección y tensiones térmicas](docs/ejemplos-calor-radiacion-solidos.md).
 
 Ambos casos tienen estructura autocontenida y postprocesamiento; **solo revisión estática, sin ejecución ni validación**.
@@ -60,12 +60,12 @@ Ambos casos tienen estructura autocontenida y postprocesamiento; **solo revisió
 
 ## Modelo óptico 2D/3D (sin CFD)
 
-- [25: refracción de rayos en una interfaz aire–agua](cases/25-refraccion-luz/README.md): ley de Snell, reflexión interna total, CSV, PNG, GIF y variantes. Modelo Python autocontenido, sin OpenFOAM; **no ejecutado ni validado**.
+- [25: refracción de rayos en una interfaz aire–agua](cases/25-refraccion-de-luz/README.md): ley de Snell, reflexión interna total, CSV, PNG, GIF y variantes. Modelo Python autocontenido, sin OpenFOAM; **no ejecutado ni validado**.
 
 
 ## Refracción con OpenFOAM
 
-- [26: superficie libre calculada con interFoam y rayos refractados](cases/26-refraccion-interfoam/README.md). CFD agua–aire 2D con postprocesamiento óptico 2D/3D, CSV, PNG y GIF temporal. **Revisión estática; sin ejecutar.**
+- [26: superficie libre calculada con interFoam y rayos refractados](cases/26-refraccion-en-interfaz-de-fluidos/README.md). CFD agua–aire 2D con postprocesamiento óptico 2D/3D, CSV, PNG y GIF temporal. **Revisión estática; sin ejecutar.**
 
 
 ## Ejecutar los casos con Docker
@@ -74,8 +74,8 @@ Para lanzar los `Allrun` existentes con **OpenFOAM v2406** sin instalar OpenFOAM
 
 ```bash
 bash scripts/run_docker.sh --list
-bash scripts/run_docker.sh 09-cavity-2d
-bash scripts/run_docker.sh cow_incompressible_transient
+bash scripts/run_docker.sh 09-cavidad-con-tapa-movil
+bash scripts/run_docker.sh 28-flujo-transitorio-alrededor-vaca
 ```
 
 El lanzador conserva logs y resultados en `cases/` y puede ejecutar únicamente el mallado con `--mesh`. Ver [explicación detallada y limitaciones](docs/ejecutar-con-docker.md).
@@ -83,4 +83,4 @@ El lanzador conserva logs y resultados en `cases/` y puede ejecutar únicamente 
 
 ### Ejecutores Docker independientes en cada caso
 
-Los casos CFD incluyen un `run_docker.sh` propio, comentado y sin dependencias de `Allrun`/`Allmesh`. Por ejemplo: `bash cases/09-cavity-2d/run_docker.sh`. Consultar [etapas, controles y limitaciones](docs/docker-por-caso.md).
+Los casos CFD incluyen un `run_docker.sh` propio, comentado y sin dependencias de `Allrun`/`Allmesh`. Por ejemplo: `bash cases/09-cavidad-con-tapa-movil/run_docker.sh`. Consultar [etapas, controles y limitaciones](docs/docker-por-caso.md).

@@ -8,7 +8,7 @@ Desde la raíz del repositorio:
 
 ```bash
 python -m pip install matplotlib pandas
-python scripts/plot_solver_log.py cases/08-tuberia-cilindrica-3d/log.pimpleFoam --output plots/08
+python scripts/plot_solver_log.py cases/08-flujo-en-tuberia-3d/log.pimpleFoam --output plots/08
 ```
 
 El script analiza las líneas `Solving for ... Initial residual` y `Courant Number mean ... max ...` presentes en un log. No todos los solvers registran ambas. Las curvas son **diagnósticos numéricos**, no propiedades físicas, y el eje horizontal de residuos identifica posiciones de registro, no segundos.

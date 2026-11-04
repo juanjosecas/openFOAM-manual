@@ -5,7 +5,7 @@ Cada carpeta CFD ejecutable contiene `run_docker.sh`, sin llamadas a `Allrun` ni
 ## Uso
 
 ```bash
-cd cases/09-cavity-2d
+cd cases/09-cavidad-con-tapa-movil
 bash run_docker.sh --dry-run    # muestra la invocación, no modifica archivos
 bash run_docker.sh              # ejecuta Docker y las etapas del caso
 ```
@@ -18,18 +18,18 @@ Cada script monta **todo el repositorio** en `/workspace`, porque algunos casos 
 
 | Casos | Etapas |
 |---|---|
-| 01-canal-no-newtoniano, 02-canal-obstaculos, 03-estenosis-capilar, 08-tuberia-cilindrica-3d, 09-cavity-2d, 14a-difusion-farmaco, 23-flexion-viga, 24-conduccion-1d | blockMesh (si falta), checkMesh, solver indicado en controlDict |
-| 04-chorro-agua | blockMesh, checkMesh, interFoam; no usa setFields |
-| 07-svg-gmsh | generación de geometría Python, gmshToFoam, ajuste de patches, checkMesh, simpleFoam |
-| 10a/10b/10c-tuberia-laminar, 11-dambreak-2d, 12-goldschmidt-particulas | solo blockMesh y checkMesh: no se presume que el solver heredado sea compatible |
-| 13-stl-snappy-esfera | surfaceCheck, blockMesh, checkMesh, snappyHexMesh, checkMesh; solo mallado |
-| 13b-esfera-agua-laminar | surfaceCheck, blockMesh, checkMesh, snappyHexMesh, checkMesh, simpleFoam |
-| 26-refraccion-interfoam | blockMesh, checkMesh, setFields, interFoam |
-| cow_incompressible_steady | gmshToFoam, changeDictionary, checkMesh, simpleFoam |
-| cow_incompressible_transient | gmshToFoam desde caso vecino, changeDictionary, checkMesh, pimpleFoam |
-| kangarooWake | generación de geometría Python, gmshToFoam, changeDictionary, checkMesh, pimpleFoam |
+| 01a-canal-no-newtoniano, 02-flujo-canal-con-obstaculos, 03-flujo-en-estenosis, 08-flujo-en-tuberia-3d, 09-cavidad-con-tapa-movil, 14a-difusion-de-farmaco, 23-flexion-de-viga, 24-conduccion-de-calor-1d | blockMesh (si falta), checkMesh, solver indicado en controlDict |
+| 04-chorro-de-agua | blockMesh, checkMesh, interFoam; no usa setFields |
+| 07-mallado-desde-svg | generación de geometría Python, gmshToFoam, ajuste de patches, checkMesh, simpleFoam |
+| 10a/10b/10c-tuberia-laminar, 11-rotura-de-presa-2d, 12-transporte-de-particulas | solo blockMesh y checkMesh: no se presume que el solver heredado sea compatible |
+| 13-mallado-esfera-desde-stl | surfaceCheck, blockMesh, checkMesh, snappyHexMesh, checkMesh; solo mallado |
+| 13b-flujo-laminar-alrededor-esfera | surfaceCheck, blockMesh, checkMesh, snappyHexMesh, checkMesh, simpleFoam |
+| 26-refraccion-en-interfaz-de-fluidos | blockMesh, checkMesh, setFields, interFoam |
+| 27-flujo-estacionario-alrededor-vaca | gmshToFoam, changeDictionary, checkMesh, simpleFoam |
+| 28-flujo-transitorio-alrededor-vaca | gmshToFoam desde caso vecino, changeDictionary, checkMesh, pimpleFoam |
+| 29-estela-transitoria-de-canguro | generación de geometría Python, gmshToFoam, changeDictionary, checkMesh, pimpleFoam |
 
-`01-anexo-exportacion` es material auxiliar, no un caso de solver. `25-refraccion-luz` es un modelo Python de rayos ópticos, no OpenFOAM: no se agregó un lanzador Docker OpenFOAM.
+`01b-exportacion-resultados` es material auxiliar, no un caso de solver. `25-refraccion-de-luz` es un modelo Python de rayos ópticos, no OpenFOAM: no se agregó un lanzador Docker OpenFOAM.
 
 ## Controles y limitaciones
 

@@ -1,6 +1,6 @@
 [
   {
-    "slug": "01-canal-no-newtoniano",
+    "slug": "01a-canal-no-newtoniano",
     "title": "Tutorial 01 — Flujo no newtoniano en un canal 2D",
     "sections": 632,
     "blocks": 25,
@@ -17,7 +17,7 @@
     "needs_review": []
   },
   {
-    "slug": "01-anexo-exportacion",
+    "slug": "01b-exportacion-resultados",
     "title": "APÉNDICE PRÁCTICO DEL TUTORIAL 01 · Exportación y visualización fuera de ParaView",
     "sections": 28,
     "blocks": 5,
@@ -27,7 +27,7 @@
     "needs_review": []
   },
   {
-    "slug": "02-canal-obstaculos",
+    "slug": "02-flujo-canal-con-obstaculos",
     "title": "Tutorial 02 — Flujo no newtoniano en un canal con obstáculos",
     "sections": 642,
     "blocks": 19,
@@ -44,7 +44,7 @@
     "needs_review": []
   },
   {
-    "slug": "03-estenosis-capilar",
+    "slug": "03-flujo-en-estenosis",
     "title": "Tutorial 03 — Estenosis capilar 2D",
     "sections": 498,
     "blocks": 16,
@@ -61,7 +61,7 @@
     "needs_review": []
   },
   {
-    "slug": "04-chorro-agua",
+    "slug": "04-chorro-de-agua",
     "title": "OpenFOAM v2406 — Tutorial 04",
     "sections": 765,
     "blocks": 24,
@@ -95,7 +95,7 @@
     "needs_review": []
   },
   {
-    "slug": "07-svg-gmsh",
+    "slug": "07-mallado-desde-svg",
     "title": "Tutorial 07 — Geometrías SVG y Gmsh",
     "sections": 480,
     "blocks": 22,
@@ -111,7 +111,7 @@
     "needs_review": []
   },
   {
-    "slug": "08-tuberia-cilindrica-3d",
+    "slug": "08-flujo-en-tuberia-3d",
     "title": "Tutorial 08. Flujo transitorio en una tubería cilíndrica 3D",
     "sections": 320,
     "blocks": 12,
@@ -128,7 +128,7 @@
     "needs_review": []
   },
   {
-    "slug": "09-cavity-2d",
+    "slug": "09-cavidad-con-tapa-movil",
     "title": "Tutorial 09 · Cavidad 2D con tapa móvil",
     "sections": 40,
     "blocks": 12,
@@ -146,7 +146,7 @@
     "needs_review": []
   },
   {
-    "slug": "10a-tuberia-laminar-case0",
+    "slug": "10a-tuberia-laminar-base",
     "title": "Tutorial 10A · Tubería laminar · case0",
     "sections": 42,
     "blocks": 13,
@@ -165,7 +165,7 @@
     "needs_review": []
   },
   {
-    "slug": "10b-tuberia-laminar-case1",
+    "slug": "10b-tuberia-laminar-variante-1",
     "title": "Tutorial 10B · Tubería laminar · case1",
     "sections": 40,
     "blocks": 12,
@@ -183,7 +183,7 @@
     "needs_review": []
   },
   {
-    "slug": "10c-tuberia-laminar-case2",
+    "slug": "10c-tuberia-laminar-variante-2",
     "title": "Tutorial 10C · Tubería laminar · case2",
     "sections": 44,
     "blocks": 14,
@@ -203,7 +203,7 @@
     "needs_review": []
   },
   {
-    "slug": "11-dambreak-2d",
+    "slug": "11-rotura-de-presa-2d",
     "title": "Tutorial 11 · Rotura de presa 2D",
     "sections": 52,
     "blocks": 18,
@@ -227,7 +227,7 @@
     "needs_review": []
   },
   {
-    "slug": "12-goldschmidt-particulas",
+    "slug": "12-transporte-de-particulas",
     "title": "Tutorial 12 · Goldschmidt · nube de partículas",
     "sections": 45,
     "blocks": 15,

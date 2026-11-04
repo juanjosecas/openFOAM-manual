@@ -2,7 +2,7 @@
 
 Este tutorial incorpora una **malla de volumen** construida a partir de una superficie STL mediante `snappyHexMesh`. El procedimiento no resuelve todavía Navier–Stokes: enseña a preparar geometría, elegir escala, crear la malla de fondo, adaptar celdas a la superficie y comprobar calidad.
 
-**Caso completo de mallado:** [`cases/13-stl-snappy-esfera/`](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/13-stl-snappy-esfera).
+**Caso completo de mallado:** [`cases/13-mallado-esfera-desde-stl/`](https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/13-mallado-esfera-desde-stl).
 
 ## Lo que ya había en el manual
 
@@ -27,7 +27,7 @@ La conversión es $x_{m}=s\,x_{STL}$ y también se aplica a las otras coordenada
 Ejemplo de STL en milímetros:
 
 ```bash
-cd cases/13-stl-snappy-esfera
+cd cases/13-mallado-esfera-desde-stl
 python ../../scripts/preparar_stl.py --input pieza_mm.stl \
   --units mm --output constant/triSurface/sphere.stl
 ```
@@ -39,7 +39,7 @@ El script imprime los límites geométricos **ya expresados en metros**. Utiliza
 Para reproducir el ejemplo sin CAD ni archivos externos:
 
 ```bash
-cd cases/13-stl-snappy-esfera
+cd cases/13-mallado-esfera-desde-stl
 python -m pip install pyvista numpy
 python ../../scripts/preparar_stl.py \
   --radius 0.5 --output constant/triSurface/sphere.stl
@@ -62,7 +62,7 @@ blockMesh
 checkMesh
 ```
 
-El archivo [`system/blockMeshDict`](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/13-stl-snappy-esfera/system/blockMeshDict) define una caja con $(24,24,24)$ celdas base. Es importante que la caja **contenga completamente la esfera** y deje espacio para el flujo exterior.
+El archivo [`system/blockMeshDict`](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/13-mallado-esfera-desde-stl/system/blockMeshDict) define una caja con $(24,24,24)$ celdas base. Es importante que la caja **contenga completamente la esfera** y deje espacio para el flujo exterior.
 
 ## 5. Ajustar y refinar cerca de la superficie
 
@@ -71,7 +71,7 @@ snappyHexMesh -overwrite
 checkMesh
 ```
 
-En [`system/snappyHexMeshDict`](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/13-stl-snappy-esfera/system/snappyHexMeshDict):
+En [`system/snappyHexMeshDict`](https://github.com/juanjosecas/openFOAM-manual/blob/main/cases/13-mallado-esfera-desde-stl/system/snappyHexMeshDict):
 
 - `castellatedMesh true` recorta/refina las celdas próximas a la superficie.
 - `snap true` ajusta puntos a los triángulos del STL.

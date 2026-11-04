@@ -1,7 +1,7 @@
 #!/usr/bin/env pvpython
 """Render OpenFOAM time steps as an MP4 or image sequence with ParaView pvpython.
 
-Run with: pvpython scripts/render_transient.py cases/32-chorro-animado --output video.mp4
+Run with: pvpython scripts/render_transient.py cases/32-chorro-de-agua-animacion --output video.mp4
 Requires ParaView with video writer support (or choose .png for a frame).
 """
 import argparse

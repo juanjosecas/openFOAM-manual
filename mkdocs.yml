@@ -39,26 +39,26 @@ nav:
   - Tutoriales:
       - Casos oficiales v2406 (cilindro, escalón, placa): tutoriales/oficiales-v2406.md
       - Casos transitorios para animaciones: tutoriales/casos-transitorios-animaciones.md
-      - 01 · Canal no newtoniano: tutoriales/01-canal-no-newtoniano.md
-      - 02 · Canal con obstáculos: tutoriales/02-canal-obstaculos.md
-      - 03 · Estenosis capilar: tutoriales/03-estenosis-capilar.md
-      - 04 · Chorro de agua: tutoriales/04-chorro-agua.md
+      - 01 · Canal no newtoniano: tutoriales/01a-canal-no-newtoniano.md
+      - 02 · Canal con obstáculos: tutoriales/02-flujo-canal-con-obstaculos.md
+      - 03 · Estenosis capilar: tutoriales/03-flujo-en-estenosis.md
+      - 04 · Chorro de agua: tutoriales/04-chorro-de-agua.md
       - 05 · Esfera en agua: tutoriales/05-esfera-agua.md
       - 06 · Automatización con foamlib: tutoriales/06-foamlib.md
-      - 07 · SVG y Gmsh: tutoriales/07-svg-gmsh.md
-      - 08 · Tubería 3D transitoria: tutoriales/08-tuberia-cilindrica-3d.md
-      - 09 · Cavidad 2D: tutoriales/09-cavity-2d.md
-      - 10A · Tubería laminar 0: tutoriales/10a-tuberia-laminar-case0.md
-      - 10B · Tubería laminar 1: tutoriales/10b-tuberia-laminar-case1.md
-      - 10C · Tubería laminar 2: tutoriales/10c-tuberia-laminar-case2.md
-      - 11 · Rotura de presa: tutoriales/11-dambreak-2d.md
-      - 12 · Goldschmidt: tutoriales/12-goldschmidt-particulas.md
+      - 07 · SVG y Gmsh: tutoriales/07-mallado-desde-svg.md
+      - 08 · Tubería 3D transitoria: tutoriales/08-flujo-en-tuberia-3d.md
+      - 09 · Cavidad 2D: tutoriales/09-cavidad-con-tapa-movil.md
+      - 10A · Tubería laminar 0: tutoriales/10a-tuberia-laminar-base.md
+      - 10B · Tubería laminar 1: tutoriales/10b-tuberia-laminar-variante-1.md
+      - 10C · Tubería laminar 2: tutoriales/10c-tuberia-laminar-variante-2.md
+      - 11 · Rotura de presa: tutoriales/11-rotura-de-presa-2d.md
+      - 12 · Goldschmidt: tutoriales/12-transporte-de-particulas.md
       - 13 · STL y snappyHexMesh: stl-snappyhexmesh.md
-      - 14A · Difusión de fármaco (caso autocontenido): https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-farmaco
-      - 23 · Flexión de viga 3D: https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/23-flexion-viga
-      - 26 · OpenFOAM y refracción en agua: tutoriales/26-refraccion-interfoam.md
-      - 25 · Refracción de luz 2D y 3D: tutoriales/25-refraccion-luz.md
-      - 24 · Conducción térmica 1D: https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/24-conduccion-1d
+      - 14A · Difusión de fármaco (caso autocontenido): https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/14a-difusion-de-farmaco
+      - 23 · Flexión de viga 3D: https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/23-flexion-de-viga
+      - 26 · OpenFOAM y refracción en agua: tutoriales/26-refraccion-en-interfaz-de-fluidos.md
+      - 25 · Refracción de luz 2D y 3D: tutoriales/25-refraccion-de-luz.md
+      - 24 · Conducción térmica 1D: https://github.com/juanjosecas/openFOAM-manual/tree/main/cases/24-conduccion-de-calor-1d
   - Investigación y futuros casos:
       - Calor, radiación y sólidos: ejemplos-calor-radiacion-solidos.md
       - Fuentes y URLs originales: investigacion-fuentes-openfoam.md
@@ -66,7 +66,7 @@ nav:
       - Hoja de ruta: investigacion-hoja-de-ruta.md
   - Postprocesamiento:
       - Gráficos y propiedades: graficos-y-propiedades.md
-      - Exportación de datos: tutoriales/01-anexo-exportacion.md
+      - Exportación de datos: tutoriales/01b-exportacion-resultados.md
       - PyVista: pyvista.md
 markdown_extensions:
   - admonition
