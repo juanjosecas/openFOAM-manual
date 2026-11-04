@@ -16,6 +16,8 @@ El objetivo es construir geometrías sin software CAD externo, ejecutar **simula
 
 Leer las [convenciones editoriales y técnicas](docs/estructura-y-estilo.md).
 
+**Instalación:** [Ubuntu, Red Hat/Rocky/AlmaLinux, Docker y Conda-forge](docs/instalacion-openfoam.md). Los tutoriales utilizan OpenFOAM.com **v2406**; el paquete conda-forge disponible es **v2412**.
+
 ## Estado de los tutoriales
 
 Cada caso debe declarar su versión de OpenFOAM, solver, estado de revisión, fecha de prueba y limitaciones. **Revisión estática no equivale a ejecución ni a validación física**.
