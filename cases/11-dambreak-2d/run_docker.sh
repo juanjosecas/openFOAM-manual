@@ -83,6 +83,8 @@ run_solver() {
 
 # Etapas específicas del caso; cada comando se registra en log.<etapa>.
 mesh_block
-# Este caso tenía solo Allmesh; se intenta el solver indicado en controlDict.
-run_solver
+# El repositorio solo tiene un procedimiento de mallado validado estáticamente.
+# No se ejecuta el solver automáticamente: faltan pasos de inicialización
+# o existen diferencias de compatibilidad entre versiones Foundation/OpenCFD.
+echo "Malla lista. Ejecución del solver pendiente de revisión específica."
 OPENFOAM_STAGES
