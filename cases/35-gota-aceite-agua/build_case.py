@@ -159,4 +159,59 @@ for key, value in {
     else:
         data += f"\n{key} {value};\n"
 ctrl.write_text(data)
+
+# Replace boundaryField consistently for the new mesh patches.
+# Keep the original field header, dimensions and initial values.
+def replace_boundary(text, replacement):
+    start = re.search(r"\bboundaryField\s*\{", text)
+    if not start:
+        raise RuntimeError("Falta boundaryField en campo de origen.")
+    opening = text.index("{", start.start())
+    depth = 0
+    end = None
+    for i in range(opening, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    if end is None:
+        raise RuntimeError("boundaryField sin cierre.")
+    return text[:start.start()] + "boundaryField\n{\n" + replacement + "\n}\n" + text[end:]
+
+for field in (target / "0").iterdir():
+    if not field.is_file():
+        continue
+    if field.name == "U":
+        patches = """
+    walls { type noSlip; }
+    atmosphere { type pressureInletOutletVelocity; value uniform (0 0 0); }
+    frontAndBack { type empty; }
+"""
+    elif field.name == "p_rgh":
+        patches = """
+    walls { type fixedFluxPressure; value uniform 0; }
+    atmosphere { type totalPressure; p0 uniform 0; U U; phi phi; rho rho; psi none; gamma 1; value uniform 0; }
+    frontAndBack { type empty; }
+"""
+    elif field.name.startswith("alpha."):
+        patches = """
+    walls { type zeroGradient; }
+    atmosphere { type inletOutlet; inletValue uniform 0; value uniform 0; }
+    frontAndBack { type empty; }
+"""
+        if field.name == "alpha.air":
+            patches = patches.replace("inletValue uniform 0", "inletValue uniform 1")
+    elif field.name == "p":
+        patches = """
+    walls { type zeroGradient; }
+    atmosphere { type fixedValue; value uniform 0; }
+    frontAndBack { type empty; }
+"""
+    else:
+        continue
+    field.write_text(replace_boundary(field.read_text(), patches))
+
 print(f"Preparado: {target}. Revisar condiciones de contorno antes de ejecutar.")
