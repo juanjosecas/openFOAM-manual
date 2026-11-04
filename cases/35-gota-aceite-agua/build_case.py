@@ -91,8 +91,8 @@ blocks (hex (0 1 2 3 4 5 6 7) (150 150 1) simpleGrading (1 1 1));
 edges ();
 boundary
 (
-    walls { type wall; faces ((0 4 5 1) (1 5 6 2) (3 2 6 7)); }
-    atmosphere { type patch; faces ((0 3 7 4)); }
+    walls { type wall; faces ((0 4 5 1) (1 5 6 2) (0 3 7 4)); }
+    atmosphere { type patch; faces ((3 2 6 7)); }
     frontAndBack { type empty; faces ((0 1 2 3) (4 7 6 5)); }
 );
 mergePatchPairs ();
