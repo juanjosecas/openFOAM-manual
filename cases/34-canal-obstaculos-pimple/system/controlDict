@@ -13,7 +13,7 @@ FoamFile
     object controlDict;
 }
 
-// Solver estacionario; recirculación fija no equivale a desprendimiento periódico de vórtices.
+// Solver transitorio PIMPLE; el desprendimiento de vórtices depende del régimen y la malla.
 application pimpleFoam;
 
 // Iniciar en el tiempo indicado, no en el último resultado disponible.
@@ -23,15 +23,15 @@ startTime 0;
 
 // Parar al alcanzar el máximo o antes si cumple residualControl.
 stopAt endTime;
-// Máximo de iteraciones SIMPLE. Algunas variantes aumentan el límite sin cambiar la base.
+// Tiempo final de simulación en segundos.
 endTime 10;
 
-// Incremento del contador; no paso temporal físico en este solver.
+// Paso temporal inicial en segundos, ajustado mediante maxCo.
 deltaT 0.001;
 
-// Escritura por iteraciones.
+// Escritura a intervalos de tiempo físico.
 writeControl adjustableRunTime;
-// Guardar cada 100 iteraciones; no modifica la malla.
+// Guardar campos cada 0.05 segundos.
 writeInterval 0.05;
 
 // Conservar todas las escrituras. Las recetas pueden limitar el número para ahorrar disco.
