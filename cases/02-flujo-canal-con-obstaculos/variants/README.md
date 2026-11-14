@@ -1,9 +1,6 @@
 # Variantes del canal y de la interacción con el obstáculo
 
-Las recetas JSON se aplican a una **copia nueva** de la plantilla original con
-`scripts.variantes_canal.preparar_canal_obstaculos`. No modifican `cases/`.
-La copia guarda `variante.json` y los diccionarios efectivos, y queda lista para
-`blockMesh`, `checkMesh` y `simpleFoam`.
+Las recetas Bash se aplican a una copia nueva de la plantilla, mediante `foamDictionary`. No modifican `cases/`.
 
 ## Ejemplos preparados
 
@@ -95,26 +92,16 @@ simular su traslación: en las caras frontal/posterior introduciría velocidad
 normal a una geometría fija. Movimiento real, deformación o permeabilidad
 requieren otra configuración y no están incluidos en estas recetas.
 
-## Uso desde el notebook
+## Ejecución desde Bash
 
-```python
-from pathlib import Path
-from scripts.variantes_canal import preparar_canal_obstaculos
-from scripts.foam_docker import foam_run
-
-REPO_DIR = Path('.').resolve(strict=True)
-CASE_DIR = preparar_canal_obstaculos(REPO_DIR, variante='objeto-parcial')
-options = dict(case_dir=CASE_DIR, repo_dir=REPO_DIR, verbose=True)
-
-foam_run(['blockMesh'], timeout=120, **options)
-mesh_result = foam_run(['checkMesh'], timeout=120, **options)
-if 'Mesh OK.' not in mesh_result.log_path.read_text():
-    raise RuntimeError(f'Revisar malla: {mesh_result.log_path}')
-result = foam_run(['simpleFoam'], timeout=600, **options)
-if 'SIMPLE solution converged' not in result.log_path.read_text():
-    raise RuntimeError(f'Revisar convergencia: {result.log_path}')
-(CASE_DIR / 'canal_obstaculos.foam').touch(exist_ok=True)
+```bash
+bash scripts/prepare_case.sh 02-flujo-canal-con-obstaculos --output runs/canal
+cp cases/02-flujo-canal-con-obstaculos/variants/objeto-parcial.sh runs/canal/
+bash scripts/run_docker.sh runs/canal -- bash objeto-parcial.sh
+bash scripts/run_docker.sh runs/canal
 ```
+
+Las pruebas históricas descritas más abajo corresponden a las recetas previas; las versiones Bash no se han reejecutado.
 
 Editar una receta para probar otros números o copiarla con otro nombre. Las
 entradas se modifican con `foamDictionary`, no con sustituciones de texto del

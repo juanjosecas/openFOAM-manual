@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+cd -- "$(dirname -- "$0")"
+command -v multiphaseInterFoam >/dev/null || { echo "Falta multiphaseInterFoam" >&2; exit 1; }
+if [[ ! -d case ]]; then python3 build_case.py; fi
+exec bash ../../scripts/run_prepared_case.sh --case-dir "$PWD/case" --method block "$@"

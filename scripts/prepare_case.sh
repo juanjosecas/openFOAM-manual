@@ -77,7 +77,8 @@ case "$case_id" in
         (cd "$output" && python3 geometry/build_mesh.py) >&2 ;;
 esac
 cp -- "$ROOT/scripts/run_prepared_case.sh" "$output/Allrun"
-chmod +x "$output/Allrun"
+cp -- "$ROOT/scripts/clean_case.sh" "$output/Allclean"
+chmod +x "$output/Allrun" "$output/Allclean"
 printf '%s\n' "$method" > "$output/.mesh_method"
 printf '{"case":"%s","variant":"%s","source_commit":"%s","status":"prepared-not-executed"}\n' \
     "$case_id" "${variant:-base}" "$(git -C "$ROOT" rev-parse HEAD)" > "$output/case.json"

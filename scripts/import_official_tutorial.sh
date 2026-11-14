@@ -13,10 +13,9 @@ dest="$ROOT/cases/$1"
 [[ ! -e "$dest" ]] || { echo "Destino existente: $dest" >&2; exit 1; }
 if [[ "${2:-}" == --dry-run ]]; then printf '%s -> %s\n' "$tutorial" "$dest"; exit 0; fi
 [[ $# == 1 ]] || exit 2
-command -v openfoam >/dev/null || { echo "Falta el lanzador openfoam" >&2; exit 1; }
 tmp="$(mktemp -d "$ROOT/cases/.official-XXXXXX")"
 trap 'rm -rf -- "$tmp"' EXIT
-openfoam -i "${FOAM_IMAGE:-opencfd/openfoam-default:2406}" -d "$tmp" -- bash -ec '
+bash "$ROOT/scripts/run_docker.sh" "$tmp" --image "${FOAM_IMAGE:-opencfd/openfoam-default:2406}" -- bash -ec '
     src="$FOAM_TUTORIALS/$1"
     test -d "$src"
     cp -a "$src"/. .

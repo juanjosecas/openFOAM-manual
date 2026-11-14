@@ -19,4 +19,4 @@ elif [[ -f "$dir/Allrun" ]]; then
 else
     cmd=(bash -ec 'blockMesh && checkMesh && solver=$(foamDictionary system/controlDict -entry application -value) && "$solver"')
 fi
-exec openfoam -i "${FOAM_IMAGE:-opencfd/openfoam-default:2406}" -d "$dir" "${args[@]}" -- "${cmd[@]}"
+exec bash "$ROOT/scripts/run_docker.sh" "$dir" --image "${FOAM_IMAGE:-opencfd/openfoam-default:2406}" "${args[@]}" -- "${cmd[@]}"
