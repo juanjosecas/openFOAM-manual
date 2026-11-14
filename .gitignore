@@ -42,3 +42,15 @@ Thumbs.db
 *.swp
 *.swo
 .ipynb_checkpoints/
+
+# Resultados de casos trasladados
+visual_cases/*/[1-9]*/
+visual_cases/*/[0-9]*.[0-9]*/
+legacy_cases/*/[1-9]*/
+legacy_cases/*/[0-9]*.[0-9]*/
+experimental_cases/*/[1-9]*/
+experimental_cases/*/[0-9]*.[0-9]*/
+examples/*/[1-9]*/
+examples/*/[0-9]*.[0-9]*/
+experimental_cases/35-gota-de-aceite-sobre-agua/case/
+visual_cases/kangaroo-flow/geometry/kangaroo.msh
