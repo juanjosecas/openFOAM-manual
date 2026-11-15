@@ -31,7 +31,6 @@ La variable es `C/C0`; para convertir a concentración real, especificar `C0` co
 ├── system/controlDict          # Solver, tiempo, salidas
 ├── system/fvSchemes            # Discretización
 ├── system/fvSolution           # Solver lineal
-├── postprocessing/analizar.py  # CSV, PNG, GIF, referencia erfc
 ├── Allmesh
 ├── Allrun
 ├── Allclean
@@ -60,14 +59,14 @@ Con resultados ya generados y Python con `numpy`, `matplotlib`, `pyvista`, `imag
 
 ```bash
 python3 -m pip install numpy matplotlib pyvista imageio
-python3 postprocessing/analizar.py
-# CSV: plots/perfiles.csv
-# PNG: plots/perfil_*.png
+python3 ../../postprocessing/reference.py diffusion . --diffusivity 1e-9 --gif --output plots/difusion
+# CSV: plots/difusion.csv
+# PNG: plots/difusion.png
 # GIF: plots/difusion.gif
 foamToVTK
 ```
 
-El script lee **los resultados del propio caso** con PyVista, calcula la curva de referencia `erfc` y escribe CSV, PNG y GIF. **No ejecuta el solver**. `foamToVTK` exporta a `VTK/` para ParaView u otros programas. Los gráficos solo se crean si existen tiempos simulados. La referencia seminf. es aproximada en un dominio finito y la difusividad del script debe mantenerse sincronizada con `DT`.
+El script lee **los resultados del propio caso** con PyVista, calcula la solución de difusión en dominio finito con extremo impermeable y escribe CSV, PNG y GIF. **No ejecuta el solver**. `foamToVTK` exporta a `VTK/` para ParaView u otros programas. Los gráficos solo se crean si existen tiempos simulados. Pasar el valor de DT vigente con --diffusivity; no se interpreta automáticamente el diccionario.
 
 ## Variaciones
 
@@ -84,4 +83,14 @@ La configuración y la geometría de este ejemplo son **elaboración propia**, i
 
 ## Criterio de revisión
 
-DT se expresa con dimensiones explícitas de difusividad [m²/s]. El problema conserva U=0, fuente fija y extremo impermeable. Comparar C/C0 con erfc solo en el régimen de medio semiinfinito; verificar 0≤T≤1, acumulación monotónica de masa y sensibilidad a deltaT y malla. El campo T no representa temperatura. No se ha ejecutado esta revisión.
+DT se expresa con dimensiones explícitas de difusividad [m²/s]. El problema conserva U=0, fuente fija y extremo impermeable. Comparar C/C0 con la solución finita; erfc es el límite de tiempos cortos; verificar 0≤T≤1, acumulación monotónica de masa y sensibilidad a deltaT y malla. El campo T no representa temperatura. No se ha ejecutado esta revisión.
+
+## Referencia analítica común
+
+El análisis se trasladó a `postprocessing/reference.py` del repositorio. Desde la raíz:
+
+```bash
+python postprocessing/reference.py diffusion runs/difusion --diffusivity 1e-9 --gif --output plots/difusion
+```
+
+Adaptar la ruta y los parámetros físicos a la corrida. La longitud y sección se obtienen de los límites de la malla; se promedian los centros de cada sección por volumen. Esta comparación supone la geometría y condiciones de contorno descritas arriba. Exporta plots/difusion.csv, un CSV de errores y una figura del último estado seleccionado. Sin ejecución ni validación nueva.

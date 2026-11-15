@@ -21,11 +21,11 @@ bash Allmesh
 bash Allrun --solve-only
 tail -n 40 log.laplacianFoam
 foamToVTK
-python3 postprocessing/analizar.py
+python3 ../../postprocessing/reference.py heat . --left 400 --right 300 --output plots/temperatura
 bash Allclean
 ~~~
 
-El caso incluye 0/T, constant/transportProperties, system/ con cuatro diccionarios, Allmesh, Allrun, Allclean, postprocessing/analizar.py y variants/README.md. El postproceso requiere numpy, matplotlib y pyvista; tras simular produce plots/temperatura.csv y plots/temperatura.png. No hay GIF porque es estacionario. Allclean --yes borra salidas pero preserva 0/.
+El caso incluye 0/T, constant/transportProperties, system/ con cuatro diccionarios, Allmesh, Allrun, Allclean, variants/README.md. El postproceso requiere numpy, matplotlib y pyvista; tras simular produce plots/temperatura.csv y plots/temperatura.png. No hay GIF porque es estacionario. Allclean --yes borra salidas pero preserva 0/.
 
 **Chequeo estático:** variable T en K, DT en m²/s, extremos Dirichlet, laterales empty, malla 1D, referencia lineal. La sintaxis y convergencia no se han probado con el binario.
 
@@ -39,3 +39,13 @@ Geometría y archivos: elaboración didáctica propia.
 ## Criterio de revisión
 
 DT se expresa con dimensiones explícitas de difusividad [m²/s]. La referencia de aceptación inicial es el error máximo absoluto frente al perfil lineal en centros de celda; una tolerancia propuesta de 0.01 K debe comprobarse con los resultados, no se considera alcanzada. Los dos pasos de solución son iteraciones, no segundos físicos.
+
+## Referencia analítica común
+
+El análisis se trasladó a `postprocessing/reference.py` del repositorio. Desde la raíz:
+
+```bash
+python postprocessing/reference.py heat runs/temperatura --left 400 --right 300 --output plots/temperatura
+```
+
+Adaptar la ruta y los parámetros físicos a la corrida. La longitud y sección se obtienen de los límites de la malla; se promedian los centros de cada sección por volumen. Esta comparación supone la geometría y condiciones de contorno descritas arriba. Exporta plots/temperatura.csv, un CSV de errores y una figura del último estado seleccionado. Sin ejecución ni validación nueva.

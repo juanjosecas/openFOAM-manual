@@ -26,11 +26,11 @@ bash Allmesh
 bash Allrun --solve-only
 tail -n 50 log.solidDisplacementFoam
 foamToVTK
-python3 postprocessing/analizar.py
+python3 ../../postprocessing/reference.py beam . --young 2e9 --traction-z -10000 --output plots/flexion
 bash Allclean
 ~~~
 
-Allrun puede mallar automáticamente en una copia limpia. Allclean solo previsualiza; para borrar salidas, ejecutar bash Allclean --yes. Para postproceso se requieren numpy, matplotlib y pyvista. Los resultados CSV (plots/desplazamiento.csv) y PNG (plots/flexion.png) se generan **solo tras correr el solver**. No hay GIF porque el modelo es estático. Consultar variants/README.md para tres cambios de un solo parámetro. El caso preparado incluye sus entradas físicas y el runner compartido.
+Allrun puede mallar automáticamente en una copia limpia. Allclean solo previsualiza; para borrar salidas, ejecutar bash Allclean --yes. Para postproceso se requieren numpy, matplotlib y pyvista. Los resultados CSV (plots/flexion.csv) y PNG (plots/flexion.png) se generan **solo tras correr el solver**. No hay GIF porque el modelo es estático. Consultar variants/README.md para tres cambios de un solo parámetro. El caso preparado incluye sus entradas físicas y el runner compartido.
 
 ## Fuentes originales
 
@@ -43,3 +43,13 @@ Geometría y archivos: elaboración didáctica propia. No se ha ejecutado OpenFO
 ## Revisión estática
 
 Se conservan los diccionarios de elasticidad. El esfuerzo aplicado es 10 kPa sobre el extremo, fuerza total 1 N; la referencia Euler–Bernoulli de desplazamiento en la punta es -0.2 mm. Evaluar además convergencia del desplazamiento con iteraciones y refinamiento transversal: la malla base tiene solo 4×4 celdas en la sección. La comparación debe considerar que los centros de celda no coinciden con la cara terminal. Sin prueba de ejecución del solver ni validación de tensiones.
+
+## Referencia analítica común
+
+El análisis se trasladó a `postprocessing/reference.py` del repositorio. Desde la raíz:
+
+```bash
+python postprocessing/reference.py beam runs/flexion --young 2e9 --traction-z -10000 --output plots/flexion
+```
+
+Adaptar la ruta y los parámetros físicos a la corrida. La longitud y sección se obtienen de los límites de la malla; se promedian los centros de cada sección por volumen. Esta comparación supone la geometría y condiciones de contorno descritas arriba. Exporta plots/flexion.csv, un CSV de errores y una figura del último estado seleccionado. Sin ejecución ni validación nueva.

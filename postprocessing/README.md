@@ -21,7 +21,7 @@ python postprocessing/plot_solver_log.py runs/canal/log.simpleFoam
 - animate.py: animación con cámara y escala de color fijas; rango temporal opcional.
 - plot_solver_log.py: residuos y Courant.
 - plot_csv.py y compare_variants.py: datos tabulares.
-- graficos_esfera.py y los analizadores de cada caso: referencias físicas y análisis particulares.
+- graficos_esfera.py y reference.py: análisis físicos y comparación con referencias analíticas.
 
 Para vectores se representa la magnitud salvo que se indique --component 0/1/2. La vorticidad se lee si existe o se estima desde U; la estimación de PyVista puede diferir del operador discreto de OpenFOAM. La interpolación de celdas a puntos puede suavizar discontinuidades. Las animaciones tienen fps constantes, no necesariamente proporcionales al paso físico. Para el manual histórico, los visualizadores retirados están en Git; usar los comandos anteriores en su lugar. No se ejecutó el código de esta revisión.
 
@@ -38,3 +38,13 @@ python postprocessing/statistics.py runs/canal --patch inlet outlet --rho 1000 -
 La integral utiliza los volúmenes de celda reales: para alpha.water representa volumen de agua en m³, incluyendo el espesor de extrusión del caso 2D. El promedio y la desviación estándar se ponderan por volumen; se exporta una fila por estado guardado. Para vectores se usa magnitud o componente indicada.
 
 El caudal se aproxima con U de las caras y normales geométricas de los patches; comprobar orientación de las normales (saliente positiva) y nombres de patches. No es el flujo conservativo phi del solver. No utilizar para certificar conservación discreta; tampoco equivale a flujo de masa multifásico con densidad variable. --rho solo admite densidad constante. Las series y el lector de patches quedan pendientes de prueba local.
+
+## Referencias analíticas
+
+```bash
+python postprocessing/reference.py diffusion runs/difusion --diffusivity 1e-9 --gif
+python postprocessing/reference.py heat runs/calor --left 400 --right 300
+python postprocessing/reference.py beam runs/viga --young 2e9 --traction-z -10000
+```
+
+Los valores son los de los casos base; pasar los parámetros de la simulación real. No se intenta parsear diccionarios OpenFOAM. Diffusion compara con la solución finita de Fick (fuente fija, extremo impermeable, sin convección), heat con el perfil estacionario lineal y beam con Euler–Bernoulli para sección rectangular constante y tracción terminal en z. Los errores MAE, RMSE y máximo absoluto comparan perfiles de sección ponderados por volumen, no todos los centros de celda individualmente. Se necesita una malla estructurada/extruida alineada con x; no son referencias universales. El GIF mantiene fps constantes. Los tres analizadores específicos antiguos fueron retirados. No se ejecutaron los scripts.
