@@ -10,14 +10,14 @@ application     pimpleFoam;
 startFrom       startTime;
 startTime       0;
 stopAt          endTime;
-endTime         5;
-deltaT          1e-5;
+endTime         5; // Duración física [s].
+deltaT          1e-5; // Paso temporal inicial [s].
 adjustTimeStep  yes;
-maxCo           0.5;
-maxDeltaT       0.001;
+maxCo           0.5; // Límite objetivo de Courant.
+maxDeltaT       0.001; // Paso máximo [s].
 writeControl    adjustableRunTime;
-writeInterval   0.05;
-purgeWrite      0;
+writeInterval   0.05; // Frecuencia de escritura según writeControl.
+purgeWrite      0; // 0 conserva todas las salidas; N conserva las últimas N.
 writeFormat     binary;
 writePrecision  8;
 writeCompression off;

@@ -1,23 +1,27 @@
-# Vaca: flujo de aire transitorio (2D)
+# Flujo alrededor de una silueta de vaca
 
-Caso `pimpleFoam` con cierre URANS `kOmegaSST` y la **misma geometría** del caso estacionario (`variants/steady`).
+Flujo de aire 2D alrededor de un objeto fijo. El caso transitorio usa pimpleFoam y kOmegaSST (URANS); la variante steady permite comparar con una solución estacionaria.
 
-- OpenFOAM.com v2406; flujo incompresible.
-- Aire: `nu=1.5e-5 m²/s`; entrada `U=(10 0 0) m/s`.
-- Tiempo de simulación 5 s, `maxCo=0.5`, techo de `deltaT=1e-3 s`.
-- Escritura cada 0.05 s, con `purgeWrite=0`.
-- Campos `U`, `p`, `k`, `omega`, `nut`, vorticidad y fuerzas.
-- Silueta inmóvil; caras frontales/posteriores con `empty`.
+## Configuración y cambios
 
-Desde la raíz del repositorio:
+| Archivo | Entrada | Efecto |
+| --- | --- | --- |
+| 0/U | Velocidad de entrada | 10 m/s en x; probar 5 m/s. |
+| constant/transportProperties | nu | Viscosidad cinemática del aire: 1.5e-5 m²/s. |
+| 0/k, 0/omega | Condiciones de entrada | Intensidad y escala de turbulencia; revisar juntas al cambiar velocidad. |
+| system/controlDict | endTime, maxCo, maxDeltaT | 5 s, 0.5 y 0.001 s. Reducir el paso para estudiar sensibilidad temporal. |
+| system/controlDict | writeInterval | 0.05 s; la variante animation aumenta frecuencia de salida. |
+| meshes/cow_tunnel.msh | Malla compartida | Cambiar geometría implica remallar; cow-silhouette.svg es referencia editable, no un generador automático. |
+
+## Ejecutar y visualizar
+
+Desde la raíz:
 
 ```bash
 bash scripts/prepare_case.sh cow-flow --output runs/cow
 bash scripts/run_docker.sh runs/cow
-python postprocessing/animate.py runs/cow --field U --normal z --cmap inferno --output plots/cow-speed.gif
+python postprocessing/animate.py runs/cow --field U --normal z --output plots/cow-speed.gif
 python postprocessing/animate.py runs/cow --field vorticity --component 2 --normal z --cmap coolwarm --output plots/cow-vorticity.gif
 ```
 
-La malla se conserva en `meshes/cow_tunnel.msh`. Para imágenes fijas usar fields.py. Los nuevos comandos de visualización no se han ejecutado.
-
-**Estado: revisión estática, no ejecutado.** URANS 2D y esquemas upwind pueden amortiguar las oscilaciones de la estela; evaluar independencia de malla/paso, fuerzas temporales y estabilidad. Las celdas sesgadas cerca de las pezuñas son una limitación conocida. El limitador `limitVelocity` existente puede intervenir durante la integración y debe auditarse.
+Agregar --variant steady o --variant animation al preparar otra copia. Revisar checkMesh antes de resolver: hay celdas sesgadas cerca de las pezuñas y el lanzador exige Mesh OK. El limitador limitVelocity puede afectar resultados; comprobar su intervención. URANS 2D puede amortiguar la estela. Sin nueva ejecución.

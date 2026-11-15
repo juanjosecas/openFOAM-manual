@@ -1,36 +1,25 @@
-# Tutorial 07 — Importación de Gmsh a OpenFOAM
+# Malla de Gmsh para un canal 2D
 
-**Estado:** variante de referencia documentada, no ejecutada. La geometría SVG original **no está disponible** y no se simuló su recuperación.
+Ejemplo de importación de una malla externa, no de importación directa de SVG. Canal rectangular de 200 × 20 mm, espesor 1 mm.
 
-## Caso alternativo: canal rectangular
+## Qué modificar
 
-Desde la raíz del repositorio:
+| Archivo | Entrada | Efecto |
+| --- | --- | --- |
+| geometry/canal.geo | Point | Dimensiones en metros. |
+| geometry/canal.geo | Transfinite Curve | Número de puntos por arista (51 longitudinales, 11 transversales). |
+| geometry/canal.geo | Extrude, Layers | Espesor y una capa de celdas. |
+| geometry/canal.geo | Physical Surface | Nombres de inlet, outlet, walls y frontAndBack. |
+| system/changeDictionaryDict | frontAndBack/type | empty para CFD 2D. |
+| 0/U | Entrada | Velocidad del flujo. |
+
+## Ejecutar
+
+Con Gmsh y OpenFOAM disponibles:
 
 ```bash
 cd examples/07-mallado-desde-svg
-gmsh geometry/canal.geo -3 -format msh2 -o geometry/canal.msh
-gmshToFoam geometry/canal.msh
-changeDictionary
-checkMesh
-foamDictionary system/controlDict -entry application -value
-simpleFoam
+bash Allrun
 ```
 
-También existe `bash Allrun` que genera geometría y recoge logs, y se detiene si ya hay una malla.
-
-El generador usa coordenadas directamente en **metros**, con geometría de 0.20 × 0.02 × 0.001 m, una celda de espesor y patches `inlet`, `outlet`, `walls` y `frontAndBack`. El conversor `gmshToFoam` puede variar en la nomenclatura de patches según versión: inspeccionar `constant/polyMesh/boundary` antes del solver. `frontAndBack` debe ser `empty` para el modelo 2D.
-
-**Limitación:** no se ha comprobado el comportamiento real de la malla Gmsh con OpenFOAM.com v2406/v2412. El ejemplo SVG original sigue pendiente de su archivo fuente.
-
-[Tutorial conceptual de SVG/Gmsh](../../docs/tutoriales/07-mallado-desde-svg.md)
-
-## Ensayos pequeños
-
-Cambiar densidad de malla Gmsh, reducir 20 % velocidad de entrada, o variar frecuencia de escritura de iteraciones. `simpleFoam` es estacionario.
-
-
-## Ampliación transitoria
-
-Este caso utiliza `simpleFoam` estacionario. Si interesa estudiar arranques, pulsaciones o fluctuaciones físicas, consultar la [guía de conversión a `pimpleFoam`](../../docs/simplefoam-a-transitorio.md). La transición requiere una **copia independiente** y revisar esquemas, algoritmo, compatibilidad de modelos y condiciones de contorno; no cambiar únicamente `application`.
-
-Este ejemplo demuestra importación de una malla Gmsh, no importación de SVG. Las coordenadas están en metros; no aplicar otro factor 0.001. Si gmshToFoam no conserva los nombres de grupos físicos, detenerse y revisar la conversión antes del solver.
+La secuencia genera MSH, convierte con gmshToFoam, ajusta patches, ejecuta checkMesh y resuelve. Inspeccionar constant/polyMesh/boundary: si los grupos físicos no coinciden con 0/, corregir la conversión. No aplicar un factor de escala adicional. Sin ejecución comprobada.

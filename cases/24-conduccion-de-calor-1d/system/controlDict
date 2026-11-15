@@ -1,13 +1,13 @@
 FoamFile { version 2.0; format ascii; class dictionary; object controlDict; }
 // Elaboracion didactica propia; no ejecutado.
-application laplacianFoam;
-startFrom startTime;
+application laplacianFoam; // Solver del caso.
+startFrom startTime; // Origen del cálculo; startTime usa el valor indicado abajo.
 startTime 0;
 stopAt endTime;
-endTime 2;
-deltaT 1;
+endTime 2; // Límite de iteraciones; no representa segundos físicos.
+deltaT 1; // Incremento del contador de iteraciones.
 writeControl timeStep;
-writeInterval 1;
+writeInterval 1; // Frecuencia de salida según writeControl; no es necesariamente el paso de cálculo.
 writeFormat ascii;
 writePrecision 9;
 runTimeModifiable false;

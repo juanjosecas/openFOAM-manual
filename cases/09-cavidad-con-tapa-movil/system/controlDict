@@ -5,7 +5,6 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-// NOTA DEL MANUAL: Solver y control temporal; icoFoam transitorio, simpleFoam estacionario.
 // Archivo heredado de Foundation: revisar compatibilidad con OpenFOAM.com.
 // Cabecera de lectura: describe el archivo, no las condiciones físicas.
 FoamFile
@@ -22,10 +21,10 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Solver transitorio, incompresible y laminar; aquí los tiempos sí son físicos.
-application     icoFoam;
+application     icoFoam; // Solver del caso.
 
 // Inicia desde el tiempo indicado por startTime, no desde el último guardado.
-startFrom       startTime;
+startFrom       startTime; // Origen del cálculo; startTime usa el valor indicado abajo.
 
 // Instante inicial en segundos; carga los campos de la carpeta 0/.
 startTime       0;
@@ -35,20 +34,20 @@ stopAt          endTime;
 
 
 // Tiempo físico final: 120 s.
-endTime         120;
+endTime         120; // Duración de la simulación [s].
 
 // Paso temporal fijo: 0.01 s; comprobar estabilidad y resolución temporal.
 // No se configura ajuste automático de paso en este archivo.
-deltaT          0.01;
+deltaT          0.01; // Paso temporal [s]; inicial si adjustTimeStep está activo.
 
 // Programa la escritura según tiempo simulado, no por número de pasos.
 writeControl    runTime;
 
 // Guardar campos cada 1 s simulado; no cambia el paso de integración.
-writeInterval   0.5;
+writeInterval   0.5; // Frecuencia de salida según writeControl; no es necesariamente el paso de cálculo.
 
 // No borrar escrituras previas; conservar todos los tiempos generados.
-purgeWrite      0;
+purgeWrite      0; // 0 conserva todas las salidas; N conserva las últimas N.
 
 // Exportar campos como texto legible.
 writeFormat     ascii;

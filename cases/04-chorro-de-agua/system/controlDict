@@ -14,19 +14,19 @@ application interFoam;
 startFrom startTime;
 startTime 0;
 stopAt endTime;
-endTime 20;
+endTime 20; // Duración física [s].
 
 // Paso inicial pequeño; el solver puede reducirlo por Courant.
-deltaT 1e-5;
+deltaT 1e-5; // Paso temporal inicial [s].
 adjustTimeStep yes;
-maxCo 0.35;
-maxAlphaCo 0.35;
-maxDeltaT 2e-4;
+maxCo 0.35; // Límite objetivo de Courant.
+maxAlphaCo 0.35; // Límite objetivo de Courant de la interfaz.
+maxDeltaT 2e-4; // Paso máximo [s].
 
 // Escribir cada 0.005 s físicos: aproximadamente 4000 escrituras más el estado inicial.
 writeControl adjustableRunTime;
-writeInterval 0.005;
-purgeWrite 0;
+writeInterval 0.005; // Frecuencia de escritura según writeControl.
+purgeWrite 0; // 0 conserva todas las salidas; N conserva las últimas N.
 writeFormat ascii;
 writePrecision 8;
 writeCompression off;

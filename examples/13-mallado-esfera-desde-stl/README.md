@@ -1,64 +1,25 @@
-# Ejemplo 13: STL a malla OpenFOAM con snappyHexMesh
+# Mallado externo de una superficie STL
 
-**Objetivo:** obtener una malla de volumen **externa** alrededor de una esfera triangulada. Este es un caso de **mallado**, no incluye campos `0/U`, `0/p` ni solver CFD. No ejecutar simulación hasta asignar condiciones de contorno correctas.
+Generar una malla volumétrica alrededor de un sólido triangulado con blockMesh y snappyHexMesh. No incluye simulación de flujo; para ello usar [el caso de esfera](../../cases/13b-flujo-laminar-alrededor-esfera/README.md).
 
-## Configuración incluida
+## Qué modificar
 
-La carpeta `system/` contiene `blockMeshDict`, `snappyHexMeshDict`,
-`controlDict`, `fvSchemes` y `fvSolution`. Los tres últimos son diccionarios
-auxiliares para ejecutar las utilidades de mallado; no definen una simulación
-de flujo. El notebook copia esta configuración desde el caso original y ya
-no la genera dentro de las celdas.
+| Archivo | Entrada | Efecto |
+| --- | --- | --- |
+| geometry/sphere.geo | Sphere | Centro y radio de demostración. |
+| geometry/sphere.geo | MeshSizeMin, MeshSizeMax | Resolución de triangulación STL. |
+| system/blockMeshDict | vertices, blocks | Caja de fondo y resolución. |
+| system/snappyHexMeshDict | geometry | STL y nombre de patch. |
+| system/snappyHexMeshDict | refinementSurfaces/sphere/level | Refinamiento local; probar (2 2). |
+| system/snappyHexMeshDict | locationInMesh | Punto en el fluido que se desea conservar. |
 
-El STL se genera con Gmsh CLI a partir de `geometry/sphere.geo`. La malla `constant/polyMesh/`
-y los logs son resultados de ejecución. Se recomienda trabajar en una copia
-nueva dentro de `runs/` para conservar limpia la configuración original.
+## Ejecutar
 
-Para simular agua alrededor de la esfera, usar el caso completo
-[`13b-esfera-agua-laminar`](../13b-esfera-agua-laminar/README.md), que ya incluye
-los campos iniciales y las propiedades del fluido.
-
-## Pasos desde la raíz del repositorio
+Con Gmsh y OpenFOAM disponibles:
 
 ```bash
 cd examples/13-mallado-esfera-desde-stl
-mkdir -p constant/triSurface
-gmsh geometry/sphere.geo -2 -format stl -o constant/triSurface/sphere.stl
-surfaceCheck constant/triSurface/sphere.stl
-blockMesh
-checkMesh
-snappyHexMesh -overwrite
-checkMesh
-touch mesh.foam
+bash Allmesh
 ```
 
-Alternativa: ejecutar `bash Allrun` **después de generar el STL**, desde la carpeta del caso. Guarda los logs. El script se detiene si la malla ya existe.
-
-## Sustituir la esfera por un STL propio
-
-1. Guardarlo en `constant/triSurface/` y confirmar las unidades de origen.
-2. Convertir su escala si corresponde. Ejemplo: `surfaceTransformPoints -scale '(0.001 0.001 0.001)' pieza_mm.stl constant/triSurface/sphere.stl`. La conversión se aplica a las coordenadas: 25 mm se convierten en 0.025 m.
-3. Si se conserva el nombre `sphere.stl`, no es necesario modificar la clave `geometry`; el nombre de patch `sphere` representa ahora el objeto importado. Para más claridad, se recomienda renombrar archivo y entrada de geometría conjuntamente.
-4. Redimensionar la caja de `system/blockMeshDict` para que contenga el sólido **y el fluido**, con margen. Adaptar las celdas según la escala.
-5. Colocar `locationInMesh` **dentro de la región de fluido que se desea conservar**, nunca dentro del STL sólido, sobre su superficie ni fuera de la malla de fondo.
-6. Comprobar topología con `surfaceCheck`, ejecutar `blockMesh`, `snappyHexMesh -overwrite` y finalmente `checkMesh`. Si la geometría está abierta o presenta caras inconsistentes, repararla previamente.
-
-Para un flujo **interno** (un tubo, por ejemplo) la caja, el punto de conservación y las superficies de cierre requieren otra configuración; no reutilizar este ejemplo externo sin adaptarlo.
-
-## Modificaciones pequeñas
-
-- Cambiar las subdivisiones de la caja de (24 24 24) a (32 32 32); no modificar sus dimensiones físicas.
-- Cambiar `refinementSurfaces/sphere/level` de `(1 2)` a `(2 2)` para aproximar mejor la esfera.
-- Cambiar el radio de la esfera de demostración de 0.5 a 0.4 m, regenerando el STL y la malla en una copia nueva.
-
-## Interpretación de la escala
-
-STL guarda triángulos **sin unidades**. Si el archivo fue exportado en milímetros y se interpreta como metros, el objeto será 1000 veces mayor de lo esperado. El `scale` de `blockMeshDict` **solo afecta a la malla de fondo**; no reescala automáticamente `sphere.stl`. El ejemplo genera un STL directamente en metros.
-
-`snappyHexMesh` necesita una malla base: no se limita a convertir un STL a `polyMesh`. La superficie STL representa límites geométricos, mientras que las celdas volumétricas de la región fluida se obtienen del refinamiento de `blockMesh`.
-
-**Estado:** secuencia de mallado comprobada en Docker OpenFOAM.com v2406 el
-2026-10-22, en una copia del caso con el STL generado por `preparar_stl.py`.
-`surfaceCheck` confirmó una superficie cerrada y sin triángulos ilegales;
-`checkMesh` confirmó `Mesh OK.` antes y después de `snappyHexMesh`. No se ha
-verificado con v2412 ni realizado una validación física.
+Para usar un STL propio, guardarlo como constant/triSurface/sphere.stl; si cambia el nombre, actualizar geometry y refinamientos. STL no tiene unidades: si está en milímetros, convertir a metros antes de mallar. El scale de blockMeshDict no escala el STL. Ajustar caja y locationInMesh, comprobar superficie cerrada con surfaceCheck y malla final con checkMesh. Existió una ejecución satisfactoria con el STL anterior; la generación actual con Gmsh no fue probada.

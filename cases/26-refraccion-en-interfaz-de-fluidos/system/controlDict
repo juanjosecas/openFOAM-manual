@@ -13,12 +13,12 @@ stopAt endTime;
 endTime 0.15; // s
 deltaT 1e-5; // s
 adjustTimeStep yes;
-maxCo 0.35;
-maxAlphaCo 0.35;
-maxDeltaT 2e-4;
+maxCo 0.35; // Límite objetivo de Courant.
+maxAlphaCo 0.35; // Límite objetivo de Courant de la interfaz.
+maxDeltaT 2e-4; // Paso máximo [s].
 writeControl adjustableRunTime;
 writeInterval 0.015; // s
-purgeWrite 0;
+purgeWrite 0; // 0 conserva todas las salidas; N conserva las últimas N.
 writeFormat ascii;
 writePrecision 8;
 writeCompression off;

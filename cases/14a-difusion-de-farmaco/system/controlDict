@@ -7,16 +7,16 @@ FoamFile
     object controlDict;
 }
 
-application scalarTransportFoam;
-startFrom startTime;
+application scalarTransportFoam; // Solver del caso.
+startFrom startTime; // Origen del cálculo; startTime usa el valor indicado abajo.
 startTime 0;
 stopAt endTime;
 endTime 200;             // 200 s físicos.
 deltaT 1;                // Integración Euler implícita.
-adjustTimeStep no;
+adjustTimeStep no; // Ajustar el paso según los límites de Courant.
 writeControl runTime;
 writeInterval 20;        // Estados 0,20,...,200 s.
-purgeWrite 0;
+purgeWrite 0; // 0 conserva todas las salidas; N conserva las últimas N.
 writeFormat ascii;
 writePrecision 9;
 writeCompression off;

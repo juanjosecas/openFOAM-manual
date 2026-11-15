@@ -5,9 +5,9 @@ startFrom startTime;
 startTime 0;
 stopAt endTime;
 endTime 120; // iteraciones de equilibrio, no segundos fisicos
-deltaT 1;
+deltaT 1; // Incremento del contador de iteraciones.
 writeControl timeStep;
-writeInterval 20;
+writeInterval 20; // Frecuencia de escritura según writeControl.
 writeFormat ascii;
 writePrecision 8;
 runTimeModifiable false;

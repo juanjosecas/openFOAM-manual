@@ -1,56 +1,25 @@
-# Tutorial 12 · Goldschmidt · nube de partículas
+# Transporte de partículas: Goldschmidt
 
-**Estado:** Revisión estática; **sin ejecución comprobada**.
+Prototipo de flujo de aire con partículas lagrangianas. Los diccionarios se conservan como punto de partida, pero la simulación completa requiere adaptar el modelo de nube y verificar el solver.
 
-## Archivos presentes
+## Archivos de interés
 
-- `0/U.air`
-- `0/p`
-- `constant/g`
-- `constant/kinematicCloudProperties`
-- `constant/momentumTransport.air`
-- `constant/transportProperties`
-- `system/blockMeshDict`
-- `system/controlDict`
-- `system/decomposeParDict`
-- `system/fvSchemes`
-- `system/fvSolution`
-- `system/mapFieldsDict`
+| Archivo | Qué modificar |
+| --- | --- |
+| 0/U.air, 0/p | Campos iniciales y condiciones del gas. |
+| constant/kinematicCloudProperties | Inyección, propiedades de partículas y submodelos de interacción. |
+| constant/momentumTransport.air | Modelo de transporte del gas. |
+| constant/transportProperties | Propiedades del medio. |
+| constant/g | Gravedad. |
+| system/blockMeshDict | Geometría, resolución y patches. |
+| system/controlDict | Solver, paso temporal y escritura. |
 
-**Advertencia:** requiere comprobar migración desde versiones anteriores y cualquier preprocesamiento adicional antes de ejecutar.
+## Mallado únicamente
 
-## Ejecución
-
-Este caso no dispone todavía de un lanzador verificado. Consultar los pasos de preparación del tutorial.
-
-
-## Preparación y ejecución
-
-Desde la raíz del repositorio, con el entorno OpenFOAM cargado:
+Desde la raíz:
 
 ```bash
-cd cases/12-transporte-de-particulas
-foamVersion
-blockMesh 2>&1 | tee log.blockMesh
-checkMesh 2>&1 | tee log.checkMesh
-# DETENIDO: es necesaria una migración o archivo de configuración pendiente
+bash scripts/run_docker.sh experimental_cases/12-transporte-de-particulas --mesh
 ```
 
-**Estado:** No ejecutar todavía: es necesario migrar los diccionarios lagrangianos de Foundation 8. No hay un `Allrun` verificado para este caso.
-
-## Variaciones pequeñas
-
-Tras migrar el caso: reducir deltaT, variar writeInterval o perturbar ligeramente un parámetro de inyección previamente identificado.
-
-Modificar **una sola variable** en cada copia del caso y conservar el original. Si cambia `blockMeshDict`, regenerar la malla; no reutilizar resultados antiguos. Los casos `simpleFoam` son estacionarios y sus iteraciones no representan tiempo físico. Consultar también la [guía general](../../docs/guia-ejecucion-y-variantes.md).
-
-
-## Gráficos de propiedades y diagnóstico
-
-Consultar [Gráficos y propiedades](../../docs/graficos-y-propiedades.md) para seleccionar campos físicos y generar perfiles a partir de CSV exportados. Si hay un archivo `log.NOMBRE_SOLVER`, ejecutar desde la raíz del repositorio:
-
-```bash
-python postprocessing/plot_solver_log.py cases/12-transporte-de-particulas/log.NOMBRE_SOLVER --output plots/12-transporte-de-particulas
-```
-
-Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `postprocessing/plot_csv.py` sobre CSV con columnas adecuadas. Los casos 09 y 10A–10C ya incluyen `system/sampleDict`, que se conserva.
+No hay Allrun. No iniciar el solver hasta resolver los pendientes de [PENDIENTES.md](PENDIENTES.md). Después de adaptar el modelo, comparar distribución espacial, velocidad de partículas y balance de masa. Sin ejecución comprobada.

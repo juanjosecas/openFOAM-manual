@@ -1,4 +1,3 @@
-// NOTA DEL MANUAL: application indica el solver; endTime limita iteraciones de simpleFoam. writeInterval controla archivos guardados, no la resolucion fisica.
 // Mantener la fisica y los valores originales; verificar compatibilidad con la version instalada.
 FoamFile
 {
@@ -8,23 +7,23 @@ FoamFile
     object      controlDict;
 }
 
-application simpleFoam;
+application simpleFoam; // Solver del caso.
 
-startFrom startTime;
+startFrom startTime; // Origen del cálculo; startTime usa el valor indicado abajo.
 
 startTime 0;
 
 stopAt endTime;
 
-endTime 1000;
+endTime 1000; // Límite de iteraciones; no representa segundos físicos.
 
-deltaT 1;
+deltaT 1; // Incremento del contador de iteraciones.
 
 writeControl timeStep;
 
-writeInterval 100;
+writeInterval 100; // Frecuencia de salida según writeControl; no es necesariamente el paso de cálculo.
 
-purgeWrite 0;
+purgeWrite 0; // 0 conserva todas las salidas; N conserva las últimas N.
 
 writeFormat ascii;
 

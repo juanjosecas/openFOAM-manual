@@ -1,44 +1,27 @@
-# Kangaroo wake — OpenFOAM.com v2406
+# Estela de un canguro
 
-Caso **2D transitorio** de flujo incompresible alrededor de una silueta fija de canguro. Inspirado en una animación Lattice Boltzmann D2Q9, pero resuelto aquí con Navier–Stokes por volúmenes finitos y `pimpleFoam`. Contorno poligonal nuevo, editable en `geometry/kangaroo_outline.csv`.
+Flujo transitorio 2D alrededor de una silueta fija. Solver pimpleFoam; fluido modelo con nu=0.008 m²/s, entrada de 1 m/s y Reynolds aproximado 145 basado en altura.
 
-**Estado:** revisión estática; no ejecutado ni validado numéricamente. No se ha comprobado independencia de malla/paso temporal.
+## Qué modificar
 
-## Modelo
+| Archivo | Entrada | Efecto |
+| --- | --- | --- |
+| geometry/kangaroo.geo | Point y Line | Contorno y dominio; mantener circuito cerrado. |
+| geometry/kangaroo.geo | SizeMin, SizeMax, DistMin, DistMax | Refinamiento alrededor del objeto y transición a la malla lejana. |
+| 0/U | Velocidad de entrada | Probar 0.5 m/s; paredes del objeto noSlip. |
+| constant/transportProperties | nu | Controla Reynolds. |
+| system/controlDict | endTime, maxCo, writeInterval | 80 s, 0.5 y salida cada 0.5 s. |
+| system/changeDictionaryDict | Patches | Mantener frontAndBack de tipo empty. |
 
-- Velocidad incidente `U=(1 0 0) m/s`, dirección +x.
-- Fluido newtoniano modelo, `nu=0.008 m²/s` (no representa aire ni agua ambiente).
-- Altura característica aproximada 1.164 m; Reynolds aproximado 145.
-- Dominio `x=[-5,15]`, `y=[-5,5]`, `z=[0,0.02]` m.
-- Una celda de espesor; caras `frontAndBack` de tipo `empty`.
-- Parches: `inlet` velocidad fija, `outlet` presión cinemática fija, `farfield` slip, `kangaroo` noSlip.
-- Duración 80 s; `maxCo=0.5`; salidas cada 0.5 s.
-- Campo derivado: `vorticity`.
-
-## Ejecución
-
-Gmsh CLI debe estar disponible en el entorno de mallado. La geometría editable es `geometry/kangaroo.geo`; el CSV se conserva como referencia del contorno.
+## Ejecutar y visualizar
 
 ```bash
 bash scripts/prepare_case.sh kangaroo-flow --output runs/kangaroo
-# Si la imagen no contiene Gmsh, generar la malla desde el host:
+# Si Gmsh no está disponible dentro del contenedor, generar en el host:
 gmsh runs/kangaroo/geometry/kangaroo.geo -3 -format msh2 -o runs/kangaroo/geometry/kangaroo.msh
 bash scripts/run_docker.sh runs/kangaroo
+python postprocessing/animate.py runs/kangaroo --field U --normal z --output plots/kangaroo-speed.gif
+python postprocessing/animate.py runs/kangaroo --field vorticity --component 2 --normal z --cmap coolwarm --output plots/kangaroo-vorticity.gif
 ```
 
-## Animaciones
-
-Desde la raíz:
-
-```bash
-python postprocessing/animate.py runs/kangaroo --field U --normal z --stride 2 --cmap inferno --output plots/kangaroo-speed.gif
-python postprocessing/animate.py runs/kangaroo --field vorticity --component 2 --normal z --stride 2 --cmap coolwarm --output plots/kangaroo-vorticity.gif
-```
-
-Si no se guardó vorticidad, se estima a partir del campo U mediante PyVista. Para una imagen fija usar fields.py. No se han ejecutado estos comandos.
-
-## Limitaciones
-
-El animal permanece fijo. El cambio galileano de referencia corresponde a traslación horizontal uniforme, **no a un salto**. La formación de vórtices y sus frecuencias deben verificarse experimentalmente mediante la corrida y pruebas de sensibilidad espacial/temporal. `speed` representa magnitud de velocidad; `omega_z` permite visualizar rotación local. No confundir los mapas.
-
-Inspirado en `cow_incompressible_steady`, `07-svg-gmsh`, `08-tuberia-cilindrica-3d` y `docs/simplefoam-a-transitorio.md`.
+La geometría activa es el archivo .geo; el CSV guarda el contorno de referencia. Si se modifica geometría, preparar una copia y generar otra malla. La variante animation cambia la frecuencia de escritura. La silueta no se mueve; no representa un salto. Revisar sensibilidad de estela a malla y paso temporal. Sin ejecución comprobada.
