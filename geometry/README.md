@@ -23,7 +23,11 @@ python geometry/generate.py geometry/templates/obstacles.toml --output runs/geom
 
 En left/right los intervalos se miden en y desde abajo; en top/bottom se miden en x desde la izquierda. Omitir start/end para ocupar toda la cara. Se admiten varias entradas y salidas, siempre que no se superpongan. El resto del perímetro se llama walls. Cada obstáculo tiene su propio patch wall. Los obstáculos deben estar separados entre sí y de las paredes; esta versión no admite estenosis, obstáculos unidos al borde ni dominios curvos.
 
-## Importar en OpenFOAM
+## Generar propiedades físicas
+
+Para crear automáticamente un caso laminar a partir de la malla, usar el [generador independiente de física](../physics/README.md). No es necesario regenerar geometría al cambiar propiedades.
+
+## Importar en OpenFOAM manualmente
 
 La carpeta de salida contiene channel.msh, changeDictionaryDict, geometry.toml y patches.json. Para usarla, preparar un caso compatible con flujo plano y adaptar **todos** los archivos de 0/ a los nombres de patches de patches.json antes de resolver. Copiar los archivos generados:
 

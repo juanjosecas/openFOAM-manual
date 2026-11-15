@@ -1,0 +1,26 @@
+# Propiedades físicas independientes de geometry.toml.
+[fluid]
+rho = 1000.0       # kg/m3
+nu = 1e-6          # m2/s; alternativa: mu = 0.001 Pa s
+
+[simulation]
+mode = "steady"    # steady o transient
+end = 2000         # iteraciones en steady; segundos en transient
+write_interval = 100
+
+[initial]
+velocity = [0.0, 0.0, 0.0]
+pressure_pa = 0.0
+
+[boundaries.inlet]
+type = "velocity"
+speed = 0.01       # m/s, perpendicular hacia el interior
+# Alternativa: velocity = [0.01, 0.0, 0.0]
+
+[boundaries.outlet]
+type = "pressure"
+pressure_pa = 0.0  # presión relativa en Pa
+
+# Las paredes y obstáculos son noSlip salvo indicación contraria.
+[boundaries.block]
+type = "slip"

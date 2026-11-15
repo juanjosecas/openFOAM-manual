@@ -31,7 +31,7 @@ if [[ -z "$method" ]]; then
     [[ -f case.json && -f .mesh_method ]] || die "Preparar copia primero."
     method="$(cat .mesh_method)"
 fi
-[[ "$method" =~ ^(block|snappy|gmsh-cow|gmsh-kangaroo)$ ]] || die "Método no admitido."
+[[ "$method" =~ ^(block|snappy|gmsh-cow|gmsh-kangaroo|gmsh-channel)$ ]] || die "Método no admitido."
 if [[ "$mode" == mesh && -n "$end_time" ]]; then die "--end-time requiere solver."; fi
 for dir in */; do
     [[ -d "$dir" ]] || continue
@@ -58,6 +58,10 @@ if [[ "$mode" != solve ]]; then
             step blockMesh blockMesh
             verify_mesh checkMeshBase
             step snappyHexMesh snappyHexMesh -overwrite ;;
+        gmsh-channel)
+            [[ -f channel.msh ]] || die "Falta channel.msh."
+            step gmshToFoam gmshToFoam channel.msh
+            step changeDictionary changeDictionary ;;
         gmsh-cow)
             mesh=cow_tunnel.msh
             [[ -f "$mesh" ]] || mesh=../../meshes/cow_tunnel.msh
