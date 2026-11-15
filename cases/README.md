@@ -1,6 +1,6 @@
 # Biblioteca operativa de casos
 
-El manual principal queda intacto. Consultar catalog.json para la clasificación.
+El manual principal queda intacto. Consultar los directorios cases/, visual_cases/, experimental_cases/ y examples/.
 
 ```bash
 bash scripts/prepare_case.sh --list
@@ -24,6 +24,6 @@ No ejecutar recetas dos veces sobre la misma copia. No se requiere Python para p
 
 ## Ejecución centralizada
 
-`bash scripts/run_docker.sh runs/difusion` ejecuta la copia con la imagen predeterminada. Usar `--mesh`, `--solve-only`, `--image IMAGEN` y `--dry-run` según necesidad. Los lanzadores históricos de cada caso son delegadores, no implementaciones independientes. Los casos originales deben ejecutarse desde el repositorio completo; para trabajar de forma aislada preparar una copia. No se reutiliza malla automáticamente: `--solve-only` es una decisión explícita. `bash Allclean` muestra las salidas, `bash Allclean --yes` las elimina sin restaurar los campos 0/ alterados por setFields. Las recetas JSON equivalentes fueron retiradas; quedan en Git.
+`bash scripts/run_docker.sh runs/difusion` ejecuta la copia con la imagen predeterminada. Usar `--mesh`, `--solve-only`, `--image IMAGEN` y `--dry-run` según necesidad. Los lanzadores Docker individuales se retiraron. Los casos originales deben ejecutarse desde el repositorio completo; para trabajar de forma aislada preparar una copia. No se reutiliza malla automáticamente: `--solve-only` es una decisión explícita. `bash Allclean` muestra las salidas, `bash Allclean --yes` las elimina sin restaurar los campos 0/ alterados por setFields. Las recetas JSON equivalentes fueron retiradas; quedan en Git.
 
-Los casos heredados mantienen su entrada de mallado únicamente. La presa cuenta con Allrun. El runner de copias permite intentar la solución de la presa, todavía sin verificar. El criterio común de calidad exige Mesh OK, incluso para la vaca.
+La presa cuenta con Allrun. El runner de copias permite intentar la solución de la presa, todavía sin verificar. El criterio común de calidad exige Mesh OK, incluso para la vaca.

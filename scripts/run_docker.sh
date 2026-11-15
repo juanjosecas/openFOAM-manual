@@ -14,7 +14,7 @@ usage() { echo "Uso: $0 CASO|DIRECTORIO [--mesh|--solve-only] [--image IMAGEN] [
 while (($#)); do
     case "$1" in
         --list)
-            for d in "$ROOT"/cases/*/ "$ROOT"/visual_cases/*/ "$ROOT"/legacy_cases/*/ "$ROOT"/experimental_cases/*/ "$ROOT"/examples/*/; do
+            for d in "$ROOT"/cases/*/ "$ROOT"/visual_cases/*/ "$ROOT"/experimental_cases/*/ "$ROOT"/examples/*/; do
                 [[ -d "$d" && ! -L "${d%/}" && ( -f "$d/Allrun" || -f "$d/Allmesh" ) ]] || continue
                 printf '%s\n' "${d#"$ROOT"/}"
             done; exit 0 ;;
@@ -33,7 +33,7 @@ if [[ -d "$target" ]]; then
     dir="$(cd -- "$target" && pwd -P)"
 else
     dir=""
-    for group in cases visual_cases legacy_cases experimental_cases examples; do
+    for group in cases visual_cases experimental_cases examples; do
         if [[ -d "$ROOT/$group/$target" ]]; then dir="$(cd -- "$ROOT/$group/$target" && pwd -P)"; break; fi
     done
     [[ -n "$dir" ]] || die "Caso no encontrado: $target"

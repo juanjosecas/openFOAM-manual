@@ -1,1 +1,0 @@
-../postprocessing/plot_solver_log.py

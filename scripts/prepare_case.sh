@@ -34,7 +34,7 @@ fi
 output="${output:-$ROOT/runs/$case_id/$(date +%Y%m%d_%H%M%S_%N)}"
 output="$(realpath -m -- "$output")"
 case "$output/" in
-    "$ROOT/cases/"*|"$ROOT/visual_cases/"*|"$ROOT/legacy_cases/"*|"$ROOT/experimental_cases/"*|"$ROOT/examples/"*) die "Salida dentro de biblioteca de casos" ;;
+    "$ROOT/cases/"*|"$ROOT/visual_cases/"*|"$ROOT/experimental_cases/"*|"$ROOT/examples/"*) die "Salida dentro de biblioteca de casos" ;;
 esac
 [[ ! -e "$output" && ! -L "$output" ]] || die "Destino existente"
 mkdir -p -- "$(dirname -- "$output")"

@@ -66,4 +66,4 @@ sphere.py exporta perfiles adimensionales, Cp superficial y parámetros. Supone 
 python postprocessing/plot_csv.py runs/base/plots/profile.csv runs/fine/plots/profile.csv --x distance --y value --output plots/comparison.png
 ```
 
-Los valores ausentes mantienen los huecos en la curva. La antigua ruta scripts/compare_variants.py queda únicamente como enlace al mismo programa por compatibilidad con el manual. El diagnóstico del log guarda todas las correcciones en CSV y muestra la primera por campo y paso; Courant se representa por secuencia propia de registros, no por tiempo físico. Los PNG separados de residuos y Courant se sustituyen por resumen.png. No se ejecutaron las herramientas.
+Los valores ausentes mantienen los huecos en la curva. La antigua ruta scripts/compare_variants.py se retiró. El diagnóstico del log guarda todas las correcciones en CSV y muestra la primera por campo y paso; Courant se representa por secuencia propia de registros, no por tiempo físico. Los PNG separados de residuos y Courant se sustituyen por resumen.png. No se ejecutaron las herramientas.

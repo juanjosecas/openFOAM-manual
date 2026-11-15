@@ -6,11 +6,14 @@ El objetivo es construir geometrías sin software CAD externo, ejecutar **simula
 
 ## Estructura del repositorio
 
-- `docs/`: capítulos teóricos, explicaciones y tutoriales en Markdown.
-- `cases/`: casos OpenFOAM autocontenidos, con `0/`, `constant/`, `system/` y scripts de ejecución.
-- `scripts/`: generación de geometrías, exportaciones y postprocesamiento.
-- `assets/`: figuras ligeras y esquemas.
-- `references/`: fuentes y procedencia de los casos heredados.
+- `docs/`: manual histórico.
+- `cases/`: casos científicos.
+- `visual_cases/`: ejemplos visuales.
+- `experimental_cases/`: prototipos pendientes.
+- `examples/`: ejemplos de mallado.
+- `scripts/`: preparación y ejecución.
+- `postprocessing/`: análisis y visualización Python.
+- `meshes/`: geometría y malla compartidas.
 
 **Portal y tabla de contenidos:** [abrir el índice maestro](docs/index.md).
 
@@ -24,7 +27,7 @@ Se añadió un [módulo para importar y ejecutar los tutoriales oficiales de cil
 
 ## Casos transitorios para animaciones
 
-Cinco [casos independientes para generar animaciones CFD](docs/tutoriales/casos-transitorios-animaciones.md): vaca, canguro, chorro de agua, rotura de presa y canal con obstáculos convertido a `pimpleFoam`. Cada uno vive en una carpeta nueva bajo `cases/`; los originales permanecen intactos. Incluye un renderizador básico con `pvpython`.
+Las variantes comparten los diccionarios base. Preparar con scripts/prepare_case.sh y visualizar con postprocessing/animate.py.
 
 ## Estado de los tutoriales
 
@@ -58,11 +61,6 @@ Se incorporó un [catálogo de tutoriales externos con sus URLs originales](docs
 Ambos casos tienen estructura autocontenida y postprocesamiento; **solo revisión estática, sin ejecución ni validación**.
 
 
-## Modelo óptico 2D/3D (sin CFD)
-
-- [25: refracción de rayos en una interfaz aire–agua](cases/25-refraccion-de-luz/README.md): ley de Snell, reflexión interna total, CSV, PNG, GIF y variantes. Modelo Python autocontenido, sin OpenFOAM; **no ejecutado ni validado**.
-
-
 ## Refracción con OpenFOAM
 
 - [26: superficie libre calculada con interFoam y rayos refractados](cases/26-refraccion-en-interfaz-de-fluidos/README.md). CFD agua–aire 2D con postprocesamiento óptico 2D/3D, CSV, PNG y GIF temporal. **Revisión estática; sin ejecutar.**
@@ -75,12 +73,10 @@ Para lanzar los `Allrun` existentes con **OpenFOAM v2406** sin instalar OpenFOAM
 ```bash
 bash scripts/run_docker.sh --list
 bash scripts/run_docker.sh 09-cavidad-con-tapa-movil
-bash scripts/run_docker.sh 28-flujo-transitorio-alrededor-vaca
+bash scripts/run_docker.sh cow-flow
 ```
 
 El lanzador conserva logs y resultados en `cases/` y puede ejecutar únicamente el mallado con `--mesh`. Ver [explicación detallada y limitaciones](docs/ejecutar-con-docker.md).
 
 
-### Ejecutores Docker independientes en cada caso
-
-Los casos CFD incluyen un `run_docker.sh` propio, comentado y sin dependencias de `Allrun`/`Allmesh`. Por ejemplo: `bash cases/09-cavidad-con-tapa-movil/run_docker.sh`. Consultar [etapas, controles y limitaciones](docs/docker-por-caso.md).
+Los lanzadores individuales fueron retirados. El manual histórico puede contener rutas y comandos anteriores; se conservan en Git.

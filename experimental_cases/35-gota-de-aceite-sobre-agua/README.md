@@ -9,7 +9,7 @@ Se adapta el caso oficial `multiphaseInterFoam/laminar/damBreak4phase` de la ins
 Desde la raíz del repositorio:
 
 ```bash
-bash experimental_cases/35-gota-de-aceite-sobre-agua/run_docker.sh
+bash scripts/run_docker.sh experimental_cases/35-gota-de-aceite-sobre-agua
 ```
 
 Requisitos: Docker accesible sin sudo, imagen `opencfd/openfoam-default:2406`, solver `multiphaseInterFoam` y tutorial `damBreak4phase` incluidos en la imagen. Los scripts no se han probado con una ejecución CFD real.

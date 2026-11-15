@@ -65,10 +65,10 @@ Modificar **una sola variable** en cada copia del caso y conservar el original. 
 Consultar [Gráficos y propiedades](../../docs/graficos-y-propiedades.md) para seleccionar campos físicos y generar perfiles a partir de CSV exportados. Si hay un archivo `log.NOMBRE_SOLVER`, ejecutar desde la raíz del repositorio:
 
 ```bash
-python scripts/plot_solver_log.py cases/02-flujo-canal-con-obstaculos/log.NOMBRE_SOLVER --output plots/02-flujo-canal-con-obstaculos
+python postprocessing/plot_solver_log.py cases/02-flujo-canal-con-obstaculos/log.NOMBRE_SOLVER --output plots/02-flujo-canal-con-obstaculos
 ```
 
-Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `scripts/plot_csv.py` sobre CSV con columnas adecuadas. Los casos 09 y 10A–10C ya incluyen `system/sampleDict`, que se conserva.
+Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `postprocessing/plot_csv.py` sobre CSV con columnas adecuadas. El caso 09 incluye `system/sampleDict`.
 
 
 ## Ampliación transitoria

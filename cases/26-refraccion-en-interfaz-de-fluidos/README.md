@@ -121,7 +121,7 @@ Caso y trazador originales para el manual, basados en el esquema general de `int
 - Solver `interFoam` (documentación): https://www.openfoam.com/documentation/guides/latest/doc/guide-applications-solvers-multiphase-interFoam.html
 - PyVista OpenFOAMReader: https://docs.pyvista.org/api/readers/_autosummary/pyvista.OpenFOAMReader.html
 - Ley de Snell: https://en.wikipedia.org/wiki/Snell%27s_law
-- [Caso 25: óptica geométrica sin CFD](../../examples/25-refraccion-de-luz/README.md)
+- El ejemplo histórico de óptica sin CFD se conserva en Git.
 
 Las URL no demuestran por sí solas compatibilidad con una versión determinada. No se ha probado el caso en v2406/v2412.
 

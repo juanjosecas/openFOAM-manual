@@ -1,3 +1,3 @@
 # experimental_cases
 
-Casos y recursos clasificados. Consultar cases/catalog.json y el README de cada caso.
+Casos y recursos clasificados. Consultar los README de cada caso.
