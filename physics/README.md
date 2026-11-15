@@ -47,7 +47,7 @@ La resolución numérica usa esquemas iniciales conservadores (upwind) y toleran
 
 0/U, 0/p, constant/transportProperties, constant/turbulenceProperties, system/controlDict, system/fvSchemes, system/fvSolution y system/changeDictionaryDict; copia de channel.msh y configuraciones de origen. Allrun y Allclean son copias de los lanzadores compartidos.
 
-Se admite flujo laminar incompresible plano newtoniano y powerLaw. Calor, turbulencia, transporte de especies y multifase quedan fuera del alcance. No se ha ejecutado el generador, la importación ni el solver.
+Se admite flujo laminar incompresible plano y transporte pasivo opcional. Calor, turbulencia, reacciones y multifase quedan fuera del alcance. No se ha ejecutado el generador, la importación ni el solver.
 
 ## Ensayos adicionales
 
@@ -64,3 +64,25 @@ bash scripts/run_docker.sh runs/pulso --solve-only
 ```
 
 Referencia de sintaxis: https://api.openfoam.com/2406/classFoam_1_1flowRateInletVelocityFvPatchVectorField.html . Los diccionarios powerLaw y uniformFixedValue siguen la estructura de los casos 01a y 08 del repositorio. Sin pruebas de ejecución.
+
+## Modelos reológicos adicionales
+
+carreau_yasuda.toml: nu en fluid es nu0; nu_inf es la viscosidad límite a alta cizalla, lambda_s la escala temporal en segundos, n el exponente y a la anchura de transición (2 corresponde a Bird-Carreau). Se limita esta plantilla al adelgazamiento.
+
+herschel_bulkley.toml: nu en fluid es la cota de viscosidad a baja cizalla; yield_stress_pa y consistency_pa_s_n son esfuerzo de cedencia [Pa] y consistencia dinámica [Pa·s^n]. Se convierten a magnitudes cinemáticas dividiendo por rho. La regularización no reproduce un sólido perfectamente rígido debajo del umbral. Parámetros ilustrativos, no calibrados para sangre o formulaciones.
+
+## Transporte pasivo de solutos (opcional)
+
+Usar un TOML independiente:
+
+```bash
+python physics/generate.py physics/templates/transient.toml --geometry runs/geometry-demo --transport physics/templates/solutes.toml --output runs/drug
+bash scripts/run_docker.sh runs/drug --mesh
+bash scripts/run_docker.sh runs/drug --solve-only
+python postprocessing/animate.py runs/drug --field C_drug --normal z --output plots/drug.gif
+python postprocessing/statistics.py runs/drug --field C_drug
+```
+
+Cada [[solutes]] define un campo adimensional independiente, D constante en m²/s, concentración inicial y valores en puertos. Las paredes son impermeables al soluto; en puertos de presión se utiliza inletOutlet con concentración de retorno (0 por defecto). Se exige concentración explícita en cada puerto de velocidad o caudal. El campo se resuelve mediante scalarTransport usando phi, una vez por paso temporal; no altera el flujo. Sin reacción, adsorción, permeación de pared ni acoplamiento de viscosidad con concentración. Convertir la integral de concentración normalizada multiplicando por la concentración de referencia con unidades. Upwind puede introducir difusión numérica dominante a Péclet alto; comprobar malla y paso temporal. No se garantiza acotación [0,1].
+
+API de referencia: https://api.openfoam.com/2406/classFoam_1_1functionObjects_1_1scalarTransport.html . No se ejecutó la generación ni se verificó la sintaxis con los binarios instalados.

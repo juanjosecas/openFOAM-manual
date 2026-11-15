@@ -181,8 +181,48 @@ def dictionaries(metadata, config):
     nuMax {fmt(high)};
 }}
 """
+    elif model == "carreau_yasuda":
+        law = fluid[model]
+        inf = number(law["nu_inf"], "nu_inf", True)
+        k = number(law["lambda_s"], "lambda_s", True)
+        n = number(law["n"], "n", True)
+        a = number(law.get("a", 2), "a", True)
+        if inf > nu or n > 1:
+            raise ValueError("Carreau-Yasuda requiere nu_inf <= nu0 y 0 < n <= 1")
+        laminar = f"""laminar
+{{
+    model generalizedNewtonian;
+    viscosityModel BirdCarreau;
+    BirdCarreauCoeffs
+    {{
+        nuInf {fmt(inf)};
+        k {fmt(k)};
+        n {fmt(n)};
+        a {fmt(a)};
+    }}
+}}
+"""
+    elif model == "herschel_bulkley":
+        law = fluid[model]
+        tau = number(law["yield_stress_pa"], "yield_stress_pa")
+        k = number(law["consistency_pa_s_n"], "consistency_pa_s_n", True)
+        n = number(law["n"], "n", True)
+        if tau < 0:
+            raise ValueError("El esfuerzo de cedencia no puede ser negativo")
+        laminar = f"""laminar
+{{
+    model generalizedNewtonian;
+    viscosityModel HerschelBulkley;
+    HerschelBulkleyCoeffs
+    {{
+        tau0 {fmt(tau/rho)};
+        k {fmt(k/rho)};
+        n {fmt(n)};
+    }}
+}}
+"""
     else:
-        raise ValueError("fluid.model debe ser newtonian o power_law")
+        raise ValueError("Modelo reológico desconocido: " + model)
     run = config["simulation"]
     mode = run["mode"]
     if mode not in ("steady", "transient"):
@@ -295,6 +335,7 @@ def main():
     p.add_argument("config", type=Path)
     p.add_argument("--geometry", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--transport", type=Path, help="Configuración opcional de solutos")
     a = p.parse_args()
     if a.output.exists():
         p.error("La salida ya existe; utilizar una carpeta nueva")
@@ -305,6 +346,9 @@ def main():
         if not (geometry/name).is_file():
             p.error(f"Falta {geometry/name}")
     files, solver, rho, nu = dictionaries(metadata, config)
+    if a.transport:
+        from transport import add_transport
+        add_transport(files, metadata, config, tomllib.loads(a.transport.read_text()))
     a.output.mkdir(parents=True)
     for name, contents in files.items():
         path = a.output/name
@@ -315,6 +359,8 @@ def main():
     for name in ("geometry.toml", "patches.json"):
         shutil.copyfile(geometry/name, a.output/name)
     shutil.copyfile(a.config, a.output/"physics.toml")
+    if a.transport:
+        shutil.copyfile(a.transport, a.output/"transport.toml")
     # Reutilizar el lanzador compartido; no añadir otra capa de ejecución.
     scripts = Path(__file__).resolve().parents[1]/"scripts"
     shutil.copyfile(scripts/"run_prepared_case.sh", a.output/"Allrun")
@@ -325,7 +371,7 @@ def main():
     (a.output/"case.json").write_text(json.dumps({
         "solver": solver, "rho_kg_m3": rho, "nu_m2_s": nu,
         "fluid_model": config["fluid"].get("model", "newtonian"),
-        "nu_is_base_value": config["fluid"].get("model") == "power_law",
+        "nu_is_base_value": config["fluid"].get("model", "newtonian") != "newtonian",
         "status": "prepared-not-executed"}, indent=2)+"\n")
     print(f"Caso preparado: {a.output} ({solver}, nu={nu:g} m2/s)")
 

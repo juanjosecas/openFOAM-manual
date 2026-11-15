@@ -1,0 +1,18 @@
+# Concentraciones normalizadas; D en m2/s.
+[[solutes]]
+name = "C_drug"
+diffusivity = 1e-9
+initial = 0.0
+
+[solutes.inlets]
+inlet = 1.0
+outlet = 0.0 # concentración del fluido si hay retorno
+
+[[solutes]]
+name = "C_tracer"
+diffusivity = 1e-8
+initial = 0.0
+
+[solutes.inlets]
+inlet = 1.0
+outlet = 0.0
