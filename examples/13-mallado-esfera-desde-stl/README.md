@@ -10,7 +10,7 @@ auxiliares para ejecutar las utilidades de mallado; no definen una simulación
 de flujo. El notebook copia esta configuración desde el caso original y ya
 no la genera dentro de las celdas.
 
-El STL se genera con `scripts/preparar_stl.py`. La malla `constant/polyMesh/`
+El STL se genera con Gmsh CLI a partir de `geometry/sphere.geo`. La malla `constant/polyMesh/`
 y los logs son resultados de ejecución. Se recomienda trabajar en una copia
 nueva dentro de `runs/` para conservar limpia la configuración original.
 
@@ -21,9 +21,9 @@ los campos iniciales y las propiedades del fluido.
 ## Pasos desde la raíz del repositorio
 
 ```bash
-python -m pip install pyvista numpy
-cd cases/13-mallado-esfera-desde-stl
-python ../../scripts/preparar_stl.py --output constant/triSurface/sphere.stl
+cd examples/13-mallado-esfera-desde-stl
+mkdir -p constant/triSurface
+gmsh geometry/sphere.geo -2 -format stl -o constant/triSurface/sphere.stl
 surfaceCheck constant/triSurface/sphere.stl
 blockMesh
 checkMesh
@@ -37,7 +37,7 @@ Alternativa: ejecutar `bash Allrun` **después de generar el STL**, desde la car
 ## Sustituir la esfera por un STL propio
 
 1. Guardarlo en `constant/triSurface/` y confirmar las unidades de origen.
-2. Convertir su escala si corresponde. Ejemplo: `python ../../scripts/preparar_stl.py --input pieza_mm.stl --units mm --output constant/triSurface/sphere.stl`. La conversión se aplica a las coordenadas: 25 mm se convierten en 0.025 m.
+2. Convertir su escala si corresponde. Ejemplo: `surfaceTransformPoints -scale '(0.001 0.001 0.001)' pieza_mm.stl constant/triSurface/sphere.stl`. La conversión se aplica a las coordenadas: 25 mm se convierten en 0.025 m.
 3. Si se conserva el nombre `sphere.stl`, no es necesario modificar la clave `geometry`; el nombre de patch `sphere` representa ahora el objeto importado. Para más claridad, se recomienda renombrar archivo y entrada de geometría conjuntamente.
 4. Redimensionar la caja de `system/blockMeshDict` para que contenga el sólido **y el fluido**, con margen. Adaptar las celdas según la escala.
 5. Colocar `locationInMesh` **dentro de la región de fluido que se desea conservar**, nunca dentro del STL sólido, sobre su superficie ni fuera de la malla de fondo.

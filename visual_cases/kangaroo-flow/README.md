@@ -15,34 +15,27 @@ Caso **2D transitorio** de flujo incompresible alrededor de una silueta fija de 
 - Duración 80 s; `maxCo=0.5`; salidas cada 0.5 s.
 - Campo derivado: `vorticity`.
 
-## Ejecución local
+## Ejecución
+
+Gmsh CLI debe estar disponible en el entorno de mallado. La geometría editable es `geometry/kangaroo.geo`; el CSV se conserva como referencia del contorno.
 
 ```bash
-python3 -m pip install gmsh
-source /usr/lib/openfoam/openfoam2406/etc/bashrc
-cd cases/29-estela-transitoria-de-canguro
-bash Allmesh
-bash Allrun
+bash scripts/prepare_case.sh kangaroo-flow --output runs/kangaroo
+# Si la imagen no contiene Gmsh, generar la malla desde el host:
+gmsh runs/kangaroo/geometry/kangaroo.geo -3 -format msh2 -o runs/kangaroo/geometry/kangaroo.msh
+bash scripts/run_docker.sh runs/kangaroo
 ```
-
-## Ejecución con Docker del repositorio
-
-```bash
-python3 -m pip install gmsh docker
-python3 cases/29-estela-transitoria-de-canguro/run_docker.py --image opencfd/openfoam-default:2406
-```
-
-Requiere imagen Docker descargada previamente; Gmsh se ejecuta en el host. El script usa `scripts/foam_docker.py`.
 
 ## Animaciones
 
+Desde la raíz:
+
 ```bash
-python3 -m pip install pyvista numpy imageio
-python3 postprocessing/render.py --field speed --stride 2
-python3 postprocessing/render.py --field vorticity --stride 2
+python postprocessing/animate.py runs/kangaroo --field U --normal z --stride 2 --cmap inferno --output plots/kangaroo-speed.gif
+python postprocessing/animate.py runs/kangaroo --field vorticity --component 2 --normal z --stride 2 --cmap coolwarm --output plots/kangaroo-vorticity.gif
 ```
 
-Se generan GIF y PNG en `postprocessing/`. Para servidores headless puede ser necesario `xvfb-run`.
+Si no se guardó vorticidad, se estima a partir del campo U mediante PyVista. Para una imagen fija usar fields.py. No se han ejecutado estos comandos.
 
 ## Limitaciones
 

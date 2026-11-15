@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
-HERE="$(cd -- "$(dirname -- "$0")" && pwd -P)"
-exec bash "$HERE/../../scripts/run_prepared_case.sh" --case-dir "$HERE" --method snappy --mesh-only "$@"
+cd -- "$(dirname -- "$0")"
+if [[ ! -f constant/triSurface/sphere.stl ]]; then
+    mkdir -p constant/triSurface
+    gmsh geometry/sphere.geo -2 -format stl -o constant/triSurface/sphere.stl
+fi
+exec bash ../../scripts/run_prepared_case.sh --case-dir "$PWD" --method snappy --mesh-only "$@"

@@ -2,14 +2,14 @@
 
 **Estado: prototipo experimental sin validación de ejecución.** Caso aislado, sin modificar tutoriales existentes.
 
-Se adapta el caso oficial `multiphaseInterFoam/laminar/damBreak4phase` de la instalación OpenFOAM v2406. El script `build_case.py` crea `case/` copiando los archivos oficiales y cambia la física a **agua, aceite y aire**. Si la imagen v2406 no contiene ese tutorial o el solver, se interrumpe explícitamente; no se simula una fase inexistente.
+Se adapta el caso oficial `multiphaseInterFoam/laminar/damBreak4phase` de la instalación OpenFOAM v2406. El script `build_case.sh` crea `case/` copiando los archivos oficiales y cambia la física a **agua, aceite y aire**. Si la imagen v2406 no contiene ese tutorial o el solver, se interrumpe explícitamente; no se simula una fase inexistente.
 
 ## Ejecutar
 
 Desde la raíz del repositorio:
 
 ```bash
-bash cases/35-gota-de-aceite-sobre-agua/run_docker.sh
+bash experimental_cases/35-gota-de-aceite-sobre-agua/run_docker.sh
 ```
 
 Requisitos: Docker accesible sin sudo, imagen `opencfd/openfoam-default:2406`, solver `multiphaseInterFoam` y tutorial `damBreak4phase` incluidos en la imagen. Los scripts no se han probado con una ejecución CFD real.
@@ -29,11 +29,11 @@ Requisitos: Docker accesible sin sudo, imagen `opencfd/openfoam-default:2406`, s
 
 ## Inspección y visualización
 
-Los archivos generados quedan en `cases/35-gota-de-aceite-sobre-agua/case/`. Para ParaView:
+Los archivos generados quedan en `experimental_cases/35-gota-de-aceite-sobre-agua/case/`. Para ParaView:
 
 ```bash
-touch cases/35-gota-de-aceite-sobre-agua/case/case.foam
-paraview cases/35-gota-de-aceite-sobre-agua/case/case.foam
+touch experimental_cases/35-gota-de-aceite-sobre-agua/case/case.foam
+paraview experimental_cases/35-gota-de-aceite-sobre-agua/case/case.foam
 ```
 
 Representar `alpha.oil` y `alpha.water` mediante contornos de valor 0,5. Usar la misma escala y cámara durante toda la animación. Verificar conservación de volumen, suma de fracciones de fase, presión, paso temporal capilar y ausencia de corrientes espurias.

@@ -1,6 +1,6 @@
 # Vaca: flujo de aire transitorio (2D)
 
-Caso `pimpleFoam` con cierre URANS `kOmegaSST` y la **misma geometría** del caso [estacionario](../cow_incompressible_steady/README.md).
+Caso `pimpleFoam` con cierre URANS `kOmegaSST` y la **misma geometría** del caso estacionario (`variants/steady`).
 
 - OpenFOAM.com v2406; flujo incompresible.
 - Aire: `nu=1.5e-5 m²/s`; entrada `U=(10 0 0) m/s`.
@@ -9,14 +9,15 @@ Caso `pimpleFoam` con cierre URANS `kOmegaSST` y la **misma geometría** del cas
 - Campos `U`, `p`, `k`, `omega`, `nut`, vorticidad y fuerzas.
 - Silueta inmóvil; caras frontales/posteriores con `empty`.
 
-Ejecutar desde esta carpeta:
+Desde la raíz del repositorio:
 
 ```bash
-bash Allrun
-python3 ../../scripts/animate_cow.py . --field speed --fps 20
-python3 ../../scripts/animate_cow.py . --field vorticity --fps 20
+bash scripts/prepare_case.sh cow-flow --output runs/cow
+bash scripts/run_docker.sh runs/cow
+python postprocessing/animate.py runs/cow --field U --normal z --cmap inferno --output plots/cow-speed.gif
+python postprocessing/animate.py runs/cow --field vorticity --component 2 --normal z --cmap coolwarm --output plots/cow-vorticity.gif
 ```
 
-Se reutiliza `../cow_incompressible_steady/cow_tunnel.msh` sin duplicar 11 MB de malla. Para la animación instalar `pyvista`, `numpy` e `imageio`.
+La malla se conserva en `meshes/cow_tunnel.msh`. Para imágenes fijas usar fields.py. Los nuevos comandos de visualización no se han ejecutado.
 
 **Estado: revisión estática, no ejecutado.** URANS 2D y esquemas upwind pueden amortiguar las oscilaciones de la estela; evaluar independencia de malla/paso, fuerzas temporales y estabilidad. Las celdas sesgadas cerca de las pezuñas son una limitación conocida. El limitador `limitVelocity` existente puede intervenir durante la integración y debe auditarse.

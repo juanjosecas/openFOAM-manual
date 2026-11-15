@@ -66,15 +66,12 @@ done
 method=block
 case "$case_id" in
     13b-*)
-        method=snappy
-        # Generación geométrica, no ejecución del solver.
-        python3 "$ROOT/scripts/preparar_stl.py" --radius 0.5 --output "$output/constant/triSurface/sphere.stl" >&2 ;;
+        method=snappy ;;
     cow-flow)
         method=gmsh-cow
         cp -- "$ROOT/meshes/cow_tunnel.msh" "$output/cow_tunnel.msh" ;;
     kangaroo-flow)
-        method=gmsh-kangaroo
-        (cd "$output" && python3 geometry/build_mesh.py) >&2 ;;
+        method=gmsh-kangaroo ;;
 esac
 cp -- "$ROOT/scripts/run_prepared_case.sh" "$output/Allrun"
 cp -- "$ROOT/scripts/clean_case.sh" "$output/Allclean"

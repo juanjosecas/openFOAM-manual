@@ -8,7 +8,7 @@ on:
       - "cases/**"
       - "mkdocs.yml"
       - "requirements-docs.txt"
-      - "scripts/generate_case_catalog.py"
+      - "scripts/generate_case_catalog.sh"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -36,7 +36,7 @@ jobs:
       - name: Instalar MkDocs y Material
         run: pip install -r requirements-docs.txt
       - name: Generar catálogo de casos
-        run: python scripts/generate_case_catalog.py
+        run: bash scripts/generate_case_catalog.sh
       - name: Construir sitio
         run: mkdocs build --clean --site-dir site
       - name: Configurar Pages
