@@ -81,3 +81,7 @@ Ver [variants/README.md](variants/README.md): cambiar `DT`, el número de celdas
 - **Investigación de biofísica del manual:** https://github.com/juanjosecas/openFOAM-manual/blob/main/docs/propuesta-difusion-farmacos.md
 
 La configuración y la geometría de este ejemplo son **elaboración propia**, inspiradas en la ecuación de transporte escalar documentada, no una copia de un tutorial biomédico. OpenFOAM Foundation, foam-extend y OpenFOAM.com pueden diferir en estructura y modelos. No se verificó la ejecución de estos diccionarios en v2406/v2412; el primer intento debe revisar especialmente `transportProperties`, `SIMPLE` y las condiciones `empty`.
+
+## Criterio de revisión
+
+DT se expresa con dimensiones explícitas de difusividad [m²/s]. El problema conserva U=0, fuente fija y extremo impermeable. Comparar C/C0 con erfc solo en el régimen de medio semiinfinito; verificar 0≤T≤1, acumulación monotónica de masa y sensibilidad a deltaT y malla. El campo T no representa temperatura. No se ha ejecutado esta revisión.

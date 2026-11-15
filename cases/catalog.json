@@ -36,14 +36,16 @@
     "path": "cases/08-flujo-en-tuberia-3d",
     "group": "essential",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "09-cavidad-con-tapa-movil",
     "path": "cases/09-cavidad-con-tapa-movil",
     "group": "essential",
-    "variants": [],
-    "status": "not-retested"
+    "variants": [
+      "re100"
+    ],
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "11-rotura-de-presa-2d",
@@ -66,7 +68,7 @@
     "path": "cases/14a-difusion-de-farmaco",
     "group": "essential",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "23-flexion-de-viga",
@@ -80,7 +82,7 @@
     "path": "cases/24-conduccion-de-calor-1d",
     "group": "essential",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "26-refraccion-en-interfaz-de-fluidos",

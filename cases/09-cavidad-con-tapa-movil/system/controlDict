@@ -83,7 +83,7 @@ minmaxdomain
     type fieldMinMax;
 
     // Carga la biblioteca del diagnóstico; clave de la configuración heredada.
-    functionObjectLibs ("libfieldFunctionObjects.so");
+    libs (fieldFunctionObjects);
 
     // Activa este objeto de diagnóstico.
     enabled true; //true or false

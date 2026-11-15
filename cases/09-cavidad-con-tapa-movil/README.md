@@ -35,13 +35,13 @@ introduce un comentario.
 | `system/decomposeParDict` | Partición opcional para una ejecución paralela. |
 | `system/sampleDict` | Definición de perfiles; necesita invocación de muestreo. |
 | `Allmesh` | Generar y comprobar la malla sin ejecutar el solver. |
-| `Allrun` | Preparar o reutilizar la malla, verificarla y ejecutar el solver. |
+| `Allrun` | Preparar malla nueva y ejecutar solver; reutilización explícita con --solve-only. |
 | `Allclean` | Mostrar candidatos de limpieza; borrar solo con `--yes`. |
 
 Con los valores activos, la tapa se mueve a 1 m/s, la longitud de la cavidad
 es 1 m y `nu=0.0001 m²/s`: `Re=U L/nu=10000`. La malla contiene 20 × 20 × 1
 celdas. Estos datos describen el caso; no demuestran resolución suficiente ni
-validación física. En `icoFoam`, `deltaT=0.01` y `endTime=50` son segundos de
+validación física. En `icoFoam`, `deltaT=0.01` y `endTime=120` son segundos de
 tiempo simulado, mientras que las tolerancias de `fvSolution` son controles
 numéricos de los sistemas lineales.
 
@@ -81,3 +81,7 @@ python scripts/plot_solver_log.py cases/09-cavidad-con-tapa-movil/log.NOMBRE_SOL
 ```
 
 Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `scripts/plot_csv.py` sobre CSV con columnas adecuadas. Los casos 09 y 10A–10C ya incluyen `system/sampleDict`, que se conserva.
+
+## Revisión de configuración v2406
+
+Se modernizó la entrada libs de fieldMinMax y se ubicaron los perfiles de sampleDict en el interior (z=0.5). El caso base conserva Re=10000 sobre 20×20×1, insuficiente para un benchmark cuantitativo. La variante re100 reduce Re a 100 y refina a 64×64×1. Ambas configuraciones requieren ejecución y validación; no se han calculado resultados nuevos.
