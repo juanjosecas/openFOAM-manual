@@ -40,6 +40,16 @@ solvers
         // Reducción relativa del residual al 10% dentro de esta resolución lineal.
         relTol 0.1;
     }
+    pFinal
+    {
+        $p;
+        relTol 0;
+    }
+    UFinal
+    {
+        $U;
+        relTol 0;
+    }
 }
 
 // Acoplamiento presión-velocidad PIMPLE para flujo transitorio.

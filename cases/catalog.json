@@ -3,8 +3,10 @@
     "id": "01a-canal-no-newtoniano",
     "path": "cases/01a-canal-no-newtoniano",
     "group": "essential",
-    "variants": [],
-    "status": "not-retested"
+    "variants": [
+      "newtonian"
+    ],
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "02-flujo-canal-con-obstaculos",
@@ -13,14 +15,14 @@
     "variants": [
       "transient"
     ],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "03-flujo-en-estenosis",
     "path": "cases/03-flujo-en-estenosis",
     "group": "essential",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "04-chorro-de-agua",
@@ -61,7 +63,7 @@
     "path": "cases/13b-flujo-laminar-alrededor-esfera",
     "group": "essential",
     "variants": [],
-    "status": "previously-tested"
+    "status": "previously-tested-static-reviewed"
   },
   {
     "id": "14a-difusion-de-farmaco",

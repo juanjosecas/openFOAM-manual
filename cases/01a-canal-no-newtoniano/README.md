@@ -54,3 +54,7 @@ Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo proc
 ## Ampliación transitoria
 
 Este caso utiliza `simpleFoam` estacionario. Si interesa estudiar arranques, pulsaciones o fluctuaciones físicas, consultar la [guía de conversión a `pimpleFoam`](../../docs/simplefoam-a-transitorio.md). La transición requiere una **copia independiente** y revisar esquemas, algoritmo, compatibilidad de modelos y condiciones de contorno; no cambiar únicamente `application`.
+
+## Revisión física y numérica de la configuración
+
+Canal plano de 0.20 × 0.02 m, espesor de representación 0.001 m, malla de 8000 celdas. U de entrada uniforme 0.01 m/s. El caso base utiliza generalizedNewtonian/powerLaw con n=0.5, k=1e-4 y límites nuMin=1e-6 y nuMax=1e-2 m²/s. Se conserva la configuración. El perfil analítico de potencia sin límites de viscosidad solo es una aproximación donde no actúa el recorte. La variante newtonian permite verificar por separado el perfil parabólico y gradiente de presión antes de comparar reología. Comparar caudal de entrada/salida, perfil transversal y sensibilidad a malla. Revisión estática, no nueva ejecución.

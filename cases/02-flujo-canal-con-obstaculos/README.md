@@ -74,3 +74,7 @@ Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo proc
 ## Ampliación transitoria
 
 Este caso utiliza `simpleFoam` estacionario. Si interesa estudiar arranques, pulsaciones o fluctuaciones físicas, consultar la [guía de conversión a `pimpleFoam`](../../docs/simplefoam-a-transitorio.md). La transición requiere una **copia independiente** y revisar esquemas, algoritmo, compatibilidad de modelos y condiciones de contorno; no cambiar únicamente `application`.
+
+## Revisión física y numérica de la configuración
+
+El bloqueo geométrico del obstáculo es 20% de la altura del canal (h=4 mm, H=20 mm); la longitud axial del objeto es 20 mm. El caso base es estacionario y conserva los diccionarios previamente ejecutados. En la variante transient se añadieron pFinal y UFinal con relTol=0 para la última corrección PIMPLE, sin cambiar reología, malla ni condiciones de contorno. No interpretar una recirculación estacionaria como desprendimiento periódico de vórtices; en transitorio medir velocidad o fuerza en función del tiempo y comprobar independencia temporal. Con powerLaw no hay un único Reynolds basado en nu constante sin definir una viscosidad de referencia. Las recetas Bash de agua permiten una comparación newtoniana (Re_h=40). La variante transitoria modificada no se ha ejecutado.
