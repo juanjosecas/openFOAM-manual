@@ -15,24 +15,16 @@ Caso **2D transitorio** de flujo incompresible alrededor de una silueta fija de 
 - Duración 80 s; `maxCo=0.5`; salidas cada 0.5 s.
 - Campo derivado: `vorticity`.
 
-## Ejecución local
+## Ejecución
+
+Gmsh CLI debe estar disponible en el entorno de mallado. La geometría editable es `geometry/kangaroo.geo`; el CSV se conserva como referencia del contorno.
 
 ```bash
-python3 -m pip install gmsh
-source /usr/lib/openfoam/openfoam2406/etc/bashrc
-cd cases/29-estela-transitoria-de-canguro
-bash Allmesh
-bash Allrun
+bash scripts/prepare_case.sh kangaroo-flow --output runs/kangaroo
+# Si la imagen no contiene Gmsh, generar la malla desde el host:
+gmsh runs/kangaroo/geometry/kangaroo.geo -3 -format msh2 -o runs/kangaroo/geometry/kangaroo.msh
+bash scripts/run_docker.sh runs/kangaroo
 ```
-
-## Ejecución con Docker del repositorio
-
-```bash
-python3 -m pip install gmsh docker
-python3 cases/29-estela-transitoria-de-canguro/run_docker.py --image opencfd/openfoam-default:2406
-```
-
-Requiere imagen Docker descargada previamente; Gmsh se ejecuta en el host. El script usa `scripts/foam_docker.py`.
 
 ## Animaciones
 

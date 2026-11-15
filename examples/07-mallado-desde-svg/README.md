@@ -7,11 +7,10 @@
 Desde la raíz del repositorio:
 
 ```bash
-python -m pip install gmsh
-cd cases/07-mallado-desde-svg
-python ../../scripts/generar_canal_gmsh.py
+cd examples/07-mallado-desde-svg
+gmsh geometry/canal.geo -3 -format msh2 -o geometry/canal.msh
 gmshToFoam geometry/canal.msh
-python ../../scripts/ajustar_patches_gmsh.py
+changeDictionary
 checkMesh
 foamDictionary system/controlDict -entry application -value
 simpleFoam

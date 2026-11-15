@@ -50,9 +50,11 @@ if [[ "$mode" != solve ]]; then
     case "$method" in
         block) step blockMesh blockMesh ;;
         snappy)
-            step surfaceCheck surfaceCheck constant/triSurface/sphere.stl
-            grep -q 'Surface is closed.' log.surfaceCheck || die "Superficie no cerrada."
-            grep -q 'Surface has no illegal triangles.' log.surfaceCheck || die "Triángulos inválidos."
+            if [[ -f constant/triSurface/sphere.stl ]]; then
+                step surfaceCheck surfaceCheck constant/triSurface/sphere.stl
+                grep -q 'Surface is closed.' log.surfaceCheck || die "Superficie no cerrada."
+                grep -q 'Surface has no illegal triangles.' log.surfaceCheck || die "Triángulos inválidos."
+            fi
             step blockMesh blockMesh
             verify_mesh checkMeshBase
             step snappyHexMesh snappyHexMesh -overwrite ;;
@@ -63,7 +65,7 @@ if [[ "$mode" != solve ]]; then
             step gmshToFoam gmshToFoam "$mesh"
             step changeDictionary changeDictionary ;;
         gmsh-kangaroo)
-            [[ -f geometry/kangaroo.msh ]] || step geometry python3 geometry/build_mesh.py
+            [[ -f geometry/kangaroo.msh ]] || step geometry gmsh geometry/kangaroo.geo -3 -format msh2 -o geometry/kangaroo.msh
             step gmshToFoam gmshToFoam geometry/kangaroo.msh
             step changeDictionary changeDictionary ;;
         *) die "Mallado desconocido." ;;

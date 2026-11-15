@@ -6,20 +6,21 @@ FoamFile
     object snappyHexMeshDict;
 }
 
-// Genera una malla conforme a la superficie STL dentro de la malla de fondo.
+// Superficie analítica; radio en metros.
 castellatedMesh true;   // Celdas cercanas al objeto y recorte.
 snap            true;   // Ajuste de puntos a la superficie triangulada.
 addLayers       false;  // Etapa de capas límite desactivada para el primer ejemplo.
 
 // sphere.stl debe estar cerrado y expresado en metros.
-// Mayor resolución del STL mejora la geometría, no aumenta por sí sola
+// Superficie analítica; radio en metros.
 // la resolución volumétrica del fluido.
 geometry
 {
-    sphere.stl
+    sphere
     {
-        type triSurfaceMesh;
-        name sphere;
+        type searchableSphere;
+        centre (0 0 0);
+        radius 0.5;
     }
 }
 
@@ -49,7 +50,7 @@ castellatedMeshControls
             // Para esta esfera suave, (1 2) NO garantiza alcanzar nivel 2.
             // Variantes: (2 2) fuerza nivel 2; (3 3) fuerza nivel 3.
             // Refinar en 3D puede aumentar mucho las celdas y el coste.
-            level (1 2);  // Nivel de refinamiento próximo al STL.
+            level (1 2);  // Superficie analítica; radio en metros.
             patchInfo { type wall; }
         }
     }

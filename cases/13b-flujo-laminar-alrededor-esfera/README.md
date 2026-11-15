@@ -101,3 +101,7 @@ Validación de la galería: generación completa con los resultados de iteració
 ## Criterios de extensión del modelo
 
 Se conservaron los diccionarios de la ejecución histórica. El dominio tiene relación ancho/diámetro=4 y bloqueo frontal geométrico pi/64≈4.9%; el arrastre no equivale al de una esfera en dominio ilimitado. Re=10 tampoco corresponde al límite asintótico de Stokes (Cd=24/Re). Antes de usar fuerzas cuantitativas, comparar sensibilidad a tamaño de dominio y refinamiento cerca de la esfera, y separar contribuciones de presión y viscosidad. La verificación histórica no cubre el nuevo lanzador Bash. No se repitió la ejecución.
+
+## Configuración actual
+
+La esfera CFD usa `searchableSphere` nativa (radio 0.5 m); ya no requiere STL ni Python para mallar. Ejecutar `bash scripts/prepare_case.sh 13b-flujo-laminar-alrededor-esfera --output runs/sphere` y `bash scripts/run_docker.sh runs/sphere`. Para el campo V: `bash scripts/run_docker.sh runs/sphere -- postProcess -func writeCellVolumes -latestTime`. Los comandos históricos de notebook y STL anteriores corresponden a la configuración retirada; la ejecución previa no valida la nueva geometría analítica.
