@@ -1,0 +1,54 @@
+# Todas las dimensiones en metros; rotaciones en grados.
+[domain]
+length = 0.20
+height = 0.04
+thickness = 0.001
+
+[mesh]
+size = 0.002
+
+# start/end: y en left/right, x en bottom/top.
+[[ports]]
+name = "inlet"
+kind = "inlet"
+side = "left"
+start = 0.01
+end = 0.03
+
+[[ports]]
+name = "outlet"
+kind = "outlet"
+side = "right"
+start = 0.0
+end = 0.04
+
+[[obstacles]]
+name = "cylinder"
+shape = "circle"
+center = [0.045, 0.020]
+radius = 0.004
+[obstacles.refinement]
+size = 0.0005
+distance = 0.008
+
+[[obstacles]]
+name = "block"
+shape = "rectangle"
+center = [0.100, 0.023]
+width = 0.014
+height = 0.006
+rotation = 30
+[obstacles.refinement]
+size = 0.0005
+distance = 0.008
+
+[[obstacles]]
+name = "ellipse"
+shape = "ellipse"
+center = [0.155, 0.015]
+radius_x = 0.009
+radius_y = 0.003
+rotation = -30
+[obstacles.refinement]
+size = 0.0004
+distance = 0.010
