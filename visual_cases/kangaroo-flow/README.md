@@ -28,13 +28,14 @@ bash scripts/run_docker.sh runs/kangaroo
 
 ## Animaciones
 
+Desde la raíz:
+
 ```bash
-python3 -m pip install pyvista numpy imageio
-python3 postprocessing/render.py --field speed --stride 2
-python3 postprocessing/render.py --field vorticity --stride 2
+python postprocessing/animate.py runs/kangaroo --field U --normal z --stride 2 --cmap inferno --output plots/kangaroo-speed.gif
+python postprocessing/animate.py runs/kangaroo --field vorticity --component 2 --normal z --stride 2 --cmap coolwarm --output plots/kangaroo-vorticity.gif
 ```
 
-Se generan GIF y PNG en `postprocessing/`. Para servidores headless puede ser necesario `xvfb-run`.
+Si no se guardó vorticidad, se estima a partir del campo U mediante PyVista. Para una imagen fija usar fields.py. No se han ejecutado estos comandos.
 
 ## Limitaciones
 

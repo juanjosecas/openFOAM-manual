@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import pyvista as pv
 
-from fields import read_case, scalar_field
+from fields import open_reader, internal_mesh, scalar_field
 
 
 def main():
@@ -15,6 +15,10 @@ def main():
     p.add_argument("--component", type=int, choices=(0, 1, 2))
     p.add_argument("--normal", choices=("x", "y", "z"), default="z")
     p.add_argument("--stride", type=int, default=1)
+    p.add_argument("--max-frames", type=int)
+    p.add_argument("--start-time", type=float)
+    p.add_argument("--end-time", type=float)
+    p.add_argument("--origin", nargs=3, type=float)
     p.add_argument("--fps", type=int, default=15)
     p.add_argument("--clim", nargs=2, type=float)
     p.add_argument("--cmap", default="viridis")
@@ -22,28 +26,38 @@ def main():
     a = p.parse_args()
     if min(a.stride, a.fps) < 1:
         p.error("stride y fps deben ser positivos")
-    case = a.case.resolve()
-    read_case(case)
-    reader = pv.OpenFOAMReader(str(case / "case.foam"))
-    reader.enable_all_cell_arrays()
-    times = reader.time_values[::a.stride]
+    reader = open_reader(a.case)
+    times = [t for t in sorted(reader.time_values)
+             if (a.start_time is None or t >= a.start_time)
+             and (a.end_time is None or t <= a.end_time)][::a.stride]
+    if a.max_frames is not None:
+        if a.max_frames < 2:
+            p.error("--max-frames debe ser >= 2")
+        times = times[:a.max_frames]
     if len(times) < 2:
         p.error("Se requieren dos estados")
     def frame(t):
         reader.set_active_time_value(t)
-        data = reader.read()
-        grid = data["internalMesh"] if isinstance(data, pv.MultiBlock) else data
-        return scalar_field(grid, a.field, a.component).slice(normal=a.normal)
+        grid = internal_mesh(reader.read())
+        section = scalar_field(grid, a.field, a.component).slice(normal=a.normal, origin=a.origin)
+        if not section.n_points:
+            raise ValueError(f"Corte vacío en t={t:g}")
+        return section
     if a.clim is None:
         lo, hi = np.inf, -np.inf
         for t in times:
             v = np.asarray(frame(t).point_data["display"])
-            lo, hi = min(lo, np.nanmin(v)), max(hi, np.nanmax(v))
+            v = v[np.isfinite(v)]
+            if not v.size:
+                raise ValueError(f"Campo sin datos finitos en t={t:g}")
+            lo, hi = min(lo, v.min()), max(hi, v.max())
         if lo == hi:
             hi = lo + max(abs(lo)*1e-9, 1e-12)
         clim = (lo, hi)
     else:
         clim = tuple(a.clim)
+        if not np.isfinite(clim).all() or clim[0] >= clim[1]:
+            p.error("--clim requiere un mínimo menor al máximo")
     a.output.parent.mkdir(parents=True, exist_ok=True)
     pl = pv.Plotter(off_screen=True, window_size=(1280, 720))
     if a.output.suffix.lower() == ".gif":
@@ -58,6 +72,7 @@ def main():
         pl.add_text(f"{a.field} | t/iter = {t:g}", name="time", font_size=12)
         if i == 0:
             {"x": pl.view_yz, "y": pl.view_xz, "z": pl.view_xy}[a.normal]()
+            pl.enable_parallel_projection()
             pl.reset_camera()
         pl.write_frame()
     pl.close()
