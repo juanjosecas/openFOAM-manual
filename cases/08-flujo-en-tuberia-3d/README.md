@@ -49,3 +49,18 @@ python scripts/plot_solver_log.py cases/08-flujo-en-tuberia-3d/log.NOMBRE_SOLVER
 ```
 
 Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `scripts/plot_csv.py` sobre CSV con columnas adecuadas. Los casos 09 y 10A–10C ya incluyen `system/sampleDict`, que se conserva.
+
+## Parámetros físicos y control numérico
+
+| Parámetro | Valor |
+| --- | --- |
+| Longitud | 0.12 m |
+| Radio | 0.01 m |
+| Viscosidad cinemática | 1e-4 m²/s |
+| Velocidad máxima de entrada | 0.02 m/s |
+| Reynolds máximo (diámetro) | 4 |
+| Malla | 12288 celdas, 5 bloques |
+| Solver | pimpleFoam, laminar |
+| Duración | 2 s |
+
+La entrada es espacialmente uniforme y temporalmente variable mediante una tabla. El caso no equivale a una tubería estacionaria plenamente desarrollada: no usar Hagen–Poiseuille como referencia exacta de todo el transitorio. Revisar conservación de caudal, perfil radial y Co. Se conservaron los diccionarios; revisión estática, sin ejecución.

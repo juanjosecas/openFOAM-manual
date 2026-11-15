@@ -3,8 +3,10 @@
     "id": "01a-canal-no-newtoniano",
     "path": "cases/01a-canal-no-newtoniano",
     "group": "essential",
-    "variants": [],
-    "status": "not-retested"
+    "variants": [
+      "newtonian"
+    ],
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "02-flujo-canal-con-obstaculos",
@@ -13,14 +15,14 @@
     "variants": [
       "transient"
     ],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "03-flujo-en-estenosis",
     "path": "cases/03-flujo-en-estenosis",
     "group": "essential",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "04-chorro-de-agua",
@@ -29,21 +31,23 @@
     "variants": [
       "animation"
     ],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "08-flujo-en-tuberia-3d",
     "path": "cases/08-flujo-en-tuberia-3d",
     "group": "essential",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "09-cavidad-con-tapa-movil",
     "path": "cases/09-cavidad-con-tapa-movil",
     "group": "essential",
-    "variants": [],
-    "status": "not-retested"
+    "variants": [
+      "re100"
+    ],
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "11-rotura-de-presa-2d",
@@ -52,42 +56,42 @@
     "variants": [
       "animation"
     ],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "13b-flujo-laminar-alrededor-esfera",
     "path": "cases/13b-flujo-laminar-alrededor-esfera",
     "group": "essential",
     "variants": [],
-    "status": "previously-tested"
+    "status": "previously-tested-static-reviewed"
   },
   {
     "id": "14a-difusion-de-farmaco",
     "path": "cases/14a-difusion-de-farmaco",
     "group": "essential",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "23-flexion-de-viga",
     "path": "cases/23-flexion-de-viga",
     "group": "extended",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "24-conduccion-de-calor-1d",
     "path": "cases/24-conduccion-de-calor-1d",
     "group": "essential",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "26-refraccion-en-interfaz-de-fluidos",
     "path": "cases/26-refraccion-en-interfaz-de-fluidos",
     "group": "extended",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "cow-flow",

@@ -23,7 +23,7 @@ maxCo 0.35;
 maxAlphaCo 0.35;
 maxDeltaT 2e-4;
 
-// Escribir cada 0.005 s de tiempo físico: hasta 60 estados.
+// Escribir cada 0.005 s físicos: aproximadamente 4000 escrituras más el estado inicial.
 writeControl adjustableRunTime;
 writeInterval 0.005;
 purgeWrite 0;

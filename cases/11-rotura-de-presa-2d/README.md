@@ -24,7 +24,7 @@
 
 ## Ejecución
 
-Este caso no dispone todavía de un lanzador verificado. Consultar los pasos de preparación del tutorial.
+Se proporciona Allrun mediante el runner compartido. Pendiente de ejecución.
 
 
 ## Preparación y ejecución
@@ -41,7 +41,7 @@ foamDictionary system/controlDict -entry application -value
 interFoam 2>&1 | tee log.interFoam
 ```
 
-**Estado:** Caso heredado: revisar compatibilidad con OpenFOAM.com antes de ejecutar. No hay un `Allrun` verificado para este caso.
+**Estado:** Caso heredado: revisar compatibilidad con OpenFOAM.com antes de ejecutar. El nuevo `Allrun` no se ha ejecutado.
 
 ## Variaciones pequeñas
 
@@ -59,3 +59,16 @@ python scripts/plot_solver_log.py cases/11-rotura-de-presa-2d/log.NOMBRE_SOLVER 
 ```
 
 Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `scripts/plot_csv.py` sobre CSV con columnas adecuadas. Los casos 09 y 10A–10C ya incluyen `system/sampleDict`, que se conserva.
+
+## Revisión estática v2406
+
+Se reemplazó la lista inicial de 2268 fracciones de fase por alpha.water uniforme 0; setFields define la columna después del mallado. El dominio y obstáculo se conservan. La columna nominal mide 0.1461 × 0.292 m, con espesor 0.0146 m (volumen geométrico ≈ 0.000623 m³; el volumen discretizado depende de los centros de celda seleccionados). Se declara defaultFaces empty explícitamente, se actualizan las bibliotecas de los function objects, se elimina el tipo duplicado cellSource y se usa regionType all. Se utiliza interfaceCompression y un límite máximo de paso 0.005 s con Co y alphaCo máximos de 0.5 en base y animación. Estos son cambios numéricos conservadores propuestos, no estabilidad demostrada. Las sondas se desplazaron al interior del fluido; probesDict no se ejecuta automáticamente. Se conservan 0/p y demás archivos heredados mientras se verifica compatibilidad.
+
+Preparar una copia limpia y ejecutar:
+
+```bash
+bash scripts/prepare_case.sh 11-rotura-de-presa-2d --output runs/dambreak
+bash scripts/run_docker.sh runs/dambreak
+```
+
+Verificar balance de agua mediante integral de alpha.water, límites de fracción de fase, Courant y posición del frente. Considerar cualquier flujo de agua por la atmósfera al evaluar conservación. No se ha ejecutado.

@@ -18,7 +18,7 @@ cd cases/24-conduccion-de-calor-1d
 foamVersion
 command -v laplacianFoam
 bash Allmesh
-bash Allrun
+bash Allrun --solve-only
 tail -n 40 log.laplacianFoam
 foamToVTK
 python3 postprocessing/analizar.py
@@ -35,3 +35,7 @@ El caso incluye 0/T, constant/transportProperties, system/ con cuatro diccionari
 - [Conducción transitoria de pared, OpenFOAM.es](https://openfoam.es/tutoriales/conduccion-transitoria-pared-laplacianfoam) — problema diferente: este caso es **estacionario**.
 
 Geometría y archivos: elaboración didáctica propia.
+
+## Criterio de revisión
+
+DT se expresa con dimensiones explícitas de difusividad [m²/s]. La referencia de aceptación inicial es el error máximo absoluto frente al perfil lineal en centros de celda; una tolerancia propuesta de 0.01 K debe comprobarse con los resultados, no se considera alcanzada. Los dos pasos de solución son iteraciones, no segundos físicos.

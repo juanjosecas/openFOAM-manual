@@ -121,6 +121,10 @@ Caso y trazador originales para el manual, basados en el esquema general de `int
 - Solver `interFoam` (documentación): https://www.openfoam.com/documentation/guides/latest/doc/guide-applications-solvers-multiphase-interFoam.html
 - PyVista OpenFOAMReader: https://docs.pyvista.org/api/readers/_autosummary/pyvista.OpenFOAMReader.html
 - Ley de Snell: https://en.wikipedia.org/wiki/Snell%27s_law
-- [Caso 25: óptica geométrica sin CFD](../25-refraccion-luz/README.md)
+- [Caso 25: óptica geométrica sin CFD](../../examples/25-refraccion-de-luz/README.md)
 
 Las URL no demuestran por sí solas compatibilidad con una versión determinada. No se ha probado el caso en v2406/v2412.
+
+## Revisión estática
+
+Se mantienen los diccionarios CFD y la malla 80×1×60. El volumen geométrico inicial del agua es 2.48e-6 m³ para el espesor numérico de 1 mm, correspondiente a una altura media de 31 mm. Verificar integral de alpha.water, límites de fase y concordancia de h(x,t) con la isosuperficie alpha.water=0.5. El cálculo óptico solo es interpretable cuando la interfaz es aproximadamente univaluada; la altura integrada no detecta por sí misma gotas ni burbujas. El paso de CFD y las pruebas ópticas permanecen sin ejecutar.

@@ -38,7 +38,7 @@ writeFormat     ascii;
 
 writePrecision  6;
 
-writeCompression uncompressed;
+writeCompression off;
 
 timeFormat      general;
 
@@ -48,9 +48,9 @@ runTimeModifiable yes;
 
 adjustTimeStep  yes;
 
-maxCo           1;
-maxAlphaCo      1;
-maxDeltaT       1;
+maxCo 0.5;
+maxAlphaCo 0.5;
+maxDeltaT 0.005;
 
 // ************************************************************************* //
 
@@ -63,7 +63,7 @@ minmaxdomain
 {
     type fieldMinMax;
 
-    functionObjectLibs ("libfieldFunctionObjects.so");
+    libs (fieldFunctionObjects);
 
     enabled true; //true or false
 
@@ -82,10 +82,10 @@ minmaxdomain
 ///////////////////////////////////////////////////////////////////////////
 water_in_domain
 {
-    type            cellSource;
+
     type            volFieldValue;
 
-    functionObjectLibs ("libfieldFunctionObjects.so");
+    libs (fieldFunctionObjects);
     enabled         true;
 
     //outputControl     outputTime;
@@ -96,7 +96,7 @@ water_in_domain
 
     log             true;
 
-    source          all;
+    regionType all;
 
     operation       volIntegrate;
     fields

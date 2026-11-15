@@ -28,3 +28,7 @@ Alternativamente ejecutar `bash Allrun` desde el caso; no mezclar los dos proced
 ## Ensayos pequeños
 
 Reducir velocidad de entrada 20 %, reducir `maxCo` a 0.25, o variar `writeInterval`. Probar un parámetro por copia limpia.
+
+## Revisión estática v2406
+
+Dominio 300 × 200 mm, espesor numérico 1 mm, 9600 celdas. Entrada de 10 mm de altura a 1 m/s: Re basado en altura=10000 para agua; solo cuatro celdas atraviesan la entrada. El modelo laminar y 2D no resuelve turbulencia tridimensional, atomización ni gotas pequeñas. Se conserva la física original. El caudal nominal de agua es 1e-5 m³/s para el espesor de representación; la atmósfera superior y lateral permite salida, por lo que la masa del agua dentro del dominio no tiene que ser constante. Revisar balance de fase, límites alpha.water, Co y resolución de la interfaz. El caso de 20 s puede guardar unas 4000 escrituras (base) o 1000 (animation); para diagnóstico reducir endTime en la copia. No se ha ejecutado.
