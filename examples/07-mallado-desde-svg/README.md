@@ -22,7 +22,7 @@ El generador usa coordenadas directamente en **metros**, con geometría de 0.20 
 
 **Limitación:** no se ha comprobado el comportamiento real de la malla Gmsh con OpenFOAM.com v2406/v2412. El ejemplo SVG original sigue pendiente de su archivo fuente.
 
-[Procedimiento y decisiones](COMPLETADO.md) · [Tutorial conceptual de SVG/Gmsh](../../docs/tutoriales/07-mallado-desde-svg.md)
+[Tutorial conceptual de SVG/Gmsh](../../docs/tutoriales/07-mallado-desde-svg.md)
 
 ## Ensayos pequeños
 
@@ -32,3 +32,5 @@ Cambiar densidad de malla Gmsh, reducir 20 % velocidad de entrada, o variar frec
 ## Ampliación transitoria
 
 Este caso utiliza `simpleFoam` estacionario. Si interesa estudiar arranques, pulsaciones o fluctuaciones físicas, consultar la [guía de conversión a `pimpleFoam`](../../docs/simplefoam-a-transitorio.md). La transición requiere una **copia independiente** y revisar esquemas, algoritmo, compatibilidad de modelos y condiciones de contorno; no cambiar únicamente `application`.
+
+Este ejemplo demuestra importación de una malla Gmsh, no importación de SVG. Las coordenadas están en metros; no aplicar otro factor 0.001. Si gmshToFoam no conserva los nombres de grupos físicos, detenerse y revisar la conversión antes del solver.

@@ -19,8 +19,8 @@ python postprocessing/plot_solver_log.py runs/canal/log.simpleFoam
 - fields.py: imagen, vista interactiva, cortes, isosuperficie y datos de centros de celda.
 - profile.py: perfil interpolado; muestras fuera de la malla marcadas como NaN.
 - animate.py: animación con cámara y escala de color fijas; rango temporal opcional.
-- plot_solver_log.py: residuos y Courant.
-- plot_csv.py y compare_variants.py: datos tabulares.
+- plot_solver_log.py: residuos, Courant y continuidad (CSV y una figura resumen).
+- plot_csv.py: uno o varios CSV, con una o varias columnas por archivo.
 - sphere.py y reference.py: análisis físicos y comparación con referencias analíticas.
 
 Para vectores se representa la magnitud salvo que se indique --component 0/1/2. La vorticidad se lee si existe o se estima desde U; la estimación de PyVista puede diferir del operador discreto de OpenFOAM. La interpolación de celdas a puntos puede suavizar discontinuidades. Las animaciones tienen fps constantes, no necesariamente proporcionales al paso físico. Para el manual histórico, los visualizadores retirados están en Git; usar los comandos anteriores en su lugar. No se ejecutó el código de esta revisión.
@@ -59,3 +59,11 @@ python postprocessing/fields.py runs/sphere --field U --normal z --edges
 ```
 
 sphere.py exporta perfiles adimensionales, Cp superficial y parámetros. Supone esfera centrada en el origen, flujo +x, presión cinemática y patches inlet/outlet/sphere. Los promedios de superficie se ponderan por área. Las derivadas de fields.py se estiman sobre puntos interpolados y no sustituyen el operador discreto de OpenFOAM. Las líneas de corriente se integran en 3D, incluso cuando se muestra un corte. Se retira la generación automática de galerías HTML/PDF; el código anterior permanece en Git. No se ejecutaron estas herramientas.
+
+## Comparación de corridas
+
+```bash
+python postprocessing/plot_csv.py runs/base/plots/profile.csv runs/fine/plots/profile.csv --x distance --y value --output plots/comparison.png
+```
+
+Los valores ausentes mantienen los huecos en la curva. La antigua ruta scripts/compare_variants.py queda únicamente como enlace al mismo programa por compatibilidad con el manual. El diagnóstico del log guarda todas las correcciones en CSV y muestra la primera por campo y paso; Courant se representa por secuencia propia de registros, no por tiempo físico. Los PNG separados de residuos y Courant se sustituyen por resumen.png. No se ejecutaron las herramientas.

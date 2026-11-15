@@ -6,4 +6,4 @@ Para habilitarlo, incorporar el contenido de [`probes.function`](probes.function
 
 Las sondas están sobre el eje X de la tubería; se usan para analizar pulsación y gradiente axial.
 
-Se recomienda comparar series con `scripts/compare_variants.py` después de exportarlas como CSV. Para obtener perfiles continuos en lugar de puntos de sondeo, usar el muestreo disponible del caso o PyVista sobre los resultados. **Ninguna configuración opcional se ha ejecutado ni verificado para v2406/v2412.**
+Se recomienda comparar series con `postprocessing/plot_csv.py` después de exportarlas como CSV. Para obtener perfiles continuos en lugar de puntos de sondeo, usar el muestreo disponible del caso o PyVista sobre los resultados. **Ninguna configuración opcional se ha ejecutado ni verificado para v2406/v2412.**

@@ -1,1 +1,1 @@
-../postprocessing/compare_variants.py
+../postprocessing/plot_csv.py

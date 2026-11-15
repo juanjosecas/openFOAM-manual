@@ -14,4 +14,4 @@ corresponden a iteraciones de convergencia, no a latidos o tiempos de tránsito.
 `p` es presión cinemática; para convertir diferencias a Pa hace falta una
 densidad elegida y justificada. El fragmento permanece opcional e inactivo.
 
-Se recomienda comparar series con `scripts/compare_variants.py` después de exportarlas como CSV. Para obtener perfiles continuos en lugar de puntos de sondeo, usar el muestreo disponible del caso o PyVista sobre los resultados. **Se comprobó la lectura del fragmento con `foamDictionary` de v2406; no se activó ni ejecutó el objeto de sondas y no se verificó con v2412.**
+Se recomienda comparar series con `postprocessing/plot_csv.py` después de exportarlas como CSV. Para obtener perfiles continuos en lugar de puntos de sondeo, usar el muestreo disponible del caso o PyVista sobre los resultados. **Se comprobó la lectura del fragmento con `foamDictionary` de v2406; no se activó ni ejecutó el objeto de sondas y no se verificó con v2412.**
