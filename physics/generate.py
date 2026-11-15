@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Crear un caso laminar newtoniano a partir de una malla del generador 2D.
+"""Crear un caso laminar newtoniano o pseudoplástico a partir de una malla del generador 2D.
 
 Solo biblioteca estándar. No requiere Gmsh, Docker ni OpenFOAM para escribir
 los diccionarios. La importación y resolución son pasos independientes.
@@ -100,6 +100,40 @@ def boundaries(metadata, config):
                         raise ValueError(f"{name}: la velocidad debe apuntar hacia el dominio")
                 u[name] = ["type fixedValue", f"value uniform {vector(v)}"]
                 p[name] = ["type zeroGradient"]
+            elif kind == "flow_rate":
+                if set(spec) - {"type", "volumetric_flow_rate", "mass_flow_rate"}:
+                    raise ValueError(f"{name}: parámetros de caudal no admitidos")
+                if ("volumetric_flow_rate" in spec) == ("mass_flow_rate" in spec):
+                    raise ValueError(f"{name}: elegir caudal volumétrico o másico")
+                if "volumetric_flow_rate" in spec:
+                    q = number(spec["volumetric_flow_rate"], name+".Q", True)
+                else:
+                    q = number(spec["mass_flow_rate"], name+".mass", True)/number(
+                        config["fluid"]["rho"], "rho", True)
+                u[name] = ["type flowRateInletVelocity",
+                           f"volumetricFlowRate {fmt(q)}",
+                           "extrapolateProfile false", "value uniform (0 0 0)"]
+                p[name] = ["type zeroGradient"]
+            elif kind == "velocity_table":
+                if set(spec) - {"type", "table"}:
+                    raise ValueError(f"{name}: parámetros de tabla no admitidos")
+                if config["simulation"]["mode"] != "transient":
+                    raise ValueError(f"{name}: la tabla requiere transient")
+                normal = inward[ports[name]["side"]]
+                rows = []
+                for time, speed in spec["table"]:
+                    t = number(time, name+".time")
+                    speed = number(speed, name+".speed")
+                    if t < 0 or speed < 0 or (rows and t <= rows[-1][0]):
+                        raise ValueError(f"{name}: tiempos crecientes y velocidades no negativas")
+                    rows.append((t, [speed*x for x in normal]))
+                if len(rows) < 2 or rows[0][0] != 0 or rows[-1][0] < config["simulation"]["end"]:
+                    raise ValueError(f"{name}: la tabla debe cubrir todo el intervalo desde t=0")
+                table = "table (\n" + "".join(
+                    f"            ({fmt(t)} {vector(v)})\n" for t, v in rows) + "        )"
+                u[name] = ["type uniformFixedValue", "uniformValue " + table,
+                           f"value uniform {vector(rows[0][1])}"]
+                p[name] = ["type zeroGradient"]
             elif kind == "pressure":
                 if set(spec) - {"type", "pressure_pa"}:
                     raise ValueError(f"{name}: parámetros de presión no admitidos")
@@ -109,7 +143,7 @@ def boundaries(metadata, config):
                 p[name] = ["type fixedValue", f"value uniform {fmt(value)}"]
                 pressure_reference = True
             else:
-                raise ValueError(f"{name}: usar velocity o pressure")
+                raise ValueError(f"{name}: usar velocity, velocity_table, flow_rate o pressure")
         else:
             raise ValueError(f"Tipo de patch no admitido: {mesh_type}")
     if not pressure_reference:
@@ -124,6 +158,31 @@ def dictionaries(metadata, config):
         raise ValueError("Definir nu [m2/s] o mu [Pa s], exclusivamente")
     nu = (number(fluid["nu"], "nu", True) if "nu" in fluid else
           number(fluid["mu"], "mu", True)/rho)
+    model = fluid.get("model", "newtonian")
+    if model == "newtonian":
+        if "power_law" in fluid:
+            raise ValueError("power_law requiere fluid.model = power_law")
+        laminar = "laminar { model Stokes; }\n"
+    elif model == "power_law":
+        law = fluid["power_law"]
+        k = number(law["k"], "k", True)
+        n = number(law["n"], "n", True)
+        low = number(law["nu_min"], "nu_min", True)
+        high = number(law["nu_max"], "nu_max", True)
+        if low > high:
+            raise ValueError("nu_min no puede superar nu_max")
+        laminar = f"""laminar
+{{
+    model generalizedNewtonian;
+    viscosityModel powerLaw;
+    k {fmt(k)};
+    n {fmt(n)};
+    nuMin {fmt(low)};
+    nuMax {fmt(high)};
+}}
+"""
+    else:
+        raise ValueError("fluid.model debe ser newtonian o power_law")
     run = config["simulation"]
     mode = run["mode"]
     if mode not in ("steady", "transient"):
@@ -149,7 +208,7 @@ def dictionaries(metadata, config):
         "constant/transportProperties": header("transportProperties") +
             f"transportModel Newtonian;\nnu [0 2 -1 0 0 0 0] {fmt(nu)};\n",
         "constant/turbulenceProperties": header("turbulenceProperties") +
-            "simulationType laminar;\nlaminar { model Stokes; }\n",
+            "simulationType laminar;\n" + laminar,
     }
     control = header("controlDict") + f"""application {solver};
 startFrom startTime;
@@ -265,6 +324,8 @@ def main():
     (a.output/".mesh_method").write_text("gmsh-channel\n")
     (a.output/"case.json").write_text(json.dumps({
         "solver": solver, "rho_kg_m3": rho, "nu_m2_s": nu,
+        "fluid_model": config["fluid"].get("model", "newtonian"),
+        "nu_is_base_value": config["fluid"].get("model") == "power_law",
         "status": "prepared-not-executed"}, indent=2)+"\n")
     print(f"Caso preparado: {a.output} ({solver}, nu={nu:g} m2/s)")
 

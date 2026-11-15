@@ -35,7 +35,7 @@ También se puede ejecutar directamente bash scripts/run_docker.sh runs/agua en 
 | initial.velocity, initial.pressure_pa | Estado uniforme inicial. |
 | boundaries.NOMBRE | Condición para un patch existente. |
 
-Puertos: type="velocity" con speed positivo (dirección normal hacia el fluido calculada desde side) o velocity=[Ux,Uy,0]; type="pressure" con pressure_pa relativa. Se requiere declarar cada puerto y al menos una presión fija. Se permiten diferencias de presión entre puertos y múltiples entradas de velocidad. No existe aún control directo de caudal ni perfiles pulsátiles. El kind de geometría es una etiqueta: la condición física la determina este TOML.
+Puertos: type="velocity" con speed positivo (dirección normal hacia el fluido calculada desde side) o velocity=[Ux,Uy,0]; type="pressure" con pressure_pa relativa. Se requiere declarar cada puerto y al menos una presión fija. Se permiten diferencias de presión entre puertos y múltiples entradas de velocidad. El kind de geometría es una etiqueta: la condición física la determina este TOML.
 
 Paredes: noSlip por defecto; slip opcional por patch. frontAndBack siempre empty.
 
@@ -47,4 +47,20 @@ La resolución numérica usa esquemas iniciales conservadores (upwind) y toleran
 
 0/U, 0/p, constant/transportProperties, constant/turbulenceProperties, system/controlDict, system/fvSchemes, system/fvSolution y system/changeDictionaryDict; copia de channel.msh y configuraciones de origen. Allrun y Allclean son copias de los lanzadores compartidos.
 
-Esta primera versión solo admite flujo laminar newtoniano incompresible plano. Reología no newtoniana, calor, turbulencia, transporte de especies y multifase quedan fuera del alcance. No se ha ejecutado el generador, la importación ni el solver.
+Se admite flujo laminar incompresible plano newtoniano y powerLaw. Calor, turbulencia, transporte de especies y multifase quedan fuera del alcance. No se ha ejecutado el generador, la importación ni el solver.
+
+## Ensayos adicionales
+
+Los archivos de templates/ se usan con la misma geometría de ejemplo:
+
+- flow_rate.toml: caudal volumétrico o másico constante hacia el dominio, mediante flowRateInletVelocity. En 2D el caudal incluye el espesor físico de extrusión. No imponer a la vez velocidad y caudal en un puerto.
+- pulsatile.toml: tabla [tiempo, velocidad normal] interpolada linealmente mediante uniformFixedValue. Debe cubrir desde cero hasta end; no repite ciclos automáticamente ni permite flujo inverso.
+- power_law.toml: viscosidad cinemática efectiva limitada entre nu_min y nu_max, con ley k * gammaDot^(n-1). k tiene unidades m²·s^(n−2); nu/mu es el valor de transporte base, no la viscosidad efectiva. La densidad es constante. n<1 adelgaza por cizalla; n>1 espesa, dentro de las cotas. Estos valores son ilustrativos.
+
+```bash
+python physics/generate.py physics/templates/pulsatile.toml --geometry runs/geometry-demo --output runs/pulso
+bash scripts/run_docker.sh runs/pulso --mesh
+bash scripts/run_docker.sh runs/pulso --solve-only
+```
+
+Referencia de sintaxis: https://api.openfoam.com/2406/classFoam_1_1flowRateInletVelocityFvPatchVectorField.html . Los diccionarios powerLaw y uniformFixedValue siguen la estructura de los casos 01a y 08 del repositorio. Sin pruebas de ejecución.

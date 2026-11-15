@@ -1,0 +1,33 @@
+# Propiedades físicas independientes de geometry.toml.
+[fluid]
+rho = 1000.0       # kg/m3
+nu = 1e-4          # m2/s, valor base; no es nu efectiva
+model = "power_law"
+
+[fluid.power_law]
+k = 1e-4           # consistencia cinemática, m2/s^(2-n)
+n = 0.5            # exponente
+nu_min = 1e-6      # m2/s
+nu_max = 1e-2
+
+[simulation]
+mode = "steady"    # steady o transient
+end = 2000         # iteraciones en steady; segundos en transient
+write_interval = 100
+
+[initial]
+velocity = [0.0, 0.0, 0.0]
+pressure_pa = 0.0
+
+[boundaries.inlet]
+type = "velocity"
+speed = 0.01       # m/s, perpendicular hacia el interior
+# Alternativa: velocity = [0.01, 0.0, 0.0]
+
+[boundaries.outlet]
+type = "pressure"
+pressure_pa = 0.0  # presión relativa en Pa
+
+# Las paredes y obstáculos son noSlip salvo indicación contraria.
+[boundaries.block]
+type = "slip"
