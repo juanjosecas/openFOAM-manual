@@ -49,12 +49,15 @@ def read_case(case, time=None):
 
 def scalar_field(grid, field, component=None):
     # Vorticidad calculada sobre puntos si no fue guardada por OpenFOAM.
-    if field == "vorticity" and field not in grid.cell_data:
+    if field in ("vorticity", "strain", "divU") and field not in grid.cell_data:
         if "U" not in grid.cell_data:
             raise KeyError("Falta U para calcular vorticidad")
         grid = grid.cell_data_to_point_data(pass_cell_data=True)
-        grid = grid.compute_derivative(scalars="U", gradient=False,
-                                       vorticity="vorticity", preference="point")
+        grid = grid.compute_derivative(scalars="U", gradient="gradU",
+                                       vorticity="vorticity", divergence="divU", preference="point")
+        grad = np.asarray(grid.point_data["gradU"]).reshape(-1, 3, 3)
+        strain = 0.5*(grad + grad.transpose(0, 2, 1))
+        grid.point_data["strain"] = np.sqrt(2*np.sum(strain**2, axis=(1, 2)))
         grid = grid.point_data_to_cell_data(pass_point_data=True)
     if field not in grid.cell_data:
         raise KeyError(f"Campos disponibles: {list(grid.cell_data.keys())}")
@@ -86,6 +89,8 @@ def main():
     p.add_argument("--output", type=Path)
     p.add_argument("--csv", type=Path)
     p.add_argument("--cmap", default="viridis")
+    p.add_argument("--edges", action="store_true")
+    p.add_argument("--streamlines", action="store_true", help="Líneas de corriente de U")
     args = p.parse_args()
     grid, time = read_case(args.case, args.time)
     if args.list:
@@ -105,7 +110,14 @@ def main():
         p.error("El corte o contorno está vacío")
     plotter = pv.Plotter(off_screen=args.output is not None)
     plotter.add_mesh(mesh, scalars="display", cmap=args.cmap, clim=args.clim,
-                     scalar_bar_args={"title": args.field})
+                     scalar_bar_args={"title": args.field}, show_edges=args.edges)
+    if args.streamlines:
+        if "U" not in grid.point_data:
+            p.error("Falta U para líneas de corriente")
+        streams = grid.streamlines(vectors="U", n_points=100,
+                                   integration_direction="both", max_steps=2000)
+        if streams.n_cells:
+            plotter.add_mesh(streams, color="white", line_width=1.5)
     plotter.add_text(f"{args.field} | t/iter = {time:g}", font_size=12)
     if args.normal:
         {"x": plotter.view_yz, "y": plotter.view_xz, "z": plotter.view_xy}[args.normal]()

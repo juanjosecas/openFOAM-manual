@@ -21,7 +21,7 @@ python postprocessing/plot_solver_log.py runs/canal/log.simpleFoam
 - animate.py: animación con cámara y escala de color fijas; rango temporal opcional.
 - plot_solver_log.py: residuos y Courant.
 - plot_csv.py y compare_variants.py: datos tabulares.
-- graficos_esfera.py y reference.py: análisis físicos y comparación con referencias analíticas.
+- sphere.py y reference.py: análisis físicos y comparación con referencias analíticas.
 
 Para vectores se representa la magnitud salvo que se indique --component 0/1/2. La vorticidad se lee si existe o se estima desde U; la estimación de PyVista puede diferir del operador discreto de OpenFOAM. La interpolación de celdas a puntos puede suavizar discontinuidades. Las animaciones tienen fps constantes, no necesariamente proporcionales al paso físico. Para el manual histórico, los visualizadores retirados están en Git; usar los comandos anteriores en su lugar. No se ejecutó el código de esta revisión.
 
@@ -48,3 +48,14 @@ python postprocessing/reference.py beam runs/viga --young 2e9 --traction-z -1000
 ```
 
 Los valores son los de los casos base; pasar los parámetros de la simulación real. No se intenta parsear diccionarios OpenFOAM. Diffusion compara con la solución finita de Fick (fuente fija, extremo impermeable, sin convección), heat con el perfil estacionario lineal y beam con Euler–Bernoulli para sección rectangular constante y tracción terminal en z. Los errores MAE, RMSE y máximo absoluto comparan perfiles de sección ponderados por volumen, no todos los centros de celda individualmente. Se necesita una malla estructurada/extruida alineada con x; no son referencias universales. El GIF mantiene fps constantes. Los tres analizadores específicos antiguos fueron retirados. No se ejecutaron los scripts.
+
+## Flujo alrededor de una esfera
+
+```bash
+python postprocessing/sphere.py runs/sphere --diameter 1 --nu 1e-6
+python postprocessing/fields.py runs/sphere --field U --normal z --streamlines
+python postprocessing/fields.py runs/sphere --field divU --normal z
+python postprocessing/fields.py runs/sphere --field U --normal z --edges
+```
+
+sphere.py exporta perfiles adimensionales, Cp superficial y parámetros. Supone esfera centrada en el origen, flujo +x, presión cinemática y patches inlet/outlet/sphere. Los promedios de superficie se ponderan por área. Las derivadas de fields.py se estiman sobre puntos interpolados y no sustituyen el operador discreto de OpenFOAM. Las líneas de corriente se integran en 3D, incluso cuando se muestra un corte. Se retira la generación automática de galerías HTML/PDF; el código anterior permanece en Git. No se ejecutaron estas herramientas.

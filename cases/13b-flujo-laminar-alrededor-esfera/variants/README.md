@@ -6,17 +6,7 @@ Python ni cambiar de solver. Son propuestas de ensayo, no resultados ejecutados.
 
 ## Cómo preparar una variante
 
-1. Conservar el resultado base en `runs/`.
-2. Modificar los números indicados en la plantilla original antes de ejecutar la
-   celda que la copia. Para conservar varias plantillas, copiar primero la carpeta
-   del caso y apuntar `SOURCE_CASE` a esa copia.
-3. Ejecutar la celda completa: crea una carpeta nueva en `runs/`, genera el STL,
-   reconstruye la malla y resuelve. No reutilizar una malla ya refinada.
-4. Actualizar `diametro` y `nu` en `graficar_esfera` si cambiaron. La función
-   obtiene la velocidad de referencia del patch inlet, pero no infiere esos dos
-   parámetros. `rho` solo convierte diferencias de presión a Pa en los gráficos.
-5. Comparar perfiles, presión, malla y convergencia; cambiar una variante por vez.
-   Los cambios coordinados dentro de una variante se indican explícitamente.
+Preparar una copia con scripts/prepare_case.sh, editar los diccionarios de esa copia y ejecutar scripts/run_docker.sh. Para el análisis usar postprocessing/sphere.py con --diameter y --nu coherentes con la corrida. No reutilizar mallas al modificar geometría. Comparar perfiles y convergencia, cambiando una variable por vez.
 
 Base: diámetro D=1 m, radio R=0.5 m, U=1e-5 m/s, nu=1e-6 m²/s, Re=10.
 
@@ -84,14 +74,14 @@ En `system/blockMeshDict`, cambiar solo las subdivisiones del bloque:
 
 Mantener los vértices y los niveles superficiales iguales para esta comparación.
 La variante 48³ ya supera el valor base de `maxLocalCells`; revisar los topes como
-se indica arriba. Aumentar `resolucion=` en los gráficos no sustituye este ensayo.
+se indica arriba. Aumentar el número de muestras de los gráficos no sustituye este ensayo.
 
 ## 5. Caja más grande para estudiar confinamiento
 
 En los vértices de `system/blockMeshDict`, cambiar todas las coordenadas de caja
 `-2`/`2` a `-4`/`4` m y las subdivisiones de `(24 24 24)` a `(48 48 48)`.
 Este cambio coordinado duplica la distancia a las fronteras y mantiene el tamaño
-de celda de fondo: 4/24 = 8/48 m. Conservar el STL de radio 0.5 m y los mismos
+de celda de fondo: 4/24 = 8/48 m. Conservar searchableSphere de radio 0.5 m y los mismos
 niveles de refinamiento. Revisar los topes de celdas como en el ensayo anterior.
 
 `locationInMesh (1.5 0 0)` sigue dentro de la caja y fuera de la esfera: no hace
@@ -100,9 +90,9 @@ cajas. La caja grande es otra prueba, no una garantía de dominio independiente.
 
 ## 6. Esfera más pequeña y mismo Reynolds
 
-En el notebook cambiar el argumento numérico `--radius` de `0.5` a `0.25` m.
+Cambiar radius de 0.5 a 0.25 m en system/snappyHexMeshDict, geometry/sphere.
 En `0/U`, cambiar ambas velocidades de `1e-5` a `2e-5` m/s. Mantener `nu=1e-6`:
-con D=0.5 m se conserva Re=10. En los gráficos usar `diametro=0.5`.
+con D=0.5 m se conserva Re=10. En los gráficos usar `--diameter 0.5`.
 
 La caja conserva sus dimensiones físicas, pero el objeto es relativamente más
 pequeño. También cambia la resolución relativa cerca de la esfera. Para separar

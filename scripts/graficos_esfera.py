@@ -1,1 +1,0 @@
-../postprocessing/graficos_esfera.py

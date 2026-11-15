@@ -1,4 +1,4 @@
-# 13B · Agua alrededor de una esfera STL: flujo laminar estacionario
+# 13B · Agua alrededor de una esfera: flujo laminar estacionario
 
 Continuación del caso de mallado `13-stl-snappy-esfera`. Se conserva el caso
 original y se añaden campos y condiciones de contorno compatibles con
@@ -34,26 +34,14 @@ propuestos todavía no se han ejecutado como un estudio paramétrico.
 
 ## Ejecución
 
-Trabajar en una copia nueva dentro de `runs/`. Desde la raíz del repositorio:
+Desde la raíz del repositorio:
 
-1. Copiar esta carpeta al directorio de ejecución.
-2. Generar el STL con el Python del notebook:
-   `python scripts/preparar_stl.py --radius 0.5 --output RUTA_CASO/constant/triSurface/sphere.stl`.
-3. En el directorio del caso, con OpenFOAM cargado: `bash Allrun`.
-
-En el notebook, ejecutar por separado mediante `scripts.foam_docker.foam_run`:
-
-```text
-surfaceCheck constant/triSurface/sphere.stl
-blockMesh
-checkMesh
-snappyHexMesh -overwrite
-checkMesh
-simpleFoam
+```bash
+bash scripts/prepare_case.sh 13b-flujo-laminar-alrededor-esfera --output runs/sphere
+bash scripts/run_docker.sh runs/sphere
 ```
 
-No combinar esta secuencia con `Allrun` en la misma copia. Crear `esfera-agua.foam`
-para leer los resultados con PyVista. No se necesita `setFields`.
+La configuración actual usa searchableSphere en snappyHexMeshDict; no requiere STL. La ejecución anterior con STL se conserva como antecedente, no como validación del caso actualizado.
 
 ## Validación realizada
 
@@ -68,40 +56,19 @@ los laterales slip producen confinamiento y no se han añadido capas prismática
 Comparar dominio, refinamiento y resultados antes de usar fuerzas o gradientes
 de pared con fines cuantitativos.
 
-## Galería de resultados desde el notebook
+## Postprocesamiento
 
-Instalar `pyvista`, `numpy` y `matplotlib`; `plotly` habilita los HTML 3D.
-La función no usa un renderer OpenGL ni necesita ParaView. Se utiliza el último
-resultado guardado y se infiere U_inf del patch inlet. El centro debe ser el
-origen y el flujo paralelo a +x.
-
-```python
-from scripts.foam_docker import foam_run
-from scripts.graficos_esfera import graficar_esfera
-
-# Volúmenes calculados por OpenFOAM: evita inconsistencias de VTK en celdas wedge.
-foam_run(["postProcess", "-func", "writeCellVolumes", "-latestTime"],
-         case_dir=CASE_DIR, repo_dir=REPO_DIR, timeout=120, verbose=False)
-
-graficos = graficar_esfera(CASE_DIR, diametro=1.0, nu=1e-6, rho=1000.0,
-                           mostrar=True, interactivo=True)
+```bash
+python postprocessing/sphere.py runs/sphere --diameter 1 --nu 1e-6
+python postprocessing/fields.py runs/sphere --field U --normal z --streamlines
+python postprocessing/fields.py runs/sphere --field strain --normal z
+python postprocessing/fields.py runs/sphere --field U --normal z --edges
+python postprocessing/plot_solver_log.py runs/sphere/log.simpleFoam
 ```
 
-Genera 11 figuras PNG/PDF, 3 tablas CSV, 2 HTML 3D y un índice HTML, en una
-carpeta única dentro de `CASE_DIR/plots/`. Guarda también parámetros en JSON.
-`rho=1000 kg/m³` es una densidad elegida para convertir diferencias de presión
-a Pa; no se utiliza en el solver incomprensible. Mantener `nu` y `diametro`
-coherentes con el caso. El interior sólido se enmascara; aumentar `resolucion`
-solo aumenta la densidad del muestreo gráfico. Las derivadas son aproximaciones
-posprocesadas y no sustituyen los diagnósticos de continuidad del solver.
-
-Validación de la galería: generación completa con los resultados de iteración
-171 y comprobación de exportaciones PNG/PDF/CSV/HTML, sin ejecutar de nuevo CFD.
+sphere.py conserva los perfiles axial y transversal, Cp de superficie y parámetros de referencia. Usa promedios de inlet/outlet y bandas angulares ponderados por área, presión cinemática y dimensiones explícitas. No calcula arrastre. La galería histórica PNG/PDF/HTML se retiró; los gráficos generales se generan cuando se necesitan. No se requiere el campo V. Las herramientas nuevas no se han ejecutado.
 
 ## Criterios de extensión del modelo
 
 Se conservaron los diccionarios de la ejecución histórica. El dominio tiene relación ancho/diámetro=4 y bloqueo frontal geométrico pi/64≈4.9%; el arrastre no equivale al de una esfera en dominio ilimitado. Re=10 tampoco corresponde al límite asintótico de Stokes (Cd=24/Re). Antes de usar fuerzas cuantitativas, comparar sensibilidad a tamaño de dominio y refinamiento cerca de la esfera, y separar contribuciones de presión y viscosidad. La verificación histórica no cubre el nuevo lanzador Bash. No se repitió la ejecución.
 
-## Configuración actual
-
-La esfera CFD usa `searchableSphere` nativa (radio 0.5 m); ya no requiere STL ni Python para mallar. Ejecutar `bash scripts/prepare_case.sh 13b-flujo-laminar-alrededor-esfera --output runs/sphere` y `bash scripts/run_docker.sh runs/sphere`. Para el campo V: `bash scripts/run_docker.sh runs/sphere -- postProcess -func writeCellVolumes -latestTime`. Los comandos históricos de notebook y STL anteriores corresponden a la configuración retirada; la ejecución previa no valida la nueva geometría analítica.
