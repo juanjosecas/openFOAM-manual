@@ -1,36 +1,45 @@
-# Tutorial 04 — Chorro de agua en aire
+# Chorro de agua en aire
 
-**Estado:** configuración reconstruida documentalmente; sin ejecución ni validación física. Los archivos de condiciones de contorno y propiedades conservan sus valores originales.
+Un chorro horizontal entra en un dominio inicialmente lleno de aire. El método VOF sigue la interfaz entre ambas fases.
 
-## Preparación y cálculo
+## Configuración base
 
-Desde la raíz del repositorio, con OpenFOAM.com cargado:
+Solver: `interFoam`. Dominio 300 × 200 mm, espesor 1 mm, 9600 celdas. Entrada de altura 10 mm a 1 m/s; agua con nu=1e-6 m²/s, rho=1000 kg/m³; aire con nu=1.5e-5 m²/s, rho=1.2 kg/m³; sigma=0.072 N/m.
+
+## Ejecutar
+
+Desde la raíz del repositorio:
 
 ```bash
-cd cases/04-chorro-de-agua
-foamVersion
-blockMesh
-checkMesh
-foamDictionary system/controlDict -entry application -value
-interFoam
+bash scripts/prepare_case.sh 04-chorro-de-agua --output runs/chorro
+bash scripts/run_docker.sh runs/chorro
 ```
 
-Alternativamente ejecutar `bash Allrun` desde el caso; no mezclar los dos procedimientos. El lanzador crea la malla, la comprueba y registra la ejecución. `Allmesh` ejecuta solamente mallado y `Allclean` protege resultados con previsualización.
+Para modificar el modelo, editar la copia antes de ejecutar. Si cambia geometría o resolución, preparar una copia nueva. Con OpenFOAM cargado se puede usar `bash Allrun` dentro de la copia.
 
-## Decisiones
+## Qué modificar
 
-- `system/controlDict` reconstruido con solver `interFoam`, paso inicial pequeño y límites conservadores de Courant.
-- Se conserva el aire inicial en el dominio y el agua entrante (`alpha.water`). **No se requiere `setFields`** para este escenario.
-- Sin ejecutar el caso, no se puede garantizar compatibilidad completa de las condiciones de contorno y los esquemas con v2406/v2412.
+| Archivo | Entrada | Efecto / prueba sugerida |
+| --- | --- | --- |
+| `0/U` | `waterInlet/value` | Velocidad de entrada: probar (0.8 0 0). |
+| `0/alpha.water` | `internalField, waterInlet/value` | 0 es aire y 1 es agua. Mantener dominio inicialmente en aire y entrada en agua; no necesita setFields. |
+| `0/p_rgh` | `atmosphere` | Presión modificada por gravedad; mantener salida abierta coherente con U y alpha. |
+| `constant/transportProperties` | `water/nu, water/rho, air/nu, air/rho, sigma` | Viscosidades, densidades y tensión superficial; sigma afecta curvatura y fragmentación. |
+| `constant/g` | `value` | Dirección y magnitud de gravedad. |
+| `system/blockMeshDict` | `vertices, blocks` | Altura de entrada y resolución; conservar patches y una celda de espesor. |
+| `system/controlDict` | `deltaT, maxCo, maxAlphaCo, endTime, writeInterval` | Paso inicial 1e-5 s, límites 0.35, duración 20 s, salida cada 0.005 s. Probar endTime=0.5 s antes de una corrida larga. |
 
-[Guía general](../../docs/guia-ejecucion-y-variantes.md)
+La variante animation cambia la escritura a 0.02 s. Prepararla con --variant animation. El Reynolds basado en altura de entrada es 10000; el modelo laminar 2D y cuatro celdas en la entrada no resuelven atomización ni turbulencia tridimensional.
 
-## Ensayos pequeños
+## Resultados
 
-Reducir velocidad de entrada 20 %, reducir `maxCo` a 0.25, o variar `writeInterval`. Probar un parámetro por copia limpia.
+Desde la raíz del repositorio, con las dependencias de [postprocesamiento](../../postprocessing/README.md) instaladas:
 
-## Revisión estática v2406
+```bash
+python postprocessing/fields.py runs/chorro --field alpha.water --normal z --clim 0 1
+python postprocessing/animate.py runs/chorro --field alpha.water --clim 0 1 --output plots/chorro.gif
+python postprocessing/statistics.py runs/chorro --field alpha.water
+python postprocessing/plot_solver_log.py runs/chorro/log.interFoam
+```
 
-Dominio 300 × 200 mm, espesor numérico 1 mm, 9600 celdas. Entrada de 10 mm de altura a 1 m/s: Re basado en altura=10000 para agua; solo cuatro celdas atraviesan la entrada. El modelo laminar y 2D no resuelve turbulencia tridimensional, atomización ni gotas pequeñas. Se conserva la física original. El caudal nominal de agua es 1e-5 m³/s para el espesor de representación; la atmósfera superior y lateral permite salida, por lo que la masa del agua dentro del dominio no tiene que ser constante. Revisar balance de fase, límites alpha.water, Co y resolución de la interfaz. El caso de 20 s puede guardar unas 4000 escrituras (base) o 1000 (animation); para diagnóstico reducir endTime en la copia. No se ha ejecutado.
-
-El paso inicial es 1e-5 s, maxCo y maxAlphaCo son 0.35; el campo inicial de aire se conserva.
+Revisar Courant, límites de alpha y frente del chorro. El agua puede salir por la atmósfera, por lo que su volumen interno no es constante. Sin ejecución comprobada.

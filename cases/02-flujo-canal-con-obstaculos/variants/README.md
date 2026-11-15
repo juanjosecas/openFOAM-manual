@@ -109,10 +109,9 @@ notebook. Los parámetros de `agua-*` cambian la física; `malla-fina` conserva 
 física y cambia la resolución. No atribuir las diferencias entre agua y powerLaw
 únicamente al tipo de interacción superficial.
 
-## Verificación realizada con Docker v2406
+## Antecedentes de ejecución
 
-Se ejecutaron `blockMesh`, `checkMesh` y `simpleFoam` en copias temporales el
-2026-10-22. Todas las mallas confirmaron `Mesh OK.` y todas las recetas finales
+Las configuraciones anteriores se ejecutaron en copias temporales. Todas las mallas confirmaron `Mesh OK.` y todas las recetas finales
 alcanzaron los criterios SIMPLE configurados:
 
 | Receta | Celdas | Iteración de convergencia |

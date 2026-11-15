@@ -1,9 +1,5 @@
-# Sondas y perfiles opcionales
+# Sondas opcionales
 
-Este ejemplo añade un **fragmento de función** de OpenFOAM, pero no modifica automáticamente el archivo `controlDict`.
+Copiar el contenido de [probes.function](probes.function) dentro del bloque `functions { ... }` de system/controlDict de la corrida, antes de resolver. Registra U y p. Editar probeLocations para mover los puntos (metros).
 
-Para habilitarlo, incorporar el contenido de [`probes.function`](probes.function) como una entrada dentro de `functions { ... }` en `system/controlDict`, con el formato y bibliotecas requeridos por la edición instalada. La función `probes` registra `U` y `p` para los puntos seleccionados.
-
-Las sondas están sobre el eje X de la tubería; se usan para analizar pulsación y gradiente axial.
-
-Se recomienda comparar series con `postprocessing/plot_csv.py` después de exportarlas como CSV. Para obtener perfiles continuos en lugar de puntos de sondeo, usar el muestreo disponible del caso o PyVista sobre los resultados. **Ninguna configuración opcional se ha ejecutado ni verificado para v2406/v2412.**
+Puntos sobre el eje x; permiten comparar la respuesta pulsátil a lo largo de la tubería. Los registros de simpleFoam son iteraciones; los de pimpleFoam, tiempos físicos. Las sondas no están activadas por defecto.

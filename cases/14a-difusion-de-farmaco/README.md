@@ -1,96 +1,45 @@
-# 14A — Difusión 1D de una concentración normalizada (modelo biofísico idealizado)
+# Difusión 1D desde un reservorio
 
-**Estado:** archivos completos por revisión estática; **no ejecutado ni validado**. Solver objetivo: `scalarTransportFoam` de **OpenFOAM.com v2406** (comprobar disponibilidad y sintaxis también en v2412). No se requiere ningún archivo de otro caso ni de `scripts/` en la raíz del repositorio.
+Difusión de un soluto hipotético hacia un medio inmóvil, desde una fuente de concentración constante. El campo T representa C/C0 (adimensional), no temperatura.
 
-## Física, magnitudes y límites
+## Configuración base
 
-Representa un soluto hipotético que difunde desde un reservorio mantenido a concentración constante hacia un medio homogéneo en reposo. El solver resuelve el campo escalar **`T = C/C0`**, adimensional: **NO es temperatura**. Se usa `T` porque ese es el nombre que espera `scalarTransportFoam`.
+Solver: `scalarTransportFoam`. Longitud 2 mm, sección 0.1 × 0.1 mm, 200 × 1 × 1 celdas. DT=1e-9 m²/s, U=0, T inicial=0, fuente fija T=1, extremo impermeable. Simulación 200 s, paso 1 s, salida cada 20 s.
 
-$$
-\frac{\partial (C/C_0)}{\partial t} = D\frac{\partial^2(C/C_0)}{\partial x^2},\qquad
-J=-D\frac{\partial C}{\partial x}.
-$$
+## Ejecutar
 
-- Longitud `L=0.002 m` (2 mm), sección transversal ficticia de 0.1 × 0.1 mm, 200 celdas longitudinales, 1 transversal en cada eje; `transverse` es `empty`.
-- Difusividad ilustrativa `DT=1e-9 m²/s`. **No representa un fármaco real** y debe reemplazarse por un dato de soluto, medio y temperatura documentados.
-- Velocidad `U=(0,0,0) m/s`: sin advección ni flujo de solvente.
-- Estado inicial `T=0`; fuente `T=1` (`fixedValue`, reservorio inagotable); extremo opuesto `zeroGradient` (sin salida de masa).
-- Tiempo simulado `0–200 s`, `deltaT=1 s`, escritura cada `20 s`.
-- Escala difusiva `L²/D=4000 s`; la frontera lejana influye menos al principio. La referencia `erfc` supone medio semiinfinito, así que **no es exacta para todo el intervalo** de un dominio finito.
-
-La variable es `C/C0`; para convertir a concentración real, especificar `C0` con unidades y multiplicar los resultados. No representa disolución, depósito agotable, permeabilidad de tejido, metabolismo ni eficacia terapéutica.
-
-## Estructura autocontenida
-
-```text
-14a-difusion-de-farmaco/
-├── 0/T                         # Concentración normalizada inicial y contornos
-├── 0/U                         # Velocidad nula
-├── constant/transportProperties # DT
-├── system/blockMeshDict        # Dominio y patches
-├── system/controlDict          # Solver, tiempo, salidas
-├── system/fvSchemes            # Discretización
-├── system/fvSolution           # Solver lineal
-├── Allmesh
-├── Allrun
-├── Allclean
-├── variants/README.md
-└── README.md
-```
-
-## Procedimiento exacto
-
-Cargar OpenFOAM.com v2406/v2412 en el entorno (en Docker o en host según la instalación) y, desde la raíz del repositorio:
+Desde la raíz del repositorio:
 
 ```bash
-cd cases/14a-difusion-de-farmaco
-foamVersion
-command -v scalarTransportFoam
-bash Allmesh
-# Leer log.checkMesh y confirmar que no hay errores de malla.
-scalarTransportFoam > log.scalarTransportFoam 2>&1
+bash scripts/prepare_case.sh 14a-difusion-de-farmaco --output runs/difusion
+bash scripts/run_docker.sh runs/difusion
 ```
 
-**Alternativa desde una copia limpia**: `bash Allrun` realiza el mallado si no existe y después ejecuta el solver. No ejecutar `Allrun` tras el procedimiento manual sobre resultados existentes. `bash Allclean` muestra lo que se borraría; `bash Allclean --yes` limpia únicamente salidas generadas, **conserva `0/` y diccionarios**.
+Para modificar el modelo, editar los archivos de la copia **antes de ejecutar**. Si se cambia geometría o resolución, preparar una copia nueva. Con OpenFOAM cargado también se puede ejecutar `bash Allrun` dentro de la copia.
 
-## Exportación y gráficos
+## Qué modificar
 
-Con resultados ya generados y Python con `numpy`, `matplotlib`, `pyvista`, `imageio`:
+| Archivo | Entrada | Efecto / prueba sugerida |
+| --- | --- | --- |
+| `0/T` | `internalField, source/value` | Concentración inicial y de fuente. Probar fuente 0.5; ajustar --source del análisis. |
+| `constant/transportProperties` | `DT` | Difusividad. Probar 5e-10 m²/s; ajustar --diffusivity del análisis. |
+| `0/U` | `internalField y contornos` | Mantener cero para difusión pura; advección invalida la referencia. |
+| `system/blockMeshDict` | `vertices, blocks` | Longitud y resolución. Probar 400 × 1 × 1 celdas sin cambiar L. |
+| `system/controlDict` | `deltaT, endTime, writeInterval` | Resolución temporal, duración y frecuencia de salida. Probar deltaT=0.5 s. |
+| `system/fvSchemes` | `ddtSchemes, laplacianSchemes` | Discretización temporal y difusión. |
 
-```bash
-python3 -m pip install numpy matplotlib pyvista imageio
-python3 ../../postprocessing/reference.py diffusion . --diffusivity 1e-9 --gif --output plots/difusion
-# CSV: plots/difusion.csv
-# PNG: plots/difusion.png
-# GIF: plots/difusion.gif
-foamToVTK
-```
+La evolución obedece ∂T/∂t = DT·∂²T/∂x². La escala difusiva L²/DT=4000 s. El análisis usa la solución de dominio finito con extremo de flujo nulo; la aproximación erfc es válida al comienzo. Para concentración real multiplicar T por C0. No implica permeabilidad, disolución ni metabolismo de un fármaco real.
 
-El script lee **los resultados del propio caso** con PyVista, calcula la solución de difusión en dominio finito con extremo impermeable y escribe CSV, PNG y GIF. **No ejecuta el solver**. `foamToVTK` exporta a `VTK/` para ParaView u otros programas. Los gráficos solo se crean si existen tiempos simulados. Pasar el valor de DT vigente con --diffusivity; no se interpreta automáticamente el diccionario.
+`system/fvSchemes` controla la discretización y `system/fvSolution` los solvers lineales y el acoplamiento; no confundir tolerancia numérica con precisión física.
 
-## Variaciones
+## Resultados
 
-Ver [variants/README.md](variants/README.md): cambiar `DT`, el número de celdas o la concentración normalizada de la fuente. Hacer **una modificación por copia**, regenerar malla si cambia `blockMeshDict`, y comparar perfiles y error.
-
-## URL de origen y compatibilidad
-
-- **Solver y ecuación originales:** https://doc.openfoam.com/2212/tools/processing/solvers/rtm/basic/scalarTransportFoam/
-- **Código de `scalarTransportFoam` de OpenFOAM.com v2406:** https://api.openfoam.com/2406/dir_000015_000503.html
-- **Fundamentos de difusión:** https://openfoam.es/tutoriales/conduccion-transitoria-pared-laplacianfoam
-- **Investigación de biofísica del manual:** https://github.com/juanjosecas/openFOAM-manual/blob/main/docs/propuesta-difusion-farmacos.md
-
-La configuración y la geometría de este ejemplo son **elaboración propia**, inspiradas en la ecuación de transporte escalar documentada, no una copia de un tutorial biomédico. OpenFOAM Foundation, foam-extend y OpenFOAM.com pueden diferir en estructura y modelos. No se verificó la ejecución de estos diccionarios en v2406/v2412; el primer intento debe revisar especialmente `transportProperties`, `SIMPLE` y las condiciones `empty`.
-
-## Criterio de revisión
-
-DT se expresa con dimensiones explícitas de difusividad [m²/s]. El problema conserva U=0, fuente fija y extremo impermeable. Comparar C/C0 con la solución finita; erfc es el límite de tiempos cortos; verificar 0≤T≤1, acumulación monotónica de masa y sensibilidad a deltaT y malla. El campo T no representa temperatura. No se ha ejecutado esta revisión.
-
-## Referencia analítica común
-
-El análisis se trasladó a `postprocessing/reference.py` del repositorio. Desde la raíz:
+Desde la raíz, con las dependencias de [postprocesamiento](../../postprocessing/README.md) instaladas:
 
 ```bash
 python postprocessing/reference.py diffusion runs/difusion --diffusivity 1e-9 --gif --output plots/difusion
+python postprocessing/statistics.py runs/difusion --field T
+python postprocessing/plot_solver_log.py runs/difusion/log.scalarTransportFoam
 ```
 
-Adaptar la ruta y los parámetros físicos a la corrida. La longitud y sección se obtienen de los límites de la malla; se promedian los centros de cada sección por volumen. Esta comparación supone la geometría y condiciones de contorno descritas arriba. Exporta plots/difusion.csv, un CSV de errores y una figura del último estado seleccionado. Sin ejecución ni validación nueva.
+Comprobar 0≤T≤1, acumulación monotónica y error del perfil respecto de la solución analítica. Configuración revisada estáticamente, sin nueva corrida.

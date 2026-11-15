@@ -1,55 +1,43 @@
-# 23 — Flexión estática de viga empotrada 3D
+# Flexión de una viga empotrada
 
-**Estado: archivos completos por revisión estática; no ejecutado ni validado.** Solver: solidDisplacementFoam de OpenFOAM.com v2406/v2412 (disponibilidad de binario por comprobar).
+Una viga rectangular, fija por un extremo, se deforma bajo una tracción transversal aplicada en la cara opuesta. El campo D es desplazamiento en metros.
 
-Viga rectangular 3D: L=0.1 m en x, b=0.01 m en y, h=0.01 m en z; 40×4×4 celdas. Empotramiento x=0, desplazamiento D=(0,0,0) m. Tracción en la cara x=L: (0,0,-10000) Pa; las demás caras son libres de tracción. Área terminal 1e-4 m², fuerza equivalente Fz=-1 N. E=2e9 Pa, nu=0.3, rho=1200 kg/m³. Valores didácticos, no material calibrado.
+## Configuración base
 
-$$
-I_y=\frac{bh^3}{12}=8.333\cdot10^{-10}\ \mathrm{m}^4,\qquad
-D_z(x)\simeq\frac{F_z x^2(3L-x)}{6EI_y},\qquad
-D_z(L)\simeq-0.0002\ \mathrm{m}.
-$$
+Solver: `solidDisplacementFoam`. Longitud 100 mm, sección 10 × 10 mm, 40 × 4 × 4 celdas. E=2 GPa, coeficiente de Poisson 0.3, rho=1200 kg/m³; tracción terminal −10000 Pa en z, fuerza total −1 N.
 
-El resultado analítico es **orientativo**: Euler–Bernoulli supone viga esbelta y carga puntual equivalente; el caso aplica tracción distribuida en la cara, con malla gruesa. No se exige precisión. La flecha esperada de 0.2 mm es pequeña frente a h=10 mm. No hay gravedad, plasticidad, contacto ni esfuerzos térmicos.
+## Ejecutar
 
-**Chequeos estáticos:** campo D en metros, material en mechanicalProperties (OpenFOAM.com, no physicalProperties de Foundation reciente), thermalStress no, condiciones de tracción libre en caras no cargadas, y d2dt2Schemes=steadyState. Las 120 unidades de endTime son **iteraciones pseudo-temporales, no segundos**. La convergencia no se ha comprobado.
-
-## Ejecución
-
-Con OpenFOAM.com cargado, desde la raíz del repositorio:
-
-~~~bash
-cd cases/23-flexion-de-viga
-foamVersion
-command -v solidDisplacementFoam
-bash Allmesh
-bash Allrun --solve-only
-tail -n 50 log.solidDisplacementFoam
-foamToVTK
-python3 ../../postprocessing/reference.py beam . --young 2e9 --traction-z -10000 --output plots/flexion
-bash Allclean
-~~~
-
-Allrun puede mallar automáticamente en una copia limpia. Allclean solo previsualiza; para borrar salidas, ejecutar bash Allclean --yes. Para postproceso se requieren numpy, matplotlib y pyvista. Los resultados CSV (plots/flexion.csv) y PNG (plots/flexion.png) se generan **solo tras correr el solver**. No hay GIF porque el modelo es estático. Consultar variants/README.md para tres cambios de un solo parámetro. El caso preparado incluye sus entradas físicas y el runner compartido.
-
-## Fuentes originales
-
-- [Solver de elasticidad, API oficial v2412](https://api.openfoam.com/2412/solidDisplacementFoam_8C.html).
-- [Tutorial oficial de análisis de tensiones, placa con agujero](https://www.openfoam.com/documentation/tutorial-guide/5-stress-analysis/5.1-stress-analysis-of-a-plate-with-a-hole).
-- [Referencia conceptual de viga con carga, OpenFOAM Foundation 13](https://github.com/OpenFOAM/OpenFOAM-13/tree/master/tutorials/solidDisplacement/beamEndLoad) — **distribución incompatible; no copiar sus diccionarios**.
-
-Geometría y archivos: elaboración didáctica propia. No se ha ejecutado OpenFOAM.
-
-## Revisión estática
-
-Se conservan los diccionarios de elasticidad. El esfuerzo aplicado es 10 kPa sobre el extremo, fuerza total 1 N; la referencia Euler–Bernoulli de desplazamiento en la punta es -0.2 mm. Evaluar además convergencia del desplazamiento con iteraciones y refinamiento transversal: la malla base tiene solo 4×4 celdas en la sección. La comparación debe considerar que los centros de celda no coinciden con la cara terminal. Sin prueba de ejecución del solver ni validación de tensiones.
-
-## Referencia analítica común
-
-El análisis se trasladó a `postprocessing/reference.py` del repositorio. Desde la raíz:
+Desde la raíz del repositorio:
 
 ```bash
-python postprocessing/reference.py beam runs/flexion --young 2e9 --traction-z -10000 --output plots/flexion
+bash scripts/prepare_case.sh 23-flexion-de-viga --output runs/viga
+bash scripts/run_docker.sh runs/viga
 ```
 
-Adaptar la ruta y los parámetros físicos a la corrida. La longitud y sección se obtienen de los límites de la malla; se promedian los centros de cada sección por volumen. Esta comparación supone la geometría y condiciones de contorno descritas arriba. Exporta plots/flexion.csv, un CSV de errores y una figura del último estado seleccionado. Sin ejecución ni validación nueva.
+Para modificar el modelo, editar la copia antes de ejecutar. Si cambia geometría o resolución, preparar una copia nueva. Con OpenFOAM cargado se puede usar `bash Allrun` dentro de la copia.
+
+## Qué modificar
+
+| Archivo | Entrada | Efecto / prueba sugerida |
+| --- | --- | --- |
+| `0/D` | `extremoCargado/traction` | Carga superficial en Pa; probar (0 0 -5000), que reduce la fuerza a la mitad. |
+| `0/D` | `empotramiento/value` | Desplazamiento fijo; conservar cero para una viga empotrada. |
+| `constant/mechanicalProperties` | `E/value, nu/value, rho/value` | Rigidez, Poisson y densidad; aumentar E reduce flexión. nu aquí es adimensional, no viscosidad. |
+| `constant/thermalProperties` | `thermalStress` | Acoplamiento térmico; desactivado en este caso. |
+| `system/blockMeshDict` | `vertices, blocks` | Longitud y sección; refinar de (40 4 4) a (80 8 8). |
+| `system/controlDict, system/fvSolution` | `endTime, tolerancias` | Iteraciones pseudo-temporales y convergencia; no segundos físicos. |
+
+Para una sección rectangular, I=b·h³/12 y la flecha terminal de Euler–Bernoulli es F·L³/(3·E·I), aproximadamente −0.2 mm. La referencia supone viga esbelta y fuerza terminal equivalente; los centros de celda no coinciden con la cara terminal.
+
+## Resultados
+
+Desde la raíz del repositorio, con las dependencias de [postprocesamiento](../../postprocessing/README.md) instaladas:
+
+```bash
+python postprocessing/reference.py beam runs/viga --young 2e9 --traction-z -10000 --output plots/flexion
+python postprocessing/fields.py runs/viga --field D --component 2
+python postprocessing/plot_solver_log.py runs/viga/log.solidDisplacementFoam
+```
+
+Comparar el perfil de desplazamiento, error y sensibilidad a resolución transversal. Ajustar parámetros de referencia si cambia material o carga. Sin ejecución comprobada.

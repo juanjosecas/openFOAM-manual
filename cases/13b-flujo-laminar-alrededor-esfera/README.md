@@ -1,74 +1,47 @@
-# 13B · Agua alrededor de una esfera: flujo laminar estacionario
+# Flujo laminar alrededor de una esfera
 
-Continuación del caso de mallado `13-stl-snappy-esfera`. Se conserva el caso
-original y se añaden campos y condiciones de contorno compatibles con
-OpenFOAM.com v2406. El dominio está completamente lleno de agua: no hay aire,
-interfaz ni `alpha.water`.
+Flujo estacionario de agua alrededor de una esfera fija, para analizar estela, presión y sensibilidad a confinamiento y malla.
 
-## Configuración física y numérica
+## Configuración base
 
-- Esfera de radio 0,5 m y diámetro 1 m, centrada en el origen.
-- Caja de fondo: [-2, 2] m en los tres ejes; 24 × 24 × 24 celdas base.
-- Entrada en x = -2 m: U = (1e-5, 0, 0) m/s.
-- Salida en x = 2 m: presión cinemática relativa p = 0 m²/s².
-- Laterales: `slip` (velocidad normal nula, sin esfuerzo tangencial).
-- Esfera: `noSlip`.
-- Agua newtoniana idealizada, viscosidad cinemática nu = 1e-6 m²/s.
-- Reynolds basado en diámetro: U D / nu = 10.
-- `simpleFoam`, estado estacionario, modelo `laminar`.
-- Máximo de 1500 iteraciones; criterios SIMPLE: p < 1e-6, U < 1e-7.
-- Escritura cada 100 iteraciones, conservando dos escrituras; OpenFOAM
-  también escribe la solución al detectar convergencia.
+Solver: `simpleFoam`. Radio 0.5 m, caja de −2 a 2 m en cada eje, 24³ celdas de fondo. Entrada 1e-5 m/s; nu=1e-6 m²/s; Re=10. Esfera noSlip y laterales slip. Superficie analítica searchableSphere.
 
-`p` es presión cinemática: para una diferencia de presión en Pa, multiplicar
-la diferencia de p por la densidad elegida para el agua. Los directorios
-numéricos representan iteraciones, no segundos físicos.
-
-## Parámetros comentados y variantes
-
-Los diccionarios incluyen comentarios sobre unidades, significado de las
-entradas y cambios numéricos coordinados. Los valores activos del caso base
-se conservan. Consultar [variantes numéricas](variants/README.md) para ensayos
-de Reynolds, viscosidad, resolución, confinamiento y convergencia. Los ejemplos
-propuestos todavía no se han ejecutado como un estudio paramétrico.
-
-## Ejecución
+## Ejecutar
 
 Desde la raíz del repositorio:
 
 ```bash
-bash scripts/prepare_case.sh 13b-flujo-laminar-alrededor-esfera --output runs/sphere
-bash scripts/run_docker.sh runs/sphere
+bash scripts/prepare_case.sh 13b-flujo-laminar-alrededor-esfera --output runs/esfera
+bash scripts/run_docker.sh runs/esfera
 ```
 
-La configuración actual usa searchableSphere en snappyHexMeshDict; no requiere STL. La ejecución anterior con STL se conserva como antecedente, no como validación del caso actualizado.
+Para modificar el modelo, editar los archivos de la copia **antes de ejecutar**. Si se cambia geometría o resolución, preparar una copia nueva. Con OpenFOAM cargado también se puede ejecutar `bash Allrun` dentro de la copia.
 
-## Validación realizada
+## Qué modificar
 
-El 2026-10-22, en Docker `opencfd/openfoam-run:2406`, se ejecutó la secuencia
-completa en una copia temporal con el STL de esfera de 4416 triángulos generado
-previamente por `preparar_stl.py`. Ambas comprobaciones de malla confirmaron
-`Mesh OK.` y SIMPLE alcanzó los criterios de convergencia en 171 iteraciones.
+| Archivo | Entrada | Efecto / prueba sugerida |
+| --- | --- | --- |
+| `0/U` | `inlet/value, internalField` | Velocidad; probar 5e-6 o 5e-5 m/s (Re=5 o 50). |
+| `constant/transportProperties` | `nu` | Viscosidad cinemática; cambia Re. |
+| `system/snappyHexMeshDict` | `geometry/sphere/radius` | Radio; si se cambia actualizar diámetro del análisis. |
+| `system/snappyHexMeshDict` | `refinementSurfaces/sphere/level` | Refinamiento local; probar (2 2) en vez de (1 2), revisar maxGlobalCells. |
+| `system/blockMeshDict` | `vertices, blocks` | Confinamiento y refinamiento global; comparar caja ±4 m con 48³. |
+| `system/snappyHexMeshDict` | `locationInMesh` | Punto dentro del fluido y fuera de la esfera; conservar coherencia al cambiar dominio. |
+| `system/controlDict` | `endTime, writeInterval, purgeWrite` | 1500 iteraciones, escritura cada 100, conserva dos estados. |
 
-Es una verificación de ejecución y convergencia numérica, no una validación
-física. La caja es pequeña para representar una esfera en un medio ilimitado,
-los laterales slip producen confinamiento y no se han añadido capas prismáticas.
-Comparar dominio, refinamiento y resultados antes de usar fuerzas o gradientes
-de pared con fines cuantitativos.
+Más ensayos en [variantes](variants/README.md). El bloqueo transversal es aproximadamente 4.9 % y no hay capas prismáticas. Re=10 está fuera del límite asintótico de Stokes; no usar Cd=24/Re como validación exacta.
 
-## Postprocesamiento
+`system/fvSchemes` controla la discretización y `system/fvSolution` los solvers lineales y el acoplamiento; no confundir tolerancia numérica con precisión física.
+
+## Resultados
+
+Desde la raíz, con las dependencias de [postprocesamiento](../../postprocessing/README.md) instaladas:
 
 ```bash
-python postprocessing/sphere.py runs/sphere --diameter 1 --nu 1e-6
-python postprocessing/fields.py runs/sphere --field U --normal z --streamlines
-python postprocessing/fields.py runs/sphere --field strain --normal z
-python postprocessing/fields.py runs/sphere --field U --normal z --edges
-python postprocessing/plot_solver_log.py runs/sphere/log.simpleFoam
+python postprocessing/sphere.py runs/esfera --diameter 1 --nu 1e-6
+python postprocessing/fields.py runs/esfera --field U --normal z --streamlines
+python postprocessing/fields.py runs/esfera --field U --normal z --edges
+python postprocessing/plot_solver_log.py runs/esfera/log.simpleFoam
 ```
 
-sphere.py conserva los perfiles axial y transversal, Cp de superficie y parámetros de referencia. Usa promedios de inlet/outlet y bandas angulares ponderados por área, presión cinemática y dimensiones explícitas. No calcula arrastre. La galería histórica PNG/PDF/HTML se retiró; los gráficos generales se generan cuando se necesitan. No se requiere el campo V. Las herramientas nuevas no se han ejecutado.
-
-## Criterios de extensión del modelo
-
-Se conservaron los diccionarios de la ejecución histórica. El dominio tiene relación ancho/diámetro=4 y bloqueo frontal geométrico pi/64≈4.9%; el arrastre no equivale al de una esfera en dominio ilimitado. Re=10 tampoco corresponde al límite asintótico de Stokes (Cd=24/Re). Antes de usar fuerzas cuantitativas, comparar sensibilidad a tamaño de dominio y refinamiento cerca de la esfera, y separar contribuciones de presión y viscosidad. La verificación histórica no cubre el nuevo lanzador Bash. No se repitió la ejecución.
-
+Comparar perfiles adimensionales, Cp superficial y convergencia de malla y dominio. La configuración anterior con STL convergió en 171 iteraciones; la geometría analítica actual no fue reejecutada.

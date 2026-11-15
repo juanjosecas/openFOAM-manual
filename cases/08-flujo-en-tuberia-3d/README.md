@@ -1,66 +1,46 @@
-# Tutorial 08. Flujo transitorio en una tubería cilíndrica 3D
+# Flujo pulsátil en una tubería 3D
 
-**Estado:** Revisión estática; **sin ejecución comprobada**.
+Una tubería rígida recibe un flujo laminar cuya velocidad de entrada cambia con el tiempo. Interesa estudiar la respuesta del perfil radial y la presión a la pulsación.
 
-## Archivos presentes
+## Configuración base
 
-- `0/U`
-- `0/p`
-- `constant/transportProperties`
-- `constant/turbulenceProperties`
-- `system/blockMeshDict`
-- `system/controlDict`
-- `system/fvSchemes`
-- `system/fvSolution`
+Solver: `pimpleFoam`. Longitud 0.12 m, radio 0.01 m, nu=1e-4 m²/s, 12288 celdas en cinco bloques. Velocidad máxima 0.02 m/s (Re=4), duración 2 s.
 
-## Ejecución
+## Ejecutar
 
-Desde esta carpeta y con OpenFOAM cargado: `./Allrun`. Conserva logs y no elimina resultados previos.
-
-
-## Preparación y ejecución
-
-Desde la raíz del repositorio, con el entorno OpenFOAM cargado:
+Desde la raíz del repositorio:
 
 ```bash
-cd cases/08-flujo-en-tuberia-3d
-foamVersion
-blockMesh 2>&1 | tee log.blockMesh
-checkMesh 2>&1 | tee log.checkMesh
-foamDictionary system/controlDict -entry application -value
-pimpleFoam 2>&1 | tee log.pimpleFoam
+bash scripts/prepare_case.sh 08-flujo-en-tuberia-3d --output runs/tuberia
+bash scripts/run_docker.sh runs/tuberia
 ```
 
-**Estado:** Comandos documentados, no comprobados mediante ejecución. Alternativamente, ejecutar `bash Allrun` desde la carpeta del caso; no combinar los dos procedimientos.
+Para modificar el modelo, editar los archivos de la copia **antes de ejecutar**. Si se cambia geometría o resolución, preparar una copia nueva. Con OpenFOAM cargado también se puede ejecutar `bash Allrun` dentro de la copia.
 
-## Variaciones pequeñas
+## Qué modificar
 
-Reducir máximos de velocidad pulsátil 0.020 a 0.015 m/s; reducir maxCo 0.5 a 0.25; variar writeInterval 0.01 a 0.02 s.
+| Archivo | Entrada | Efecto / prueba sugerida |
+| --- | --- | --- |
+| `0/U` | `inlet/uniformValue table` | Pares tiempo (s), vector velocidad (m/s); cambiar máximos 0.020 a 0.015 o modificar los instantes. |
+| `constant/transportProperties` | `nu` | Controla difusión viscosa y Reynolds. |
+| `system/blockMeshDict` | `vertices, arcs, blocks` | Longitud, radio y resolución de la sección circular; conservar arcos e interfaces. |
+| `system/controlDict` | `deltaT, maxCo, maxDeltaT` | Paso inicial 0.001 s, Co máximo 0.5 y techo 0.005 s; reducir maxCo a 0.25. |
+| `system/controlDict` | `endTime, writeInterval` | 2 s y salida cada 0.01 s; duplicar intervalo reduce archivos, no aumenta paso de cálculo. |
+| `system/fvSolution` | `PIMPLE` | Correcciones de presión y velocidad por paso. |
 
-Modificar **una sola variable** en cada copia del caso y conservar el original. Si cambia `blockMeshDict`, regenerar la malla; no reutilizar resultados antiguos. Los casos `simpleFoam` son estacionarios y sus iteraciones no representan tiempo físico. Consultar también la [guía general](../../docs/guia-ejecucion-y-variantes.md).
+La tabla prescribe velocidad uniforme en la sección de entrada, no un perfil parabólico. Hagen–Poiseuille no es una solución exacta para todo el arranque pulsátil. Al extender endTime, extender también la tabla si se quiere mantener la pulsación.
 
+`system/fvSchemes` controla la discretización y `system/fvSolution` los solvers lineales y el acoplamiento; no confundir tolerancia numérica con precisión física.
 
-## Gráficos de propiedades y diagnóstico
+## Resultados
 
-Consultar [Gráficos y propiedades](../../docs/graficos-y-propiedades.md) para seleccionar campos físicos y generar perfiles a partir de CSV exportados. Si hay un archivo `log.NOMBRE_SOLVER`, ejecutar desde la raíz del repositorio:
+Desde la raíz, con las dependencias de [postprocesamiento](../../postprocessing/README.md) instaladas:
 
 ```bash
-python postprocessing/plot_solver_log.py cases/08-flujo-en-tuberia-3d/log.NOMBRE_SOLVER --output plots/08-flujo-en-tuberia-3d
+python postprocessing/fields.py runs/tuberia --field U --normal z
+python postprocessing/animate.py runs/tuberia --field U --normal z --output plots/tuberia.gif
+python postprocessing/statistics.py runs/tuberia --patch inlet outlet
+python postprocessing/plot_solver_log.py runs/tuberia/log.pimpleFoam
 ```
 
-Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `postprocessing/plot_csv.py` sobre CSV con columnas adecuadas. El caso 09 incluye `system/sampleDict`.
-
-## Parámetros físicos y control numérico
-
-| Parámetro | Valor |
-| --- | --- |
-| Longitud | 0.12 m |
-| Radio | 0.01 m |
-| Viscosidad cinemática | 1e-4 m²/s |
-| Velocidad máxima de entrada | 0.02 m/s |
-| Reynolds máximo (diámetro) | 4 |
-| Malla | 12288 celdas, 5 bloques |
-| Solver | pimpleFoam, laminar |
-| Duración | 2 s |
-
-La entrada es espacialmente uniforme y temporalmente variable mediante una tabla. El caso no equivale a una tubería estacionaria plenamente desarrollada: no usar Hagen–Poiseuille como referencia exacta de todo el transitorio. Revisar conservación de caudal, perfil radial y Co. Se conservaron los diccionarios; revisión estática, sin ejecución.
+Comparar caudal, perfil radial, desfase temporal y Courant. Configuración revisada estáticamente, sin nueva corrida.

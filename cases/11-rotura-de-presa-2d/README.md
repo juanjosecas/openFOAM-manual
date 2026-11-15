@@ -1,74 +1,46 @@
-# Tutorial 11 · Rotura de presa 2D
+# Rotura de presa en 2D
 
-**Estado:** Revisión estática; **sin ejecución comprobada**.
+Una columna de agua cae por gravedad, se desplaza sobre el fondo y alcanza un obstáculo. Se utiliza VOF para seguir el frente de agua.
 
-## Archivos presentes
+## Configuración base
 
-- `0/U`
-- `0/alpha.water`
-- `0/p`
-- `0/p_rgh`
-- `constant/dynamicMeshDict`
-- `constant/g`
-- `constant/transportProperties`
-- `constant/turbulenceProperties`
-- `system/blockMeshDict`
-- `system/controlDict`
-- `system/decomposeParDict`
-- `system/fvSchemes`
-- `system/fvSolution`
-- `system/probesDict`
-- `system/setFieldsDict`
+Solver: `interFoam`. Columna inicial de 146.1 × 292 mm, espesor 14.6 mm; volumen geométrico aproximado 0.623 L. Inicialización con setFields; malla fija.
 
-**Advertencia:** requiere comprobar migración desde versiones anteriores y cualquier preprocesamiento adicional antes de ejecutar.
+## Ejecutar
 
-## Ejecución
-
-Se proporciona Allrun mediante el runner compartido. Pendiente de ejecución.
-
-
-## Preparación y ejecución
-
-Desde la raíz del repositorio, con el entorno OpenFOAM cargado:
+Desde la raíz del repositorio:
 
 ```bash
-cd cases/11-rotura-de-presa-2d
-foamVersion
-blockMesh 2>&1 | tee log.blockMesh
-checkMesh 2>&1 | tee log.checkMesh
-setFields 2>&1 | tee log.setFields
-foamDictionary system/controlDict -entry application -value
-interFoam 2>&1 | tee log.interFoam
+bash scripts/prepare_case.sh 11-rotura-de-presa-2d --output runs/presa
+bash scripts/run_docker.sh runs/presa
 ```
 
-**Estado:** Caso heredado: revisar compatibilidad con OpenFOAM.com antes de ejecutar. El nuevo `Allrun` no se ha ejecutado.
+Para modificar el modelo, editar la copia antes de ejecutar. Si cambia geometría o resolución, preparar una copia nueva. Con OpenFOAM cargado se puede usar `bash Allrun` dentro de la copia.
 
-## Variaciones pequeñas
+## Qué modificar
 
-Reducir maxCo; variar writeInterval; modificar ligeramente la columna inicial en setFieldsDict y volver a ejecutar setFields.
+| Archivo | Entrada | Efecto / prueba sugerida |
+| --- | --- | --- |
+| `system/setFieldsDict` | `regions/boxToCell/box` | Ancho y altura iniciales. Probar extremo superior (0.1461 0.25 1); la caja debe cubrir el espesor. |
+| `0/alpha.water` | `internalField` | Aire inicial (0); setFields asigna 1 a la columna. |
+| `0/U, 0/p_rgh` | `internalField, boundaryField` | Reposo inicial, paredes impermeables y atmósfera abierta. |
+| `constant/g` | `value` | Gravedad; determina aceleración de la caída. |
+| `constant/transportProperties` | `nu, rho, sigma de las fases` | Viscosidad, densidad y tensión superficial. |
+| `system/blockMeshDict` | `vertices, blocks` | Dominio, obstáculo y resolución; conservar compatibilidad de bloques. |
+| `system/controlDict` | `maxCo, maxAlphaCo, maxDeltaT, writeInterval` | Límites 0.5, paso máximo 0.005 s; reducir a 0.25 para comparar integración. |
+| `system/probesDict` | `probeLocations` | Sondas internas de velocidad y presión; requieren invocación explícita. |
 
-Modificar **una sola variable** en cada copia del caso y conservar el original. Si cambia `blockMeshDict`, regenerar la malla; no reutilizar resultados antiguos. Los casos `simpleFoam` son estacionarios y sus iteraciones no representan tiempo físico. Consultar también la [guía general](../../docs/guia-ejecucion-y-variantes.md).
+Allrun realiza setFields después del mallado. La variante animation guarda estados con mayor frecuencia; --variant animation. El volumen discretizado inicial depende de los centros de celda seleccionados.
 
+## Resultados
 
-## Gráficos de propiedades y diagnóstico
-
-Consultar [Gráficos y propiedades](../../docs/graficos-y-propiedades.md) para seleccionar campos físicos y generar perfiles a partir de CSV exportados. Si hay un archivo `log.NOMBRE_SOLVER`, ejecutar desde la raíz del repositorio:
+Desde la raíz del repositorio, con las dependencias de [postprocesamiento](../../postprocessing/README.md) instaladas:
 
 ```bash
-python postprocessing/plot_solver_log.py cases/11-rotura-de-presa-2d/log.NOMBRE_SOLVER --output plots/11-rotura-de-presa-2d
+python postprocessing/fields.py runs/presa --field alpha.water --normal z --clim 0 1
+python postprocessing/animate.py runs/presa --field alpha.water --clim 0 1 --output plots/presa.gif
+python postprocessing/statistics.py runs/presa --field alpha.water
+python postprocessing/plot_solver_log.py runs/presa/log.interFoam
 ```
 
-Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `postprocessing/plot_csv.py` sobre CSV con columnas adecuadas. El caso 09 incluye `system/sampleDict`.
-
-## Revisión estática v2406
-
-Se reemplazó la lista inicial de 2268 fracciones de fase por alpha.water uniforme 0; setFields define la columna después del mallado. El dominio y obstáculo se conservan. La columna nominal mide 0.1461 × 0.292 m, con espesor 0.0146 m (volumen geométrico ≈ 0.000623 m³; el volumen discretizado depende de los centros de celda seleccionados). Se declara defaultFaces empty explícitamente, se actualizan las bibliotecas de los function objects, se elimina el tipo duplicado cellSource y se usa regionType all. Se utiliza interfaceCompression y un límite máximo de paso 0.005 s con Co y alphaCo máximos de 0.5 en base y animación. Estos son cambios numéricos conservadores propuestos, no estabilidad demostrada. Las sondas se desplazaron al interior del fluido; probesDict no se ejecuta automáticamente. Se conservan 0/p y demás archivos heredados mientras se verifica compatibilidad.
-
-Preparar una copia limpia y ejecutar:
-
-```bash
-bash scripts/prepare_case.sh 11-rotura-de-presa-2d --output runs/dambreak
-bash scripts/run_docker.sh runs/dambreak
-```
-
-Verificar balance de agua mediante integral de alpha.water, límites de fracción de fase, Courant y posición del frente. Considerar cualquier flujo de agua por la atmósfera al evaluar conservación. No se ha ejecutado.
+Revisar posición del frente, integral de alpha.water y Courant. Considerar salida por la atmósfera en el balance. Configuración actual sin nueva ejecución.

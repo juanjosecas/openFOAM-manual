@@ -1,29 +1,33 @@
-# Biblioteca operativa de casos
+# Casos científicos
 
-El manual principal queda intacto. Consultar los directorios cases/, visual_cases/, experimental_cases/ y examples/.
+Cada caso incluye sus diccionarios físicos y numéricos, instrucciones y lanzadores. Las variantes cambian solo los archivos necesarios sobre una copia del caso base.
+
+## Flujo de trabajo
+
+Desde la raíz:
 
 ```bash
 bash scripts/prepare_case.sh --list
 bash scripts/prepare_case.sh 14a-difusion-de-farmaco --output runs/difusion
-cd runs/difusion
-openfoam -- bash Allrun
+# Editar los diccionarios en runs/difusion antes de calcular.
+bash scripts/run_docker.sh runs/difusion
 ```
 
-Variantes de diccionarios: `--variant transient`, `--variant animation` o `--variant steady` según el caso. Los resultados se escriben en la copia, no en el original. Para recetas paramétricas del canal con obstáculos, preparar una copia base y ejecutar desde ella `openfoam -- bash ...` con la receta copiada a la corrida:
+Usar `--variant NOMBRE` al preparar si existe una variante con diccionarios. Los scripts de recetas del caso 02 se copian y se aplican antes del mallado; ver su README.
 
-```bash
-# Desde la raíz del repositorio
-bash scripts/prepare_case.sh 02-flujo-canal-con-obstaculos --output runs/canal
-cp cases/02-flujo-canal-con-obstaculos/variants/agua-estela.sh runs/canal/
-cd runs/canal
-openfoam -- bash agua-estela.sh
-openfoam -- bash Allrun
-```
+`--mesh` crea la malla sin resolver; `--solve-only` usa una malla existente. Dentro de una copia, `bash Allclean` previsualiza la limpieza y `bash Allclean --yes` borra salidas generadas (no restaura campos de 0/ alterados por setFields). Para ensayos independientes, preferir copias nuevas.
 
-No ejecutar recetas dos veces sobre la misma copia. No se requiere Python para preparar y ejecutar casos con blockMesh. La esfera CFD utiliza searchableSphere; el canguro requiere Gmsh CLI en el entorno de mallado. Python se reserva para análisis y visualización. Las antiguas interfaces foam_docker.py, prepare_case.py y variantes_canal.py se retiraron. Los tutoriales oficiales se importan con scripts/import_official_tutorial.sh y se ejecutan con scripts/run_official_tutorial.sh. El manual puede conservar comandos históricos. No hay nueva validación CFD.
+## Archivos comunes
 
-## Ejecución centralizada
+| Ubicación | Qué contiene |
+| --- | --- |
+| 0/ | Campos iniciales y condiciones de contorno |
+| constant/ | Propiedades físicas, gravedad y modelos |
+| system/blockMeshDict | Vértices, bloques, resolución y patches |
+| system/controlDict | Solver, duración o iteraciones y escritura |
+| system/fvSchemes | Discretización |
+| system/fvSolution | Algoritmo y tolerancias |
+| variants/ | Cambios preparados o recetas |
+| Allrun / Allmesh / Allclean | Lanzadores Bash compartidos |
 
-`bash scripts/run_docker.sh runs/difusion` ejecuta la copia con la imagen predeterminada. Usar `--mesh`, `--solve-only`, `--image IMAGEN` y `--dry-run` según necesidad. Los lanzadores Docker individuales se retiraron. Los casos originales deben ejecutarse desde el repositorio completo; para trabajar de forma aislada preparar una copia. No se reutiliza malla automáticamente: `--solve-only` es una decisión explícita. `bash Allclean` muestra las salidas, `bash Allclean --yes` las elimina sin restaurar los campos 0/ alterados por setFields. Las recetas JSON equivalentes fueron retiradas; quedan en Git.
-
-La presa cuenta con Allrun. El runner de copias permite intentar la solución de la presa, todavía sin verificar. El criterio común de calidad exige Mesh OK, incluso para la vaca.
+Los casos originales usan los scripts del repositorio; las copias preparadas incluyen los lanzadores necesarios. Las herramientas Python están en [postprocessing/](../postprocessing/README.md). El estado de ejecución se describe en cada caso. No confundir revisión estática, convergencia numérica y validación física.

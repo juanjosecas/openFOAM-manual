@@ -1,80 +1,46 @@
-# Tutorial 02 — Flujo no newtoniano en un canal con obstáculos
+# Canal con obstáculo rectangular
 
-**Estado:** caso base ejecutado con OpenFOAM.com v2406; comentarios y variantes documentados. La convergencia numérica no equivale a validación física.
+Flujo no newtoniano alrededor de un obstáculo fijo unido a la pared. Permite estudiar aceleración, recirculación y sensibilidad a la condición superficial.
 
-## Archivos presentes
+## Configuración base
 
-- `0/U`
-- `0/p`
-- `constant/transportProperties`
-- `constant/turbulenceProperties`
-- `system/blockMeshDict`
-- `system/controlDict`
-- `system/fvSchemes`
-- `system/fvSolution`
+Solver: `simpleFoam`. Canal de 200 × 20 mm, obstáculo de 20 × 4 mm (20 % de bloqueo), 7840 celdas, espesor 1 mm. Entrada 0.01 m/s; powerLaw con n=0.5, k=1e-4, nuMin=1e-6 y nuMax=1e-2.
 
-## Configuración comentada e interacción con el objeto
+## Ejecutar
 
-La plantilla conserva todos sus valores físicos y numéricos originales. Los
-diccionarios explican unidades, función de las entradas y simplificaciones. Los
-scripts también están comentados. El canal mide 200 x 20 mm y contiene un
-obstáculo rectangular de 20 x 4 mm; la malla planar tiene 7840 celdas y una
-celda en z. El espesor de 1 mm no convierte el objeto en una esfera o un cilindro.
-
-El patch `obstacle` es independiente de `lowerWall` y `upperWall`. Puede tener
-`slip` o `partialSlip` mientras ambas paredes siguen `noSlip`, manteniendo
-inalterados geometría y patches de presión. Las [recetas preparadas](variants/README.md)
-permiten comparar esos comportamientos, agua newtoniana y una malla más fina.
-Se aplican solo en copias nuevas de `runs/` y dejan la plantilla intacta.
-
-Las configuraciones de transporte base y `generalizedNewtonian/powerLaw` actúan
-en distintos niveles. Cambiar solo `nu` no convierte esta base en agua de
-viscosidad constante; las recetas `agua-*` modifican ambos archivos de forma
-coordinada. La presión es cinemática, no Pa; requiere una densidad para convertir
-diferencias. Los diagnósticos opcionales permanecen inactivos.
-
-## Ejecución
-
-Desde esta carpeta y con OpenFOAM cargado: `./Allrun`. Registra logs y no elimina directorios de resultados previos; los logs con el mismo nombre pueden sobrescribirse.
-
-
-## Preparación y ejecución
-
-Desde la raíz del repositorio, con el entorno OpenFOAM cargado:
+Desde la raíz del repositorio:
 
 ```bash
-cd cases/02-flujo-canal-con-obstaculos
-foamVersion
-blockMesh 2>&1 | tee log.blockMesh
-checkMesh 2>&1 | tee log.checkMesh
-foamDictionary system/controlDict -entry application -value
-simpleFoam 2>&1 | tee log.simpleFoam
+bash scripts/prepare_case.sh 02-flujo-canal-con-obstaculos --output runs/obstaculo
+bash scripts/run_docker.sh runs/obstaculo
 ```
 
-**Verificación:** mallado y solver base comprobados en Docker v2406. Alternativamente, ejecutar `bash Allrun` desde la carpeta del caso; no combinar los dos procedimientos.
+Para modificar el modelo, editar los archivos de la copia **antes de ejecutar**. Si se cambia geometría o resolución, preparar una copia nueva. Con OpenFOAM cargado también se puede ejecutar `bash Allrun` dentro de la copia.
 
-## Variaciones pequeñas
+## Qué modificar
 
-Reducir la velocidad de entrada 20%; variar n de 0.5 a 0.7; refinar bloques próximos al obstáculo conservando interfaces.
+| Archivo | Entrada | Efecto / prueba sugerida |
+| --- | --- | --- |
+| `0/U` | `inlet/value, internalField` | Velocidad de entrada; reducir a 0.008 m/s. |
+| `0/U` | `obstacle/type` | noSlip, slip o partialSlip. El patch es independiente de las paredes. |
+| `constant/turbulenceProperties` | `n, k, límites de nu` | Controlan la viscosidad efectiva; variar n a 0.7. |
+| `constant/transportProperties + turbulenceProperties` | `nu + laminar/model` | Para agua: nu=1e-6 y model Stokes; sustituir el bloque powerLaw. |
+| `system/blockMeshDict` | `vertices, blocks` | Cambiar tamaño del objeto o resolución; conservar interfaces entre bloques. |
+| `system/controlDict` | `endTime, writeInterval` | 1500 iteraciones, escritura cada 100; variante transient usa tiempo físico. |
 
-Modificar **una sola variable** en cada copia del caso y conservar el original. Si cambia `blockMeshDict`, regenerar la malla; no reutilizar resultados antiguos. Los casos `simpleFoam` son estacionarios y sus iteraciones no representan tiempo físico. Consultar también la [guía general](../../docs/guia-ejecucion-y-variantes.md).
+Las recetas de [variantes](variants/README.md) cambian deslizamiento, agua o resolución. Para estudiar desprendimiento de vórtices usar `--variant transient` (pimpleFoam). Un patrón estacionario de recirculación no demuestra oscilación temporal. Con agua, Re basado en altura del objeto es 40.
 
+`system/fvSchemes` controla la discretización y `system/fvSolution` los solvers lineales y el acoplamiento; no confundir tolerancia numérica con precisión física.
 
-## Gráficos de propiedades y diagnóstico
+## Resultados
 
-Consultar [Gráficos y propiedades](../../docs/graficos-y-propiedades.md) para seleccionar campos físicos y generar perfiles a partir de CSV exportados. Si hay un archivo `log.NOMBRE_SOLVER`, ejecutar desde la raíz del repositorio:
+Desde la raíz, con las dependencias de [postprocesamiento](../../postprocessing/README.md) instaladas:
 
 ```bash
-python postprocessing/plot_solver_log.py cases/02-flujo-canal-con-obstaculos/log.NOMBRE_SOLVER --output plots/02-flujo-canal-con-obstaculos
+python postprocessing/fields.py runs/obstaculo --field U --normal z --streamlines
+python postprocessing/fields.py runs/obstaculo --field vorticity --component 2 --normal z
+python postprocessing/statistics.py runs/obstaculo --patch inlet outlet
+python postprocessing/plot_solver_log.py runs/obstaculo/log.simpleFoam
 ```
 
-Reemplazar `NOMBRE_SOLVER` por el solver real del caso. **Este comando solo procesa logs existentes**; no inicia el cálculo. Para curvas espaciales usar `postprocessing/plot_csv.py` sobre CSV con columnas adecuadas. El caso 09 incluye `system/sampleDict`.
-
-
-## Ampliación transitoria
-
-Este caso utiliza `simpleFoam` estacionario. Si interesa estudiar arranques, pulsaciones o fluctuaciones físicas, consultar la [guía de conversión a `pimpleFoam`](../../docs/simplefoam-a-transitorio.md). La transición requiere una **copia independiente** y revisar esquemas, algoritmo, compatibilidad de modelos y condiciones de contorno; no cambiar únicamente `application`.
-
-## Revisión física y numérica de la configuración
-
-El bloqueo geométrico del obstáculo es 20% de la altura del canal (h=4 mm, H=20 mm); la longitud axial del objeto es 20 mm. El caso base es estacionario y conserva los diccionarios previamente ejecutados. En la variante transient se añadieron pFinal y UFinal con relTol=0 para la última corrección PIMPLE, sin cambiar reología, malla ni condiciones de contorno. No interpretar una recirculación estacionaria como desprendimiento periódico de vórtices; en transitorio medir velocidad o fuerza en función del tiempo y comprobar independencia temporal. Con powerLaw no hay un único Reynolds basado en nu constante sin definir una viscosidad de referencia. Las recetas Bash de agua permiten una comparación newtoniana (Re_h=40). La variante transitoria modificada no se ha ejecutado.
+Comparar velocidad axial negativa aguas abajo, presión y flujo normal en obstáculo. Existen corridas históricas del caso base y recetas anteriores; los scripts actuales no se reejecutaron.
