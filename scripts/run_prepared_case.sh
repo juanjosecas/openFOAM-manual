@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
-cd -- "$(dirname -- "$0")"
+case_dir="$(cd -- "$(dirname -- "$0")" && pwd -P)"
+method=""
 die() { echo "ERROR: $*" >&2; exit 1; }
 step() {
     local label="$1"; shift
@@ -11,17 +12,27 @@ verify_mesh() {
     step "$1" checkMesh
     grep -q 'Mesh OK' "log.$1" || die "checkMesh no confirmó Mesh OK."
 }
-[[ -f case.json && -f .mesh_method ]] || die "Preparar copia primero."
+
 mode=all
 end_time=""
 while (($#)); do
     case "$1" in
-        --mesh-only) mode=mesh; shift ;;
-        --solve-only) mode=solve; shift ;;
+        --case-dir) (($# >= 2)) || die "Falta directorio."; case_dir="$2"; shift 2 ;;
+        --method) (($# >= 2)) || die "Falta método."; method="$2"; shift 2 ;;
+        --mesh-only) [[ "$mode" != solve ]] || die "Modos incompatibles."; mode=mesh; shift ;;
+        --solve-only) [[ "$mode" != mesh ]] || die "Modos incompatibles."; mode=solve; shift ;;
         --end-time) (($# >= 2)) || die "Falta endTime."; end_time="$2"; shift 2 ;;
         *) die "Opción desconocida: $1" ;;
     esac
 done
+cd -- "$case_dir"
+[[ -f system/controlDict && -f system/fvSchemes && -f system/fvSolution ]] || die "Caso incompleto."
+if [[ -z "$method" ]]; then
+    [[ -f case.json && -f .mesh_method ]] || die "Preparar copia primero."
+    method="$(cat .mesh_method)"
+fi
+[[ "$method" =~ ^(block|snappy|gmsh-cow|gmsh-kangaroo)$ ]] || die "Método no admitido."
+if [[ "$mode" == mesh && -n "$end_time" ]]; then die "--end-time requiere solver."; fi
 for dir in */; do
     [[ -d "$dir" ]] || continue
     name="${dir%/}"
@@ -36,7 +47,7 @@ solver="$(foamDictionary system/controlDict -entry application -value)"
 if [[ "$mode" != mesh ]]; then command -v "$solver" >/dev/null || die "Falta $solver."; fi
 if [[ "$mode" != solve ]]; then
     [[ ! -e constant/polyMesh ]] || die "Malla previa; usar --solve-only o una copia nueva."
-    case "$(cat .mesh_method)" in
+    case "$method" in
         block) step blockMesh blockMesh ;;
         snappy)
             step surfaceCheck surfaceCheck constant/triSurface/sphere.stl
@@ -45,11 +56,20 @@ if [[ "$mode" != solve ]]; then
             step blockMesh blockMesh
             verify_mesh checkMeshBase
             step snappyHexMesh snappyHexMesh -overwrite ;;
-        gmsh-cow) step gmshToFoam gmshToFoam cow_tunnel.msh; step changeDictionary changeDictionary ;;
-        gmsh-kangaroo) step gmshToFoam gmshToFoam geometry/kangaroo.msh; step changeDictionary changeDictionary ;;
+        gmsh-cow)
+            mesh=cow_tunnel.msh
+            [[ -f "$mesh" ]] || mesh=../../meshes/cow_tunnel.msh
+            [[ -f "$mesh" ]] || die "Falta malla bovina."
+            step gmshToFoam gmshToFoam "$mesh"
+            step changeDictionary changeDictionary ;;
+        gmsh-kangaroo)
+            [[ -f geometry/kangaroo.msh ]] || step geometry python3 geometry/build_mesh.py
+            step gmshToFoam gmshToFoam geometry/kangaroo.msh
+            step changeDictionary changeDictionary ;;
         *) die "Mallado desconocido." ;;
     esac
 fi
+[[ -f constant/polyMesh/points || -f constant/polyMesh/points.gz ]] || die "Malla no disponible."
 verify_mesh checkMesh
 [[ "$mode" != mesh ]] || exit 0
 if [[ -n "$end_time" ]]; then

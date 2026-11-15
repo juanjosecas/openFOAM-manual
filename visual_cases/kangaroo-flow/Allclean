@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
-cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
-foamListTimes -rm >/dev/null
-rm -rf constant/polyMesh VTK postProcessing geometry/kangaroo.msh log.*
+HERE="$(cd -- "$(dirname -- "$0")" && pwd -P)"
+exec bash "$HERE/../../scripts/clean_case.sh" --case-dir "$HERE" "$@"
