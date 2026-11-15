@@ -31,7 +31,7 @@
     "variants": [
       "animation"
     ],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "08-flujo-en-tuberia-3d",
@@ -56,7 +56,7 @@
     "variants": [
       "animation"
     ],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "13b-flujo-laminar-alrededor-esfera",
@@ -77,7 +77,7 @@
     "path": "cases/23-flexion-de-viga",
     "group": "extended",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "24-conduccion-de-calor-1d",
@@ -91,7 +91,7 @@
     "path": "cases/26-refraccion-en-interfaz-de-fluidos",
     "group": "extended",
     "variants": [],
-    "status": "not-retested"
+    "status": "static-reviewed-v2406"
   },
   {
     "id": "cow-flow",

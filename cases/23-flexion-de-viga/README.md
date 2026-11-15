@@ -23,14 +23,14 @@ cd cases/23-flexion-de-viga
 foamVersion
 command -v solidDisplacementFoam
 bash Allmesh
-bash Allrun
+bash Allrun --solve-only
 tail -n 50 log.solidDisplacementFoam
 foamToVTK
 python3 postprocessing/analizar.py
 bash Allclean
 ~~~
 
-Allrun puede mallar automáticamente en una copia limpia. Allclean solo previsualiza; para borrar salidas, ejecutar bash Allclean --yes. Para postproceso se requieren numpy, matplotlib y pyvista. Los resultados CSV (plots/desplazamiento.csv) y PNG (plots/flexion.png) se generan **solo tras correr el solver**. No hay GIF porque el modelo es estático. Consultar variants/README.md para tres cambios de un solo parámetro. Todo el caso es autocontenido.
+Allrun puede mallar automáticamente en una copia limpia. Allclean solo previsualiza; para borrar salidas, ejecutar bash Allclean --yes. Para postproceso se requieren numpy, matplotlib y pyvista. Los resultados CSV (plots/desplazamiento.csv) y PNG (plots/flexion.png) se generan **solo tras correr el solver**. No hay GIF porque el modelo es estático. Consultar variants/README.md para tres cambios de un solo parámetro. El caso preparado incluye sus entradas físicas y el runner compartido.
 
 ## Fuentes originales
 
@@ -39,3 +39,7 @@ Allrun puede mallar automáticamente en una copia limpia. Allclean solo previsua
 - [Referencia conceptual de viga con carga, OpenFOAM Foundation 13](https://github.com/OpenFOAM/OpenFOAM-13/tree/master/tutorials/solidDisplacement/beamEndLoad) — **distribución incompatible; no copiar sus diccionarios**.
 
 Geometría y archivos: elaboración didáctica propia. No se ha ejecutado OpenFOAM.
+
+## Revisión estática
+
+Se conservan los diccionarios de elasticidad. El esfuerzo aplicado es 10 kPa sobre el extremo, fuerza total 1 N; la referencia Euler–Bernoulli de desplazamiento en la punta es -0.2 mm. Evaluar además convergencia del desplazamiento con iteraciones y refinamiento transversal: la malla base tiene solo 4×4 celdas en la sección. La comparación debe considerar que los centros de celda no coinciden con la cara terminal. Sin prueba de ejecución del solver ni validación de tensiones.
