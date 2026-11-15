@@ -24,3 +24,17 @@ python postprocessing/plot_solver_log.py runs/canal/log.simpleFoam
 - graficos_esfera.py y los analizadores de cada caso: referencias físicas y análisis particulares.
 
 Para vectores se representa la magnitud salvo que se indique --component 0/1/2. La vorticidad se lee si existe o se estima desde U; la estimación de PyVista puede diferir del operador discreto de OpenFOAM. La interpolación de celdas a puntos puede suavizar discontinuidades. Las animaciones tienen fps constantes, no necesariamente proporcionales al paso físico. Para el manual histórico, los visualizadores retirados están en Git; usar los comandos anteriores en su lugar. No se ejecutó el código de esta revisión.
+
+## Análisis cuantitativo
+
+```bash
+python postprocessing/statistics.py runs/presa --field alpha.water --output plots/agua
+python postprocessing/statistics.py runs/canal --field U --component 0 --output plots/velocidad
+python postprocessing/statistics.py runs/canal --list-patches
+python postprocessing/statistics.py runs/canal --patch inlet outlet --output plots/caudal
+python postprocessing/statistics.py runs/canal --patch inlet outlet --rho 1000 --output plots/masa
+```
+
+La integral utiliza los volúmenes de celda reales: para alpha.water representa volumen de agua en m³, incluyendo el espesor de extrusión del caso 2D. El promedio y la desviación estándar se ponderan por volumen; se exporta una fila por estado guardado. Para vectores se usa magnitud o componente indicada.
+
+El caudal se aproxima con U de las caras y normales geométricas de los patches; comprobar orientación de las normales (saliente positiva) y nombres de patches. No es el flujo conservativo phi del solver. No utilizar para certificar conservación discreta; tampoco equivale a flujo de masa multifásico con densidad variable. --rho solo admite densidad constante. Las series y el lector de patches quedan pendientes de prueba local.
