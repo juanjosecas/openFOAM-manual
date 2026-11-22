@@ -102,7 +102,7 @@ done
 for phase in water oil air; do
     initial=0; [[ "$phase" != air ]] || initial=1
     foamDictionary "0/alpha.$phase" -entry internalField -set "uniform $initial"
-    foamDictionary "0/alpha.$phase" -entry boundaryField -set "{ walls { type zeroGradient; } atmosphere { type inletOutlet; inletValue uniform $initial; value uniform 0; } frontAndBack { type empty; } }"
+    foamDictionary "0/alpha.$phase" -entry boundaryField -set "{ walls { type zeroGradient; } atmosphere { type inletOutlet; inletValue uniform $initial; value uniform $initial; } frontAndBack { type empty; } }"
 done
 foamDictionary 0/U -entry boundaryField -set '{ walls { type noSlip; } atmosphere { type pressureInletOutletVelocity; value uniform (0 0 0); } frontAndBack { type empty; } }'
 foamDictionary 0/p_rgh -entry boundaryField -set '{ walls { type fixedFluxPressure; value uniform 0; } atmosphere { type totalPressure; p0 uniform 0; U U; phi phi; rho rho; psi none; gamma 1; value uniform 0; } frontAndBack { type empty; } }'
