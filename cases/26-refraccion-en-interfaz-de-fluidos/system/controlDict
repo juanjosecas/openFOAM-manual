@@ -22,6 +22,6 @@ purgeWrite 0; // 0 conserva todas las salidas; N conserva las últimas N.
 writeFormat ascii;
 writePrecision 8;
 writeCompression off;
-timeFormat fixed;
+timeFormat general; // Mantener nombre inicial '0' compatible con campos 0/.
 timePrecision 6;
 runTimeModifiable yes;
